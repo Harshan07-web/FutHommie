@@ -1,16 +1,20 @@
 import requests
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 #39	7293
-#
 
-url = "https://v3.football.api-sports.io/fixtures"
+API = os.getenv("FOOTBALL_API")
+url = os.getenv("BASE_URL")
 
 params={
     "league" : 39,
     "season" : 2024
 }
+
 headers = {
-  'x-apisports-key': '7487df84048b717a30555981eb06ae81',
+  'x-apisports-key': API,
 }
 
 response = requests.request("GET", url, headers=headers, params=params)
