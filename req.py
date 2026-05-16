@@ -8,15 +8,18 @@ load_dotenv()
 API = os.getenv("FOOTBALL_API")
 url = os.getenv("BASE_URL")
 
-params={
-    "league" : 39,
-    "season" : 2024
-}
+def fetch_match(league_id : int,season : int):
+    params = {
+        "league" : league_id,
+        "season" : season
+    }
 
-headers = {
-  'x-apisports-key': API,
-}
+    headers = {
+        'x-apisports-key' : API
+    }
 
-response = requests.request("GET", url, headers=headers, params=params)
+    response = requests.request("GET",url=url,headers=headers,params=params,)
 
-print(response.text)
+    return response
+
+fetch_match(39,2024)
