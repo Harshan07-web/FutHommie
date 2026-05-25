@@ -29,4 +29,9 @@ class fetch:
 
         return response
 
+if __name__ == '__main__':
+    from transform import build
+    data = fetch(39,2024).fetch_fixtures().json()
+    res = build(data).build_data()
+    print(res)
 
