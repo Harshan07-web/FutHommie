@@ -1,14 +1,14 @@
 import json
 import pandas as pd
 
-#from etl.extract import fetch
-from extract import fetch
+from etl.extract import Fetch
+#from extract import fetch
 
-class build:
+class Build:
     def __init__(self,json_data):
         self.json_data = json_data
 
-    def build_data(self):
+    def points_table(self):
         with open("data/raw/raw_results.json","w") as f:
             json.dump(self.json_data,f,indent=5)
 
@@ -18,8 +18,13 @@ class build:
         for i in range(tot_matches):
             home = self.json_data['response'][i]['teams']['home']['name']
             away = self.json_data['response'][i]['teams']['away']['name']
+
             home_goals = self.json_data['response'][i]['goals']['home']
             away_goals = self.json_data['response'][i]['goals']['away']
+
+            if home_goals is None or away_goals is None:
+                continue
+
             if home not in final_data:
                 final_data[home] = {
                                     "played" : 0,
@@ -88,17 +93,111 @@ class build:
                 if home_goals==0:
                     final_data[away]['clean_sheets']+=1
 
-        for team in final_data:
-            final_data[team]['points'] = final_data[team]['wins']*3 + final_data[team]['draws']*1
-            final_data[team]['goal diff'] = final_data[team]['goals'] - final_data[team]['goal con']
-            final_data[team]['win_per'] = round((final_data[team]['wins']/final_data[team]['played'])*100,2)
-        table = pd.DataFrame.from_dict(final_data,orient='index')
-        table.reset_index(inplace=True)
-        table.rename(columns={"index" : "teams"}, inplace=True)
-        table.sort_values(["points", "goal diff", "goals"],ascending=False,inplace=True)
-        table.insert(0, "rank", range(1, len(table) + 1))
+        final_data = self.calculate_addition_data(final_data)
 
+        table = self.build_table(final_data)
         table.to_csv(r"data\processed\standings.csv",index=False)
 
         return table
     
+    def home_points_table(self):
+        tot_matches = self.json_data['results']
+        final_data = {}
+        for i in range(tot_matches):
+            info = self.json_data['response'][i]
+            home_team = info['teams']['home']['name']
+
+            home_goals = info['goals']['home']
+            away_goals = info['goals']['away']
+
+            if home_team not in final_data:
+                final_data[home_team] = {
+                                    "played" : 0,
+                                    "wins" : 0, 
+                                    "draws":0, 
+                                    "losses":0,
+                                    "goals":0,
+                                    "goal con":0,
+                                    "goal diff":0,
+                                    "points" : 0,
+                                    'win_per' : 0,
+                                    'clean_sheets' :0
+                                    }
+                
+            final_data[home_team]['goals'] += home_goals
+            final_data[home_team]['goal con'] += away_goals
+            final_data[home_team]['played']+=1
+            if away_goals==0:
+                final_data[home_team]['clean_sheets'] +=1
+
+            if info['teams']['home']['winner']:
+                final_data[home_team]['wins'] += 1
+            elif info['teams']['home']['winner'] is None and info['teams']['home']['winner'] is None:
+                final_data[home_team]['draws'] +=1
+            else:
+                final_data[home_team]['losses'] += 1
+
+        final_data = self.calculate_addition_data(final_data)
+
+        table = self.build_table(final_data)
+        return table
+
+    def away_points_table(self):
+        tot_matches = self.json_data['results']
+        final_data = {}
+        for i in range(tot_matches):
+            info = self.json_data['response'][i]
+            away_team = info['teams']['away']['name']
+
+            home_goals = info['goals']['home']
+            away_goals = info['goals']['away']
+
+            if away_team not in final_data:
+                final_data[away_team] = {
+                                    "played" : 0,
+                                    "wins" : 0, 
+                                    "draws":0, 
+                                    "losses":0,
+                                    "goals":0,
+                                    "goal con":0,
+                                    "goal diff":0,
+                                    "points" : 0,
+                                    'win_per' : 0,
+                                    'clean_sheets' :0
+                                    }
+                
+            final_data[away_team]['goals'] += away_goals
+            final_data[away_team]['goal con'] += home_goals
+            final_data[away_team]['played']+=1
+            if home_goals==0:
+                final_data[away_team]['clean_sheets'] +=1
+
+            if info['teams']['home']['winner']:
+                final_data[away_team]['losses'] += 1
+            elif info['teams']['home']['winner'] is None and info['teams']['home']['winner'] is None:
+                final_data[away_team]['draws'] +=1
+            else:
+                final_data[away_team]['wins'] += 1
+
+        final_data = self.calculate_addition_data(final_data)
+
+        table = self.build_table(final_data)
+        return table
+
+    def calculate_addition_data(self,final_data:dict):
+        for team in final_data:
+            final_data[team]['points'] = final_data[team]['wins']*3 + final_data[team]['draws']*1
+            final_data[team]['goal diff'] = final_data[team]['goals'] - final_data[team]['goal con']
+            final_data[team]['win_per'] = round((final_data[team]['wins']/final_data[team]['played'])*100,2)
+
+        return final_data
+    
+    def build_table(self,final_data:dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={"index" : "teams"}, inplace=True)
+        table.sort_values(["points", "goal diff", "goals"],ascending=False,inplace=True)
+        table.reset_index(inplace=True,drop=True)
+        table.insert(0, "rank", range(1, len(table) + 1))
+
+        return table

@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import json
 
-from etl.extract import fetch
-from etl.transform import build
+from etl.extract import Fetch
+from etl.transform import Build
 
 app = FastAPI()
 
@@ -21,14 +21,33 @@ def home():
         "msg" : "fast api running"
     }
 
-@app.post("/fetch")
-def fetch_data(payload : FetchRequest):
-    response = fetch(payload.league_id,payload.season).fetch_fixtures()
+@app.post("/fetch_overall_table")
+def fetch_table(payload : FetchRequest):
+    response = Fetch(payload.league_id,payload.season).fetch_fixtures()
     json_data = response.json()
 
-    table = build(json_data).build_data()
+    table = Build(json_data).points_table()
 
     return table.to_dict(orient='records')
+
+@app.post("/fetch_home_table")
+def fetch_home_table(payload : FetchRequest):
+    response = Fetch(payload.league_id,payload.season).fetch_fixtures()
+    json_data = response.json()
+
+    home_table = Build(json_data).home_points_table()
+
+    return home_table.to_dict(orient='records')
+
+@app.post("/fetch_away_table")
+def fetch_away_table(payload : FetchRequest):
+    response = Fetch(payload.league_id,payload.season).fetch_fixtures()
+    json_data = response.json()
+
+    away_table = Build(json_data).away_points_table()
+
+    return away_table.to_dict(orient='records')
+
 
 
 

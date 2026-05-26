@@ -10,7 +10,7 @@ load_dotenv()
 API = os.getenv("FOOTBALL_API")
 url = os.getenv("BASE_URL")
 
-class fetch:
+class Fetch:
     def __init__(self,league_id:int,season:int):
         self.league_id = league_id
         self.season = season
@@ -30,8 +30,8 @@ class fetch:
         return response
 
 if __name__ == '__main__':
-    from transform import build
-    data = fetch(39,2024).fetch_fixtures().json()
-    res = build(data).build_data()
+    from transform import Build
+    data = Fetch(39,2024).fetch_fixtures().json()
+    res = Build(data).build_data()
     print(res)
 
