@@ -1,6 +1,5 @@
 import json
 import pandas as pd
-
 from etl.extract import Fetch
 #from extract import fetch
 
@@ -140,6 +139,7 @@ class Build:
         final_data = self.calculate_addition_data(final_data)
 
         table = self.build_table(final_data)
+        table.to_csv(r"data\processed\hstandings.csv",index=False)
         return table
 
     def away_points_table(self):
@@ -182,6 +182,7 @@ class Build:
         final_data = self.calculate_addition_data(final_data)
 
         table = self.build_table(final_data)
+        table.to_csv(r"data\processed\astandings.csv",index=False)
         return table
 
     def calculate_addition_data(self,final_data:dict):
