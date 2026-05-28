@@ -1,14 +1,16 @@
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 import os
 from dotenv import load_dotenv
 
+from database.fixture_models import OverallStanding,HomeStanding,AwayStanding
+from database.base import base
+
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DB_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DB_URL)
 
 session = sessionmaker(
     autocommit=False,
@@ -23,4 +25,4 @@ def get_db():
     finally:
         db.close()
 
-base = declarative_base()
+base.metadata.create_all(bind=engine)

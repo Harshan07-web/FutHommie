@@ -16,22 +16,26 @@ class Fetch:
         self.season = season
 
     def fetch_fixtures(self):
-        params = {
-            "league" : self.league_id,
-            "season" : self.season
-        }
+        try:
+            params = {
+                "league" : self.league_id,
+                "season" : self.season
+            }
 
-        headers = {
-            'x-apisports-key' : API
-        }
+            headers = {
+                'x-apisports-key' : API
+            }
 
-        response = requests.request("GET",url=url,headers=headers,params=params,)
+            response = requests.request("GET",url=url,headers=headers,params=params,)
 
-        return response
+            return response
+        
+        except Exception as e:
+            raise e
 
 if __name__ == '__main__':
     from transform import Build
     data = Fetch(39,2024).fetch_fixtures().json()
-    res = Build(data).build_data()
+    res = Build(data).points_table()
     print(res)
 

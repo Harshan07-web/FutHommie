@@ -1,7 +1,8 @@
 import json
 import pandas as pd
 from etl.extract import Fetch
-#from extract import fetch
+from etl.load import StoreData
+# from load import StoreData
 
 class Build:
     def __init__(self,json_data):
@@ -26,6 +27,7 @@ class Build:
 
             if home not in final_data:
                 final_data[home] = {
+                                    "season" : 0,
                                     "played" : 0,
                                     "wins" : 0, 
                                     "draws":0, 
@@ -33,8 +35,6 @@ class Build:
                                     "goals":0,
                                     "goal con":0,
                                     "goal diff":0,
-                                    "home_wins" :0, 
-                                    "away_wins" :0 , 
                                     "points" : 0,
                                     "home_points" : 0,
                                     "away_points" : 0,
@@ -43,6 +43,7 @@ class Build:
                                     }
             if away not in final_data:
                 final_data[away] = {
+                                    "season" : 0,
                                     "played" : 0,
                                     "wins" : 0, 
                                     "draws":0, 
@@ -50,15 +51,14 @@ class Build:
                                     "goals":0,
                                     "goal con":0,
                                     "goal diff":0, 
-                                    "home_wins":0, 
-                                    "away_wins" : 0, 
                                     "points" : 0,
                                     "home_points" : 0,
                                     "away_points" : 0,
                                     'win_per' : 0,
                                     'clean_sheets' :0
                                     }
-
+            final_data[home]['season'] = self.json_data['response'][i]['league']['season']
+            final_data[away]['season'] = self.json_data['response'][i]['league']['season']
             final_data[home]['goals'] += home_goals
             final_data[away]['goals'] += away_goals
             final_data[home]["goal con"] += away_goals
@@ -79,14 +79,12 @@ class Build:
                     final_data[away]['clean_sheets']+=1
             elif home_win:
                 final_data[home]["wins"] += 1
-                final_data[home]["home_wins"] += 1
                 final_data[away]["losses"] +=1
                 final_data[home]['home_points']+=3
                 if away_goals==0:
                     final_data[home]['clean_sheets']+=1
             else:
                 final_data[away]["wins"] += 1
-                final_data[away]["away_wins"] += 1
                 final_data[home]["losses"] +=1
                 final_data[away]['away_points']+=3
                 if home_goals==0:
@@ -97,7 +95,7 @@ class Build:
         table = self.build_table(final_data)
         table.to_csv(r"data\processed\standings.csv",index=False)
 
-        return table
+        StoreData(table).overall_table()
     
     def home_points_table(self):
         tot_matches = self.json_data['results']
@@ -111,6 +109,7 @@ class Build:
 
             if home_team not in final_data:
                 final_data[home_team] = {
+                                    "season" : 0,
                                     "played" : 0,
                                     "wins" : 0, 
                                     "draws":0, 
@@ -122,7 +121,7 @@ class Build:
                                     'win_per' : 0,
                                     'clean_sheets' :0
                                     }
-                
+            final_data[home_team]['season'] = info['league']['season']
             final_data[home_team]['goals'] += home_goals
             final_data[home_team]['goal con'] += away_goals
             final_data[home_team]['played']+=1
@@ -131,7 +130,7 @@ class Build:
 
             if info['teams']['home']['winner']:
                 final_data[home_team]['wins'] += 1
-            elif info['teams']['home']['winner'] is None and info['teams']['home']['winner'] is None:
+            elif info['teams']['home']['winner'] is None and info['teams']['away']['winner'] is None:
                 final_data[home_team]['draws'] +=1
             else:
                 final_data[home_team]['losses'] += 1
@@ -140,7 +139,7 @@ class Build:
 
         table = self.build_table(final_data)
         table.to_csv(r"data\processed\hstandings.csv",index=False)
-        return table
+        StoreData(table).home_table()
 
     def away_points_table(self):
         tot_matches = self.json_data['results']
@@ -154,6 +153,7 @@ class Build:
 
             if away_team not in final_data:
                 final_data[away_team] = {
+                                    "season" : 0,
                                     "played" : 0,
                                     "wins" : 0, 
                                     "draws":0, 
@@ -165,7 +165,7 @@ class Build:
                                     'win_per' : 0,
                                     'clean_sheets' :0
                                     }
-                
+            final_data[away_team]['season'] = info['league']['season']
             final_data[away_team]['goals'] += away_goals
             final_data[away_team]['goal con'] += home_goals
             final_data[away_team]['played']+=1
@@ -174,7 +174,7 @@ class Build:
 
             if info['teams']['home']['winner']:
                 final_data[away_team]['losses'] += 1
-            elif info['teams']['home']['winner'] is None and info['teams']['home']['winner'] is None:
+            elif info['teams']['away']['winner'] is None and info['teams']['home']['winner'] is None:
                 final_data[away_team]['draws'] +=1
             else:
                 final_data[away_team]['wins'] += 1
@@ -183,7 +183,7 @@ class Build:
 
         table = self.build_table(final_data)
         table.to_csv(r"data\processed\astandings.csv",index=False)
-        return table
+        StoreData(table).away_table()
 
     def calculate_addition_data(self,final_data:dict):
         for team in final_data:

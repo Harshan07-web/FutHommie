@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
 from pydantic import BaseModel
 import json
 
-from etl.extract import Fetch
-from etl.transform import Build
+from database.fixture_models import OverallStanding, HomeStanding, AwayStanding
+from database.database import get_db
 
 app = FastAPI()
 
@@ -21,33 +22,41 @@ def home():
         "msg" : "fast api running"
     }
 
-@app.post("/fetch_overall_table")
-def fetch_table(payload : FetchRequest):
-    response = Fetch(payload.league_id,payload.season).fetch_fixtures()
-    json_data = response.json()
+@app.get("/standings/{season}")
+def get_overall_standings(season: int, db: Session = Depends(get_db)):
+    results = (
+        db.query(OverallStanding)
+        .filter(OverallStanding.season == season)
+        .order_by(OverallStanding.rank)
+        .all()
+    )
+    if not results:
+        raise HTTPException(status_code=404, detail=f"No data found for season {season}")
+    return results
 
-    table = Build(json_data).points_table()
+@app.get("/fetch_home_table/{season}")
+def fetch_home_table(season: int, db: Session = Depends(get_db)):
+    results = (
+        db.query(HomeStanding)
+        .filter(HomeStanding.season == season)
+        .order_by(HomeStanding.rank)
+        .all()
+    )
 
-    return table.to_dict(orient='records')
+    if not results:
+        raise HTTPException(status_code=400, detail=f"data doesnt exist in the databse for season : {season}")
+    return results
 
-@app.post("/fetch_home_table")
-def fetch_home_table(payload : FetchRequest):
-    response = Fetch(payload.league_id,payload.season).fetch_fixtures()
-    json_data = response.json()
+@app.get("/fetch_away_table/{season}")
+def fetch_away_table(season: int, db: Session = Depends(get_db)):
+    results = (
+        db.query(AwayStanding)
+        .filter(AwayStanding.season == season)
+        .order_by(AwayStanding.rank)
+        .all()
+    )
 
-    home_table = Build(json_data).home_points_table()
-
-    return home_table.to_dict(orient='records')
-
-@app.post("/fetch_away_table")
-def fetch_away_table(payload : FetchRequest):
-    response = Fetch(payload.league_id,payload.season).fetch_fixtures()
-    json_data = response.json()
-
-    away_table = Build(json_data).away_points_table()
-
-    return away_table.to_dict(orient='records')
-
-
-
+    if not results:
+        raise HTTPException(status_code=400, detail=f"data doesnt exist in the databse for season : {season}")
+    return results
 
