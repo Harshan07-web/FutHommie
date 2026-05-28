@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from pydantic import BaseModel
 import json
 
@@ -60,3 +61,33 @@ def fetch_away_table(season: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=f"data doesnt exist in the databse for season : {season}")
     return results
 
+@app.get("/fetch_team_performance/{season}/{name}")
+def fetch_team_data(name: str, season:int, db : Session = Depends(get_db)):
+    team = name.strip().lower()
+    team_exists = (
+        db.query(OverallStanding)
+        .filter(OverallStanding.season==season)
+        .filter(func.lower(OverallStanding.team)==team)
+        .first()
+    )
+
+    if not team_exists:
+        raise HTTPException(status_code=404, detail=f"Team with the name {name} was not found")
+    
+    return team_exists
+
+@app.get("/fetch_top_teams/{season}/{n}")
+def get_top_teams(season : int , n : int , db : Session = Depends(get_db)):
+    if n>20:
+        raise HTTPException(status_code=500, detail="Only 20 teams available")
+    top_teams = (
+        db.query(OverallStanding)
+        .filter(OverallStanding.season==Session)
+        .limit(n)
+    )
+
+    if not top_teams:
+        raise HTTPException(status_code=404,detail="team details doesnt exist")
+    
+
+# @app.get("/fetch_")
