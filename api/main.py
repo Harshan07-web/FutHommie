@@ -83,6 +83,7 @@ def get_top_teams(season : int , n : int , db : Session = Depends(get_db)):
     top_teams = (
         db.query(OverallStanding)
         .filter(OverallStanding.season==Session)
+        .order_by(OverallStanding.rank)
         .limit(n)
     )
 
