@@ -23,11 +23,12 @@ def home():
         "msg" : "fast api running"
     }
 
-@app.get("/standings/{season}")
-def get_overall_standings(season: int, db: Session = Depends(get_db)):
+@app.get("/standings/{season}/{league_id}")
+def get_overall_standings(season: int,league_id :int, db: Session = Depends(get_db)):
     results = (
         db.query(OverallStanding)
         .filter(OverallStanding.season == season)
+        .filter(OverallStanding.league_id == league_id)
         .order_by(OverallStanding.rank)
         .all()
     )

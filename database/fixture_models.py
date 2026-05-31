@@ -5,6 +5,9 @@ class OverallStanding(base):
     __tablename__ = "overall_standing"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    team_id = Column(Integer)
+    league_id = Column(Integer)
+    league = Column(VARCHAR(255))
     season = Column(Integer)
     rank = Column(Integer)
     team = Column(VARCHAR(255))
@@ -27,6 +30,9 @@ class HomeStanding(base):
     __tablename__ = 'home_standing'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    team_id = Column(Integer)
+    league_id = Column(Integer)
+    league = Column(VARCHAR(255))
     season = Column(Integer)
     rank = Column(Integer)
     team = Column(VARCHAR(255))
@@ -49,6 +55,9 @@ class AwayStanding(base):
     __tablename__ = 'away_standing'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    team_id = Column(Integer)
+    league_id = Column(Integer)
+    league = Column(VARCHAR(255))
     season = Column(Integer)
     rank = Column(Integer)
     team = Column(VARCHAR(255))

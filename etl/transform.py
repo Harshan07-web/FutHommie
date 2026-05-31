@@ -27,6 +27,9 @@ class Build:
 
             if home not in final_data:
                 final_data[home] = {
+                                    "team_id" : 0,
+                                    "league_id" : 0,
+                                    "league" : "",
                                     "season" : 0,
                                     "played" : 0,
                                     "wins" : 0, 
@@ -43,6 +46,9 @@ class Build:
                                     }
             if away not in final_data:
                 final_data[away] = {
+                                    "team_id" : 0,
+                                    "league_id" : 0,
+                                    "league" : "",
                                     "season" : 0,
                                     "played" : 0,
                                     "wins" : 0, 
@@ -59,6 +65,13 @@ class Build:
                                     }
             final_data[home]['season'] = self.json_data['response'][i]['league']['season']
             final_data[away]['season'] = self.json_data['response'][i]['league']['season']
+            final_data[home]['league_id'] = self.json_data['response'][i]['league']['id']
+            final_data[away]['league_id'] = self.json_data['response'][i]['league']['id']
+            final_data[home]['league'] = self.json_data['response'][i]['league']['name']
+            final_data[away]['league'] = self.json_data['response'][i]['league']['name']
+            final_data[home]['team_id'] = self.json_data['response'][i]['teams']['home']['id']
+            final_data[away]['team_id'] = self.json_data['response'][i]['teams']['away']['id']
+
             final_data[home]['goals'] += home_goals
             final_data[away]['goals'] += away_goals
             final_data[home]["goal con"] += away_goals
@@ -109,6 +122,9 @@ class Build:
 
             if home_team not in final_data:
                 final_data[home_team] = {
+                                    "team_id" : 0,
+                                    "league_id" : 0,
+                                    "league" : "",
                                     "season" : 0,
                                     "played" : 0,
                                     "wins" : 0, 
@@ -121,6 +137,9 @@ class Build:
                                     'win_per' : 0,
                                     'clean_sheets' :0
                                     }
+            final_data[home_team]['team_id'] = info['teams']['home']['id']
+            final_data[home_team]['league_id'] = info['league']['id']
+            final_data[home_team]['league'] = info['league']['name']
             final_data[home_team]['season'] = info['league']['season']
             final_data[home_team]['goals'] += home_goals
             final_data[home_team]['goal con'] += away_goals
@@ -153,6 +172,9 @@ class Build:
 
             if away_team not in final_data:
                 final_data[away_team] = {
+                                    "team_id" : 0,
+                                    "league_id" : 0,
+                                    "league" : "",
                                     "season" : 0,
                                     "played" : 0,
                                     "wins" : 0, 
@@ -165,6 +187,10 @@ class Build:
                                     'win_per' : 0,
                                     'clean_sheets' :0
                                     }
+                
+            final_data[away_team]['team_id'] = info['teams']['away']['id']
+            final_data[away_team]['league_id'] = info['league']['id']
+            final_data[away_team]['league'] = info['league']['name']
             final_data[away_team]['season'] = info['league']['season']
             final_data[away_team]['goals'] += away_goals
             final_data[away_team]['goal con'] += home_goals
@@ -194,6 +220,8 @@ class Build:
         return final_data
     
     def build_table(self,final_data:dict):
+        if not final_data:
+            raise ValueError("No match data to build a table from. Check that the API response contains results.")
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={"index" : "teams"}, inplace=True)

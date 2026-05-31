@@ -18,6 +18,9 @@ class StoreData:
                 )
 
                 if exists:
+                    exists.team_id = row['team_id']
+                    exists.league_id = row['league_id']
+                    exists.league = row['league']
                     exists.season = row['season']
                     exists.rank = row['rank']
                     exists.team = row['teams']
@@ -34,6 +37,9 @@ class StoreData:
 
                 else:
                     team = OverallStanding(
+                        team_id = row['team_id'],
+                        league_id = row['league_id'],
+                        league = row['league'],
                         season = row['season'],
                         rank = row['rank'],
                         team = row['teams'],
@@ -68,6 +74,9 @@ class StoreData:
                 )
 
                 if exists:
+                    exists.team_id = row['team_id']
+                    exists.league_id = row['league_id']
+                    exists.league = row['league']
                     exists.season = row['season']
                     exists.rank = row['rank']
                     exists.team = row['teams']
@@ -84,6 +93,9 @@ class StoreData:
 
                 else:
                     team = HomeStanding(
+                        team_id = row['team_id'],
+                        league_id = row['league_id'],
+                        league = row['league'],
                         season = row['season'],
                         rank = row['rank'],
                         team = row['teams'],
@@ -119,6 +131,9 @@ class StoreData:
                 )
 
                 if exists:
+                    exists.team_id = row['team_id']
+                    exists.league_id = row['league_id']
+                    exists.league = row['league']
                     exists.season = row['season']
                     exists.rank = row['rank']
                     exists.team = row['teams']
@@ -135,6 +150,9 @@ class StoreData:
 
                 else:
                     team = AwayStanding(
+                        team_id = row['team_id'],
+                        league_id = row['league_id'],
+                        league = row['league'],
                         season = row['season'],
                         rank = row['rank'],
                         team = row['teams'],
