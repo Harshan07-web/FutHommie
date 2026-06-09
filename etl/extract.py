@@ -9,6 +9,7 @@ load_dotenv()
 
 API = os.getenv("FOOTBALL_API")
 url = os.getenv("BASE_URL")
+team_url = os.getenv("TEAM_URL")
 
 class Fetch:
     def __init__(self,league_id:int,season:int):
@@ -26,10 +27,27 @@ class Fetch:
                 'x-apisports-key' : API
             }
 
-            response = requests.request("GET",url=url,headers=headers,params=params,)
+            response = requests.request("GET",url=url,headers=headers,params=params)
 
             return response
         
+        except Exception as e:
+            raise e
+        
+    def fetch_teams(self):
+        try:
+            params = {
+                "league" : self.league_id,
+                "season" : self.season
+            }
+
+            headers = {
+                'x-apisports-key' : API
+            }
+
+            response = requests.request("GET", url=team_url,headers=headers,params=params)
+
+            return response
         except Exception as e:
             raise e
 

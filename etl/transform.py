@@ -211,6 +211,33 @@ class Build:
         table.to_csv(r"data\processed\astandings.csv",index=False)
         StoreData(table).away_table()
 
+    def team_table(self):
+        final_data = {}
+        tot_teams = self.json_data['resutls']
+        for i in range(tot_teams):
+            response = self.json_data['response']
+            team = response[i]['team']['name']
+            final_data[team] = {
+                                'id' : 0,
+                                'code' : "",
+                                'country' : "",
+                                'founded' : "",
+                                "logo" : "",
+                                "venue_id" : 0,
+                                "league_id" : 0,
+                                "season" : 0
+                                }
+            final_data[team]['id'] = response['team']['id']
+            final_data[team]['code'] = response['team']['code']
+            final_data[team]['country'] = response['team']['country']
+            final_data[team]['founded'] = response['team']['founded']
+            final_data[team]['logo'] = response['team']['logo']
+            final_data[team]['venue_id'] = response['venue']['id']
+            final_data[team]['league_id'] = self.json_data['parameters']['league']
+            final_data[team]['league_id'] = self.json_data['parameters']['season']
+
+        return final_data
+
     def calculate_addition_data(self,final_data:dict):
         for team in final_data:
             final_data[team]['points'] = final_data[team]['wins']*3 + final_data[team]['draws']*1
@@ -228,5 +255,15 @@ class Build:
         table.sort_values(["points", "goal diff", "goals"],ascending=False,inplace=True)
         table.reset_index(inplace=True,drop=True)
         table.insert(0, "rank", range(1, len(table) + 1))
+
+        return table
+
+    def build_team_table(self,final_data:dict):
+        if not final_data:
+            raise ValueError("No match data to build table from. check that the API response contains results.")
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index':'teams'},inplace=True)
+        table.reset_index(inplace=True,drop=True)
 
         return table

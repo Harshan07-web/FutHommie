@@ -1,4 +1,4 @@
-from sqlalchemy import Column,VARCHAR,Integer,Float, UniqueConstraint
+from sqlalchemy import Column,VARCHAR,Integer,Float, UniqueConstraint, URL
 from database.base import base
 
 class OverallStanding(base):
@@ -75,5 +75,20 @@ class AwayStanding(base):
     __table_args__ = (
         UniqueConstraint('season','team',name='unique_away_season_team'),
     )
+
+class Teams(base):
+    __tablename__ = 'team_info'
+
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    team_id = Column(Integer,unique=True)
+    code = Column(VARCHAR(255))
+    country = Column(VARCHAR(255))
+    founded = Column(VARCHAR(255))
+    logo = Column(VARCHAR(255))
+    venue_id = Column(Integer,unique=True)
+    league_id = Column(Integer)
+    season = Column(Integer)
+
+    
 
 
