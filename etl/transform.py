@@ -213,12 +213,12 @@ class Build:
 
     def team_table(self):
         final_data = {}
-        tot_teams = self.json_data['resutls']
+        tot_teams = self.json_data['results']
         for i in range(tot_teams):
             response = self.json_data['response']
             team = response[i]['team']['name']
             final_data[team] = {
-                                'id' : 0,
+                                'team_id' : 0,
                                 'code' : "",
                                 'country' : "",
                                 'founded' : "",
@@ -227,16 +227,18 @@ class Build:
                                 "league_id" : 0,
                                 "season" : 0
                                 }
-            final_data[team]['id'] = response['team']['id']
-            final_data[team]['code'] = response['team']['code']
-            final_data[team]['country'] = response['team']['country']
-            final_data[team]['founded'] = response['team']['founded']
-            final_data[team]['logo'] = response['team']['logo']
-            final_data[team]['venue_id'] = response['venue']['id']
+            final_data[team]['team_id'] = response[i]['team']['id']
+            final_data[team]['code'] = response[i]['team']['code']
+            final_data[team]['country'] = response[i]['team']['country']
+            final_data[team]['founded'] = response[i]['team']['founded']
+            final_data[team]['logo'] = response[i]['team']['logo']
+            final_data[team]['venue_id'] = response[i]['venue']['id']
             final_data[team]['league_id'] = self.json_data['parameters']['league']
-            final_data[team]['league_id'] = self.json_data['parameters']['season']
+            final_data[team]['season'] = self.json_data['parameters']['season']
 
-        return final_data
+        table = self.build_team_table(final_data=final_data)
+        table.to_csv(r"data\processed\teams.csv",index=False)
+        StoreData(table).team_table()
 
     def calculate_addition_data(self,final_data:dict):
         for team in final_data:

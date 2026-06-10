@@ -1,5 +1,5 @@
 from database.database import session
-from database.fixture_models import OverallStanding, HomeStanding,AwayStanding
+from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams
 
 
 class StoreData:
@@ -176,4 +176,51 @@ class StoreData:
             raise e
         finally:
             db.close()
+
+    def team_table(self):
+        try:
+            db = session()
+            for index,row in self.table.iterrows():
+                exists = (db.query(Teams)
+                        .filter(Teams.season==row['season'], 
+                                Teams.team_id==row['team_id'])
+                        .first()
+                )
+
+                if exists:
+                    exists.team_id = row["team_id"]
+                    exists.team = row["teams"]
+                    exists.code = row["code"]
+                    exists.country = row["country"]
+                    exists.founded = row["founded"]
+                    exists.league_id = row["league_id"]
+                    exists.logo = row["logo"]
+                    exists.season = row["season"]
+                    exists.venue_id = row["venue_id"]
+
+                else:
+
+                    team = Teams(
+                    team_id = row["team_id"],
+                    team = row["teams"],
+                    code = row["code"],
+                    country = row["country"],
+                    founded = row["founded"],
+                    league_id = row["league_id"],
+                    logo = row["logo"],
+                    season = row["season"],
+                    venue_id = row["venue_id"]                   
+                    )
+
+                    db.add(team)
+            db.commit()
+        
+        except Exception as e:
+            db.rollback()
+            raise e
+        finally:
+            db.close()
+
+
+
 

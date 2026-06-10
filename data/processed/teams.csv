@@ -1,0 +1,21 @@
+teams,team_id,code,country,founded,logo,venue_id,league_id,season
+Manchester United,33,MUN,England,1878,https://media.api-sports.io/football/teams/33.png,556,39,2024
+Newcastle,34,NEW,England,1892,https://media.api-sports.io/football/teams/34.png,562,39,2024
+Bournemouth,35,BOU,England,1899,https://media.api-sports.io/football/teams/35.png,504,39,2024
+Fulham,36,FUL,England,1879,https://media.api-sports.io/football/teams/36.png,535,39,2024
+Wolves,39,WOL,England,1877,https://media.api-sports.io/football/teams/39.png,600,39,2024
+Liverpool,40,LIV,England,1892,https://media.api-sports.io/football/teams/40.png,550,39,2024
+Southampton,41,SOU,England,1885,https://media.api-sports.io/football/teams/41.png,585,39,2024
+Arsenal,42,ARS,England,1886,https://media.api-sports.io/football/teams/42.png,494,39,2024
+Everton,45,EVE,England,1878,https://media.api-sports.io/football/teams/45.png,22033,39,2024
+Leicester,46,LEI,England,1884,https://media.api-sports.io/football/teams/46.png,547,39,2024
+Tottenham,47,TOT,England,1882,https://media.api-sports.io/football/teams/47.png,593,39,2024
+West Ham,48,WES,England,1895,https://media.api-sports.io/football/teams/48.png,598,39,2024
+Chelsea,49,CHE,England,1905,https://media.api-sports.io/football/teams/49.png,519,39,2024
+Manchester City,50,MCI,England,1880,https://media.api-sports.io/football/teams/50.png,555,39,2024
+Brighton,51,BRI,England,1901,https://media.api-sports.io/football/teams/51.png,508,39,2024
+Crystal Palace,52,CRY,England,1861,https://media.api-sports.io/football/teams/52.png,525,39,2024
+Brentford,55,BRE,England,1889,https://media.api-sports.io/football/teams/55.png,10503,39,2024
+Ipswich,57,IPS,England,1878,https://media.api-sports.io/football/teams/57.png,545,39,2024
+Nottingham Forest,65,NOT,England,1865,https://media.api-sports.io/football/teams/65.png,566,39,2024
+Aston Villa,66,AST,England,1874,https://media.api-sports.io/football/teams/66.png,495,39,2024

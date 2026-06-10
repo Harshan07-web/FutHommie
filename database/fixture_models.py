@@ -81,6 +81,7 @@ class Teams(base):
 
     id = Column(Integer,primary_key=True,autoincrement=True)
     team_id = Column(Integer,unique=True)
+    team = Column(VARCHAR(255))
     code = Column(VARCHAR(255))
     country = Column(VARCHAR(255))
     founded = Column(VARCHAR(255))
@@ -88,6 +89,10 @@ class Teams(base):
     venue_id = Column(Integer,unique=True)
     league_id = Column(Integer)
     season = Column(Integer)
+
+    __table_args__ = (
+        UniqueConstraint('season','team',name='unique_season_league_team'),
+    )
 
     
 

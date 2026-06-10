@@ -4,7 +4,7 @@ from sqlalchemy import func
 from pydantic import BaseModel
 import json
 
-from database.fixture_models import OverallStanding, HomeStanding, AwayStanding
+from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams
 from database.database import get_db
 
 app = FastAPI()
@@ -92,4 +92,16 @@ def get_top_teams(season : int , n : int , db : Session = Depends(get_db)):
         raise HTTPException(status_code=404,detail="team details doesnt exist")
     
 
-# @app.get("/fetch_")
+@app.get("/fetch_teams/{season}/{league_id}")
+def get_league_teams(season:int , league_id:int , db : Session = Depends(get_db)):
+    teams = (
+            db.query(Teams)
+            .filter(Teams.season==season)
+            .filter(Teams.league_id==league_id)
+            .all()
+            )
+    
+    if not teams:
+        raise HTTPException(status_code=500,detail="Internal server error,no teams to fetch")
+    
+    return teams
