@@ -1,11 +1,11 @@
-from sqlalchemy import Column,VARCHAR,Integer,Float, UniqueConstraint, URL
+from sqlalchemy import Column,VARCHAR,Integer,Float, UniqueConstraint, ForeignKey
 from database.base import base
 
 class OverallStanding(base):
     __tablename__ = "overall_standing"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    team_id = Column(Integer)
+    team_id = Column(Integer,ForeignKey("team_info.team_id"))
     league_id = Column(Integer)
     league = Column(VARCHAR(255))
     season = Column(Integer)
@@ -30,7 +30,7 @@ class HomeStanding(base):
     __tablename__ = 'home_standing'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    team_id = Column(Integer)
+    team_id = Column(Integer,ForeignKey("team_info.team_id"))
     league_id = Column(Integer)
     league = Column(VARCHAR(255))
     season = Column(Integer)
@@ -55,7 +55,7 @@ class AwayStanding(base):
     __tablename__ = 'away_standing'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    team_id = Column(Integer)
+    team_id = Column(Integer,ForeignKey("team_info.team_id"))
     league_id = Column(Integer)
     league = Column(VARCHAR(255))
     season = Column(Integer)
@@ -87,13 +87,23 @@ class Teams(base):
     founded = Column(VARCHAR(255))
     logo = Column(VARCHAR(255))
     venue_id = Column(Integer,unique=True)
-    league_id = Column(Integer)
+    league_id = Column(Integer,ForeignKey('team_venues.id'))
     season = Column(Integer)
 
     __table_args__ = (
-        UniqueConstraint('season','team',name='unique_season_league_team'),
+        UniqueConstraint('season','team','league_id',name='unique_season_league_team'),
     )
 
+class Venues(base):
+    __tablename__ = 'team_venues'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(VARCHAR(255))
+    address = Column(VARCHAR(255))
+    city = Column(VARCHAR(255))
+    capacity = Column(Integer)
+    surface = Column(VARCHAR(255))
+    image = Column(VARCHAR(255))
     
 
 

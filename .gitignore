@@ -3,3 +3,12 @@ __pycache__
 
 data/raw
 pipeline.log
+
+.vscode/
+
+football-dashboard/node_modules/
+football-dashboard/dist/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
