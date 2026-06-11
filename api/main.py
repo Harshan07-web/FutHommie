@@ -107,6 +107,20 @@ def get_league_teams(season:int , league_id:int , db : Session = Depends(get_db)
     
     return teams
 
+@app.get("/fetch_team_details/{name}")
+def fetch_team_data(name: str, db : Session = Depends(get_db)):
+    team = name.strip().lower()
+    team_exists = (
+        db.query(Teams)
+        .filter(func.lower(OverallStanding.team)==team)
+        .first()
+    )
+
+    if not team_exists:
+        raise HTTPException(status_code=404, detail=f"Team with the name {name} was not found")
+    
+    return team_exists
+
 
 app.add_middleware(
     CORSMiddleware,

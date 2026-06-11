@@ -10,6 +10,7 @@ function StandingsTable({ standings }) {
                     <th>Wins</th>
                     <th>Draws</th>
                     <th>Losses</th>
+                    <th>GD</th>
                 </tr>
             </thead>
 
@@ -22,6 +23,7 @@ function StandingsTable({ standings }) {
                         <td>{team.wins}</td>
                         <td>{team.draws}</td>
                         <td>{team.losses}</td>
+                        <td>{team.goal_diff}</td>
                     </tr>
                 ))}
             </tbody>
