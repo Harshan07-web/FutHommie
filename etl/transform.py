@@ -9,13 +9,12 @@ class Build:
         self.json_data = json_data
 
     def points_table(self):
-        with open("data/raw/raw_results.json","w") as f:
-            json.dump(self.json_data,f,indent=5)
-
-
         tot_matches = self.json_data["results"]
         final_data = {}
         for i in range(tot_matches):
+            round_name = self.json_data['response'][i]['league']['round']
+            if "Regular Season" not in round_name:
+                continue
             home = self.json_data['response'][i]['teams']['home']['name']
             away = self.json_data['response'][i]['teams']['away']['name']
 
@@ -114,6 +113,10 @@ class Build:
         tot_matches = self.json_data['results']
         final_data = {}
         for i in range(tot_matches):
+            round_name = self.json_data['response'][i]['league']['round']
+            if "Regular Season" not in round_name:
+                continue
+            
             info = self.json_data['response'][i]
             home_team = info['teams']['home']['name']
 
@@ -164,6 +167,9 @@ class Build:
         tot_matches = self.json_data['results']
         final_data = {}
         for i in range(tot_matches):
+            round_name = self.json_data['response'][i]['league']['round']
+            if "Regular Season" not in round_name:
+                continue
             info = self.json_data['response'][i]
             away_team = info['teams']['away']['name']
 
@@ -218,27 +224,43 @@ class Build:
             response = self.json_data['response']
             team = response[i]['team']['name']
             final_data[team] = {
-                                'team_id' : 0,
-                                'code' : "",
-                                'country' : "",
-                                'founded' : "",
-                                "logo" : "",
-                                "venue_id" : 0,
-                                "league_id" : 0,
-                                "season" : 0
+                                'team_id' : response[i]['team']['id'],
+                                'code' : response[i]['team']['code'],
+                                'country' : response[i]['team']['country'],
+                                'founded' : response[i]['team']['founded'],
+                                "logo" : response[i]['team']['logo'],
+                                "venue_id" : response[i]['venue']['id'],
+                                "league_id" : self.json_data['parameters']['league'],
+                                "season" : self.json_data['parameters']['season']
                                 }
-            final_data[team]['team_id'] = response[i]['team']['id']
-            final_data[team]['code'] = response[i]['team']['code']
-            final_data[team]['country'] = response[i]['team']['country']
-            final_data[team]['founded'] = response[i]['team']['founded']
-            final_data[team]['logo'] = response[i]['team']['logo']
-            final_data[team]['venue_id'] = response[i]['venue']['id']
-            final_data[team]['league_id'] = self.json_data['parameters']['league']
-            final_data[team]['season'] = self.json_data['parameters']['season']
 
         table = self.build_team_table(final_data=final_data)
         table.to_csv(r"data\processed\teams.csv",index=False)
         StoreData(table).team_table()
+
+    def squad_table(self):
+        final_data = {}
+        team = self.json_data['response']['team']['name']
+        team_id = self.json_data['response']['team']['name']
+        players = self.json_data['response']['players']
+        for player in players:
+            final_data[player['id']] = {
+                'name' : player['name'],
+                'age' : player['age'],
+                'team' : team,
+                'team_id' : team_id,
+                'number' : player['number'],
+                'position' : player['position'],
+                'photo' : player['photo']
+            }
+
+        table = self.build_squad_table(final_data=final_data)
+        table.to_csv(rf"data\processed\squads_{team_id}.csv",index=False)
+        StoreData(table).squad_table()
+
+    def player_stats_table(self):
+        pass
+
 
     def calculate_addition_data(self,final_data:dict):
         for team in final_data:
@@ -267,5 +289,12 @@ class Build:
         table.reset_index(inplace=True)
         table.rename(columns={'index':'teams'},inplace=True)
         table.reset_index(inplace=True,drop=True)
+
+        return table
+    
+    def build_squad_table(self,final_data:dict):
+        table = pd.DataFrame.from_dict(final_data,rient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index':'player_id'},inplace=True)
 
         return table

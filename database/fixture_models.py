@@ -104,6 +104,19 @@ class Venues(base):
     capacity = Column(Integer)
     surface = Column(VARCHAR(255))
     image = Column(VARCHAR(255))
+
+class Squad(base):
+    __tablename__ = 'squads_teams'
+
+    player_id = Column(Integer,primary_key=True)
+    name = Column(VARCHAR(255))
+    age = Column(Integer)
+    team = Column(VARCHAR(255))
+    team_id = Column(Integer)
+    number = Column(Integer)
+    position = Column(VARCHAR(255))
+    photo = Column(VARCHAR(255))
+
     
 
 

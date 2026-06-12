@@ -1,5 +1,5 @@
 from database.database import session
-from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams
+from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad
 
 
 class StoreData:
@@ -213,6 +213,47 @@ class StoreData:
                     )
 
                     db.add(team)
+            db.commit()
+        
+        except Exception as e:
+            db.rollback()
+            raise e
+        finally:
+            db.close()
+
+    def squad_table(self):
+        try:
+            db = session()
+            for index,row in self.table.iterrows():
+                exists = (db.query(Squad)
+                        .filter(Squad.team_id==row['team_id'])
+                        .first()
+                )
+
+                if exists:
+                    exists.player_id = row['id']
+                    exists.name = row['name']
+                    exists.age = row['age']
+                    exists.team = row['team']
+                    exists.team_id = row['team_id']
+                    exists.number = row['number']
+                    exists.position = row['position']
+                    exists.photo = row['photo']
+
+                else:
+
+                    squads = Squad(
+                        player_id = row['id'],
+                        name = row['name'],
+                        age = row['age'],
+                        team = row['team'],
+                        team_id = row['team_id'],
+                        number = row['number'],
+                        position = row['position'],
+                        photo = row['photo']                
+                    )
+
+                    db.add(squads)
             db.commit()
         
         except Exception as e:
