@@ -117,6 +117,17 @@ class Squad(base):
     position = Column(VARCHAR(255))
     photo = Column(VARCHAR(255))
 
+class League(base):
+    __tablename__ = 'league_info'
+
+    league_id = Column(Integer,primary_key=True)
+    league_name = Column(VARCHAR(255))
+    league_type = Column(VARCHAR(255))
+    country = Column(VARCHAR(255))
+    logo = Column(VARCHAR(255))
+
+    
+
     
 
 

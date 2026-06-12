@@ -259,7 +259,23 @@ class Build:
         StoreData(table).squad_table()
 
     def player_stats_table(self):
+        final_data = {}
         pass
+
+    def league_table(self):
+        final_data = {}
+        league = self.json_data['response']['league']
+        league_id = league['id']
+        final_data[league_id] = {
+            'league_name' : league['name'],
+            'league_type' : league['type'],
+            'country' : self.json_data['response']['country']['name'],
+            'logo' : league['logo']
+        }
+
+        table = self.build_league_table(final_data)
+        StoreData(table).league_table()
+
 
 
     def calculate_addition_data(self,final_data:dict):
@@ -293,8 +309,15 @@ class Build:
         return table
     
     def build_squad_table(self,final_data:dict):
-        table = pd.DataFrame.from_dict(final_data,rient='index')
+        table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index':'player_id'},inplace=True)
+
+        return table
+    
+    def build_league_table(self,final_data:dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index':'league_id'},inplace=True)
 
         return table
