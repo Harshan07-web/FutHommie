@@ -30,7 +30,7 @@ class Fetch:
 
             response = requests.request("GET",url=url,headers=headers,params=params)
             with open("data/raw/fixture_results.json","w") as f:
-                json.dump(self.json_data,f,indent=5)
+                json.dump(response.json(),f,indent=5)
 
             return response
         
@@ -51,7 +51,7 @@ class Fetch:
             response = requests.request("GET", url=team_url,headers=headers,params=params)
 
             with open("data/raw/team_results.json","w") as f:
-                json.dump(self.json_data,f,indent=5)
+                json.dump(response.json(),f,indent=5)
 
             return response
         except Exception as e:
@@ -70,7 +70,27 @@ class Fetch:
             response = requests.request("GET",url=player_url,headers=header,params=params)
 
             with open("data/raw/squad_results.json","w") as f:
-                json.dump(self.json_data,f,indent=5)
+                json.dump(response.json(),f,indent=5)
+
+            return response
+
+        except Exception as e:
+            raise e
+        
+    def fetch_player_details(self,player_id:int):
+        try:
+            params = {
+                'player' : player_id
+            }
+
+            header = {
+                'x-apisports-key' : API
+            }
+
+            response = requests.request("GET",url=player_url,headers=header,params=params)
+
+            with open("data/raw/player_details.json","w") as f:
+                json.dump(response.json(),f,indent=5)
 
             return response
 

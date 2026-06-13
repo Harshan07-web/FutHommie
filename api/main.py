@@ -64,7 +64,7 @@ def fetch_away_table(season: int, db: Session = Depends(get_db)):
     return results
 
 @app.get("/fetch_team_performance/{season}/{name}")
-def fetch_team_data(name: str, season:int, db : Session = Depends(get_db)):
+def fetch_team_performance(name: str, season:int, db : Session = Depends(get_db)):
     team = name.strip().lower()
     team_exists = (
         db.query(OverallStanding)
@@ -84,7 +84,7 @@ def get_top_teams(season : int , n : int , db : Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Only 20 teams available")
     top_teams = (
         db.query(OverallStanding)
-        .filter(OverallStanding.season==Session)
+        .filter(OverallStanding.season==season)
         .order_by(OverallStanding.rank)
         .limit(n)
     )
@@ -108,11 +108,11 @@ def get_league_teams(season:int , league_id:int , db : Session = Depends(get_db)
     return teams
 
 @app.get("/fetch_team_details/{name}")
-def fetch_team_data(name: str, db : Session = Depends(get_db)):
+def fetch_team_details(name: str, db : Session = Depends(get_db)):
     team = name.strip().lower()
     team_exists = (
         db.query(Teams)
-        .filter(func.lower(OverallStanding.team)==team)
+        .filter(func.lower(Teams.team)==team)
         .first()
     )
 

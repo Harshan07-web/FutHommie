@@ -231,7 +231,7 @@ class StoreData:
                 )
 
                 if exists:
-                    exists.player_id = row['id']
+                    exists.player_id = row['player_id']
                     exists.name = row['name']
                     exists.age = row['age']
                     exists.team = row['team']
@@ -243,7 +243,7 @@ class StoreData:
                 else:
 
                     squads = Squad(
-                        player_id = row['id'],
+                        player_id = row['player_id'],
                         name = row['name'],
                         age = row['age'],
                         team = row['team'],

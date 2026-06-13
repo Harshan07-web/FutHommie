@@ -126,7 +126,26 @@ class League(base):
     country = Column(VARCHAR(255))
     logo = Column(VARCHAR(255))
 
-    
+class PlayerInfo(base):
+    __tablename__ = 'player_info'
+
+    player_id = Column(Integer, primary_key=True)
+    name = Column(VARCHAR(255))
+    firstname = Column(VARCHAR(255))
+    lastname = Column(VARCHAR(255))
+    age = Column(Integer)
+    nationality = Column(VARCHAR(255))
+    height = Column(VARCHAR(20))
+    weight = Column(VARCHAR(20))
+    position = Column(VARCHAR(255))
+    photo = Column(VARCHAR(255))
+    birth_country = Column(VARCHAR(255))
+
+
+class PlayerStats(base):
+    __tablename__ = 'player_stats'
+
+    pass
 
     
 

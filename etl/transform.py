@@ -38,8 +38,6 @@ class Build:
                                     "goal con":0,
                                     "goal diff":0,
                                     "points" : 0,
-                                    "home_points" : 0,
-                                    "away_points" : 0,
                                     'win_per' : 0,
                                     'clean_sheets' :0
                                     }
@@ -57,8 +55,6 @@ class Build:
                                     "goal con":0,
                                     "goal diff":0, 
                                     "points" : 0,
-                                    "home_points" : 0,
-                                    "away_points" : 0,
                                     'win_per' : 0,
                                     'clean_sheets' :0
                                     }
@@ -84,21 +80,17 @@ class Build:
             if not home_win and not away_win:
                 final_data[home]["draws"] += 1
                 final_data[away]["draws"] +=1
-                final_data[home]['home_points']+=1
-                final_data[away]['away_points']+=1
                 if home_goals==0 and away_goals==0:
                     final_data[home]['clean_sheets']+=1
                     final_data[away]['clean_sheets']+=1
             elif home_win:
                 final_data[home]["wins"] += 1
                 final_data[away]["losses"] +=1
-                final_data[home]['home_points']+=3
                 if away_goals==0:
                     final_data[home]['clean_sheets']+=1
             else:
                 final_data[away]["wins"] += 1
                 final_data[home]["losses"] +=1
-                final_data[away]['away_points']+=3
                 if home_goals==0:
                     final_data[away]['clean_sheets']+=1
 
@@ -241,7 +233,7 @@ class Build:
     def squad_table(self):
         final_data = {}
         team = self.json_data['response']['team']['name']
-        team_id = self.json_data['response']['team']['name']
+        team_id = self.json_data['response']['team']['id']
         players = self.json_data['response']['players']
         for player in players:
             final_data[player['id']] = {
@@ -258,9 +250,21 @@ class Build:
         table.to_csv(rf"data\processed\squads_{team_id}.csv",index=False)
         StoreData(table).squad_table()
 
-    def player_stats_table(self):
+    def player_details_table(self):
         final_data = {}
-        pass
+        player = self.json_data['response'][0]['player']
+        final_data[player['id']] = {
+            'name' : player['name'],
+            'firstname' : player['firstname'],
+            'lastname' : player['lastname'],
+            'age' : player['age'],
+            'nationality' : player['nationality'],
+            'height' : player['height'],
+            'weight' : player['weight'],
+            'position' : player['position'],
+            'photo' :player['photo']
+        }
+        
 
     def league_table(self):
         final_data = {}
