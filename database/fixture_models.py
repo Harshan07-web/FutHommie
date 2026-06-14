@@ -87,7 +87,7 @@ class Teams(base):
     founded = Column(VARCHAR(255))
     logo = Column(VARCHAR(255))
     venue_id = Column(Integer,unique=True)
-    league_id = Column(Integer,ForeignKey('team_venues.id'))
+    league_id = Column(Integer,ForeignKey('league_info.league_id'))
     season = Column(Integer)
 
     __table_args__ = (
@@ -97,10 +97,11 @@ class Teams(base):
 class Venues(base):
     __tablename__ = 'team_venues'
 
-    id = Column(Integer, primary_key=True)
+    venue_id = Column(Integer, primary_key=True)
     name = Column(VARCHAR(255))
     address = Column(VARCHAR(255))
     city = Column(VARCHAR(255))
+    country = Column(VARCHAR(255))
     capacity = Column(Integer)
     surface = Column(VARCHAR(255))
     image = Column(VARCHAR(255))
@@ -141,10 +142,6 @@ class PlayerInfo(base):
     photo = Column(VARCHAR(255))
 
 
-class PlayerStats(base):
-    __tablename__ = 'player_stats'
-
-    pass
 
     
 

@@ -230,11 +230,28 @@ class Build:
         table.to_csv(r"data\processed\teams.csv",index=False)
         StoreData(table).team_table()
 
+    def venue_table(self):
+        final_data = {}
+        res = self.json_data['response'][0]
+        final_data[res['id']] = {
+            'name' : res['name'],
+            'address' : res['address'],
+            'city' : res['city'],
+            'country' : res['country'],
+            'capacity' : res['capacity'],
+            'surface' : res['surface'],
+            'image' : res['image']
+        }
+
+        table = self.build_venue_table(final_data)
+        StoreData(table).venue_table()
+
+
     def squad_table(self):
         final_data = {}
-        team = self.json_data['response']['team']['name']
-        team_id = self.json_data['response']['team']['id']
-        players = self.json_data['response']['players']
+        team = self.json_data['response'][0]['team']['name']
+        team_id = self.json_data['response'][0]['team']['id']
+        players = self.json_data['response'][0]['players']
         for player in players:
             final_data[player['id']] = {
                 'name' : player['name'],
@@ -268,7 +285,7 @@ class Build:
 
     def league_table(self):
         final_data = {}
-        league = self.json_data['response']['league']
+        league = self.json_data['response'][0]['league']
         league_id = league['id']
         final_data[league_id] = {
             'league_name' : league['name'],
@@ -323,5 +340,12 @@ class Build:
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index':'league_id'},inplace=True)
+
+        return table
+    
+    def build_venue_table(self,final_data:dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index':'venue_id'},inplace=True)
 
         return table

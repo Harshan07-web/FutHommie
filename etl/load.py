@@ -1,5 +1,5 @@
 from database.database import session
-from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad
+from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues, PlayerInfo, PlayerStats
 
 
 class StoreData:
@@ -226,7 +226,7 @@ class StoreData:
             db = session()
             for index,row in self.table.iterrows():
                 exists = (db.query(Squad)
-                        .filter(Squad.team_id==row['team_id'])
+                        .filter(Squad.player_id==row['player_id'])
                         .first()
                 )
 
@@ -261,6 +261,87 @@ class StoreData:
             raise e
         finally:
             db.close()
+        
+    def league_table(self):
+        try:
+            db = session()
+            for index,row in self.table.iterrows():
+                exists = (db.query(League)
+                        .filter(League.league_id==row['league_id'])
+                        .first()
+                )
+
+                if exists:
+                    exists.league_name = row['league_name']
+                    exists.league_type = row['league_type']
+                    exists.country = row['country']
+                    exists.logo = row['logo']
+
+                else:
+
+                    leagues = League(
+                        league_id = row['league_id'],
+                        league_name = row['league_name'],
+                        league_type = row['league_type'],
+                        country = row['country'],
+                        logo = row['logo']                          
+                    )
+
+                    db.add(leagues)
+            db.commit()
+        
+        except Exception as e:
+            db.rollback()
+            raise e
+        finally:
+            db.close()
+
+    def venue_table(self):
+        try:
+            db = session()
+            for index,row in self.table.iterrows():
+                exists = (db.query(Venues)
+                        .filter(Venues.venue_id==row['venue_id'])
+                        .first()
+                )
+
+                if exists:
+                    exists.name = row['name']
+                    exists.address = row['address']
+                    exists.city = row['city']
+                    exists.country = row['country']
+                    exists.capacity = row['capacity']
+                    exists.surface = row['surface']
+                    exists.image = row['image']
+
+                else:
+
+                    venue = Venues(
+                        name = row['name'],
+                        address = row['address'],
+                        city = row['city'],
+                        country = row['country'],
+                        capacity = row['capacity'],
+                        surface = row['surface'],
+                        image = row['image']              
+                    )
+
+                    db.add(venue)
+            db.commit()
+        
+        except Exception as e:
+            db.rollback()
+            raise e
+        finally:
+            db.close()
+
+    def player_details_table(Self):
+        try:
+            db = session()
+            for index,row in Self.table.iterrows():
+                pass
+        except:
+            pass
 
 
 

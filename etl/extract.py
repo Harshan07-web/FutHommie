@@ -11,6 +11,8 @@ API = os.getenv("FOOTBALL_API")
 url = os.getenv("BASE_URL")
 team_url = os.getenv("TEAM_URL")
 player_url = os.getenv("PLAYER_URL")
+league_url = os.getenv("LEAGUE_URL")
+venue_url = os.getenv("VENUES_URL")
 
 class Fetch:
     def __init__(self,league_id:int,season:int):
@@ -69,7 +71,45 @@ class Fetch:
 
             response = requests.request("GET",url=player_url,headers=header,params=params)
 
-            with open("data/raw/squad_results.json","w") as f:
+            with open(f"data/raw/squad_{team_id}_results.json","w") as f:
+                json.dump(response.json(),f,indent=5)
+
+            return response
+
+        except Exception as e:
+            raise e
+        
+    def fetch_venues(self,venue_id:int):
+        try:
+            param = {
+                'id' : venue_id
+            }
+
+            header = {
+                'x-apisports-key' : API
+            }
+
+            response = requests.request("GET" , url= venue_url,headers=header, params=param)
+            with open(f"data/raw/venue_{venue_id}_results.json","w") as f:
+                json.dump(response.json(),f,indent=5)
+
+            return response
+
+        except Exception as e:
+            raise e
+        
+    def fetch_leagues(self,league_id:int):
+        try:
+            param = {
+                'id' : league_id
+            }
+
+            header = {
+                'x-apisports-key' : API
+            }
+
+            response = requests.request("GET" , url= league_url,headers=header, params=param)
+            with open(f"data/raw/league_{league_id}_results.json","w") as f:
                 json.dump(response.json(),f,indent=5)
 
             return response
@@ -89,7 +129,7 @@ class Fetch:
 
             response = requests.request("GET",url=player_url,headers=header,params=params)
 
-            with open("data/raw/player_details.json","w") as f:
+            with open(f"data/raw/player_{player_id}_details.json","w") as f:
                 json.dump(response.json(),f,indent=5)
 
             return response

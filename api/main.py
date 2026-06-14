@@ -80,17 +80,20 @@ def fetch_team_performance(name: str, season:int, db : Session = Depends(get_db)
 
 @app.get("/fetch_top_teams/{season}/{n}")
 def get_top_teams(season : int , n : int , db : Session = Depends(get_db)):
-    if n>20:
-        raise HTTPException(status_code=500, detail="Only 20 teams available")
+    if n <= 0 or n > 20:
+        raise HTTPException(status_code=400, detail="n must be between 1 and 20")
+
     top_teams = (
         db.query(OverallStanding)
-        .filter(OverallStanding.season==season)
+        .filter(OverallStanding.season == season)
         .order_by(OverallStanding.rank)
         .limit(n)
-    )
+    ).all()
 
     if not top_teams:
-        raise HTTPException(status_code=404,detail="team details doesnt exist")
+        raise HTTPException(status_code=404, detail="team details doesnt exist")
+
+    return top_teams
     
 
 @app.get("/fetch_teams/{season}/{league_id}")
