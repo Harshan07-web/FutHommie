@@ -139,7 +139,6 @@ class PlayerInfo(base):
     weight = Column(VARCHAR(20))
     position = Column(VARCHAR(255))
     photo = Column(VARCHAR(255))
-    birth_country = Column(VARCHAR(255))
 
 
 class PlayerStats(base):
