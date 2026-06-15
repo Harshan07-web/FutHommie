@@ -1,5 +1,5 @@
 from database.database import session
-from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues, PlayerInfo, PlayerStats
+from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues
 
 
 class StoreData:
@@ -317,6 +317,7 @@ class StoreData:
                 else:
 
                     venue = Venues(
+                        venue_id = row['venue_id'],
                         name = row['name'],
                         address = row['address'],
                         city = row['city'],
@@ -335,13 +336,7 @@ class StoreData:
         finally:
             db.close()
 
-    def player_details_table(Self):
-        try:
-            db = session()
-            for index,row in Self.table.iterrows():
-                pass
-        except:
-            pass
+
 
 
 

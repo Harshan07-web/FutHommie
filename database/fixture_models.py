@@ -5,7 +5,7 @@ class OverallStanding(base):
     __tablename__ = "overall_standing"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    team_id = Column(Integer,ForeignKey("team_info.team_id"))
+    team_id = Column(Integer)
     league_id = Column(Integer)
     league = Column(VARCHAR(255))
     season = Column(Integer)
@@ -30,7 +30,7 @@ class HomeStanding(base):
     __tablename__ = 'home_standing'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    team_id = Column(Integer,ForeignKey("team_info.team_id"))
+    team_id = Column(Integer)
     league_id = Column(Integer)
     league = Column(VARCHAR(255))
     season = Column(Integer)
@@ -55,7 +55,7 @@ class AwayStanding(base):
     __tablename__ = 'away_standing'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    team_id = Column(Integer,ForeignKey("team_info.team_id"))
+    team_id = Column(Integer)
     league_id = Column(Integer)
     league = Column(VARCHAR(255))
     season = Column(Integer)
@@ -80,13 +80,13 @@ class Teams(base):
     __tablename__ = 'team_info'
 
     id = Column(Integer,primary_key=True,autoincrement=True)
-    team_id = Column(Integer,unique=True)
+    team_id = Column(Integer)
     team = Column(VARCHAR(255))
     code = Column(VARCHAR(255))
     country = Column(VARCHAR(255))
     founded = Column(VARCHAR(255))
     logo = Column(VARCHAR(255))
-    venue_id = Column(Integer,unique=True)
+    venue_id = Column(Integer)
     league_id = Column(Integer,ForeignKey('league_info.league_id'))
     season = Column(Integer)
 

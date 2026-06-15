@@ -215,6 +215,7 @@ class Build:
         for i in range(tot_teams):
             response = self.json_data['response']
             team = response[i]['team']['name']
+            league_id = self.json_data['parameters']['league']
             final_data[team] = {
                                 'team_id' : response[i]['team']['id'],
                                 'code' : response[i]['team']['code'],
@@ -222,12 +223,12 @@ class Build:
                                 'founded' : response[i]['team']['founded'],
                                 "logo" : response[i]['team']['logo'],
                                 "venue_id" : response[i]['venue']['id'],
-                                "league_id" : self.json_data['parameters']['league'],
+                                "league_id" : league_id,
                                 "season" : self.json_data['parameters']['season']
                                 }
 
         table = self.build_team_table(final_data=final_data)
-        table.to_csv(r"data\processed\teams.csv",index=False)
+        table.to_csv(rf"data\processed\teams_{league_id}.csv",index=False)
         StoreData(table).team_table()
 
     def venue_table(self):
@@ -290,7 +291,7 @@ class Build:
         final_data[league_id] = {
             'league_name' : league['name'],
             'league_type' : league['type'],
-            'country' : self.json_data['response']['country']['name'],
+            'country' : self.json_data['response'][0]['country']['name'],
             'logo' : league['logo']
         }
 
