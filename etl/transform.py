@@ -224,7 +224,6 @@ class Build:
                                 "logo" : response[i]['team']['logo'],
                                 "venue_id" : response[i]['venue']['id'],
                                 "league_id" : league_id,
-                                "season" : self.json_data['parameters']['season']
                                 }
 
         table = self.build_team_table(final_data=final_data)

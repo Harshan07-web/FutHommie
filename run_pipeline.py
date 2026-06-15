@@ -6,7 +6,7 @@ import os
 import logging
 from datetime import date
 
-from database.fixture_models import Teams
+from database.fixture_models import Teams, OverallStanding
 from database.database import session
 
 
@@ -57,6 +57,7 @@ REQUEST_DELAY = 10
 STATE_FILE = r"D:\Football\data\raw\state.json"
 LOG_FILE = r"D:\Football\logs\pipeline.log"
 visited_venues = set()
+visited_teams = set()
 
 # for league_id, league_name in TOP5_LEAGUES.items():
 #     print(f"\nProcessing {league_name}")
@@ -95,6 +96,7 @@ for league_id, league_name in TOP5_LEAGUES.items():
         )
         build = Build(team_data.json())
         build.team_table()
+        print(f"Stored {league_name}")
         time.sleep(10)
 
 db = session()
@@ -116,6 +118,7 @@ try:
         build = Build(venue_data.json())
         build.venue_table()
         visited_venues.add(venue_id)
+        print(f"stored {venue_id}")
         time.sleep(10)
 finally:
     db.close()

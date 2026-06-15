@@ -2,6 +2,7 @@
 __pycache__
 
 data/raw
+data/processed
 pipeline.log
 
 .vscode/

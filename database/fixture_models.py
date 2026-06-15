@@ -88,10 +88,9 @@ class Teams(base):
     logo = Column(VARCHAR(255))
     venue_id = Column(Integer)
     league_id = Column(Integer,ForeignKey('league_info.league_id'))
-    season = Column(Integer)
 
     __table_args__ = (
-        UniqueConstraint('season','team','league_id',name='unique_season_league_team'),
+        UniqueConstraint('team_id','league_id',name='unique_season_league_team'),
     )
 
 class Venues(base):
