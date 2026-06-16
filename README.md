@@ -19,3 +19,6 @@ A data engineering project based on football data that is fetched from the an AP
 - store team stats
 - store individual player stats
 - develop the frontend to display data in a better UI
+
+- Frontend to be developed using ReactJS
+- interactive UI
