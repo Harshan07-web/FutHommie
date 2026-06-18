@@ -27,41 +27,110 @@ def home():
 @app.get("/standings/{season}/{league_id}")
 def get_overall_standings(season: int,league_id :int, db: Session = Depends(get_db)):
     results = (
-        db.query(OverallStanding)
+        db.query(OverallStanding, Teams.logo)
+        .join(
+            Teams,
+            Teams.team_id == OverallStanding.team_id
+        )
         .filter(OverallStanding.season == season)
         .filter(OverallStanding.league_id == league_id)
         .order_by(OverallStanding.rank)
         .all()
     )
-    if not results:
-        raise HTTPException(status_code=404, detail=f"No data found for season {season}")
-    return results
 
-@app.get("/fetch_home_table/{season}")
-def fetch_home_table(season: int, db: Session = Depends(get_db)):
+    if not results:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No data found for season {season}"
+        )
+
+    return [
+        {
+            "team_id": standing.team_id,
+            "rank": standing.rank,
+            "team": standing.team,
+            "played": standing.played,
+            "wins": standing.wins,
+            "draws": standing.draws,
+            "losses": standing.losses,
+            "goal_diff": standing.goal_diff,
+            "points": standing.points,
+            "logo": logo
+        }
+        for standing, logo in results
+    ]
+
+@app.get("/fetch_home_table/{season}/{league_id}")
+def fetch_home_table(season: int, league_id : int , db: Session = Depends(get_db)):
     results = (
-        db.query(HomeStanding)
+        db.query(HomeStanding, Teams.logo)
+        .join(
+            Teams,
+            Teams.team_id == HomeStanding.team_id
+        )
         .filter(HomeStanding.season == season)
+        .filter(HomeStanding.league_id == league_id)
         .order_by(HomeStanding.rank)
         .all()
     )
 
     if not results:
-        raise HTTPException(status_code=400, detail=f"data doesnt exist in the databse for season : {season}")
-    return results
+        raise HTTPException(
+            status_code=404,
+            detail=f"No data found for season {season}"
+        )
 
-@app.get("/fetch_away_table/{season}")
-def fetch_away_table(season: int, db: Session = Depends(get_db)):
+    return [
+        {
+            "team_id": standing.team_id,
+            "rank": standing.rank,
+            "team": standing.team,
+            "played": standing.played,
+            "wins": standing.wins,
+            "draws": standing.draws,
+            "losses": standing.losses,
+            "goal_diff": standing.goal_diff,
+            "points": standing.points,
+            "logo": logo
+        }
+        for standing, logo in results
+    ]
+
+@app.get("/fetch_away_table/{season}/{league_id}")
+def fetch_away_table(season: int,league_id : int, db: Session = Depends(get_db)):
     results = (
-        db.query(AwayStanding)
+        db.query(AwayStanding, Teams.logo)
+        .join(
+            Teams,
+            Teams.team_id == AwayStanding.team_id
+        )
         .filter(AwayStanding.season == season)
+        .filter(AwayStanding.league_id == league_id)
         .order_by(AwayStanding.rank)
         .all()
     )
 
     if not results:
-        raise HTTPException(status_code=400, detail=f"data doesnt exist in the databse for season : {season}")
-    return results
+        raise HTTPException(
+            status_code=404,
+            detail=f"No data found for season {season}"
+        )
+
+    return [
+        {
+            "team_id": standing.team_id,
+            "rank": standing.rank,
+            "team": standing.team,
+            "played": standing.played,
+            "wins": standing.wins,
+            "draws": standing.draws,
+            "losses": standing.losses,
+            "goal_diff": standing.goal_diff,
+            "points": standing.points,
+            "logo": logo
+        }
+        for standing, logo in results
+    ]
 
 @app.get("/fetch_team_performance/{season}/{name}")
 def fetch_team_performance(name: str, season:int, db : Session = Depends(get_db)):
@@ -110,17 +179,17 @@ def get_league_teams(season:int , league_id:int , db : Session = Depends(get_db)
     
     return teams
 
-@app.get("/fetch_team_details/{name}")
-def fetch_team_details(name: str, db : Session = Depends(get_db)):
-    team = name.strip().lower()
+@app.get("/fetch_team_details/{team_id}")
+def fetch_team_details(team_id: int, db : Session = Depends(get_db)):
+
     team_exists = (
         db.query(Teams)
-        .filter(func.lower(Teams.team)==team)
+        .filter(Teams.team_id==team_id)
         .first()
     )
 
     if not team_exists:
-        raise HTTPException(status_code=404, detail=f"Team with the name {name} was not found")
+        raise HTTPException(status_code=404, detail=f"Team with the name {team_id} was not found")
     
     return team_exists
 

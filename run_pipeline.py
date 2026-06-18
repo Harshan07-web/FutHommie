@@ -6,7 +6,7 @@ import os
 import logging
 from datetime import date
 
-from database.fixture_models import Teams, OverallStanding
+from database.fixture_models import Teams, OverallStanding, Venues
 from database.database import session
 
 
@@ -59,30 +59,30 @@ LOG_FILE = r"D:\Football\logs\pipeline.log"
 visited_venues = set()
 visited_teams = set()
 
-# for league_id, league_name in TOP5_LEAGUES.items():
-#     print(f"\nProcessing {league_name}")
-#     for season in SEASONS:
-#         print(f"Season {season}")
-#         fixture_data = (
-#             Fetch(
-#                 league_id=league_id,
-#                 season=season
-#             )
-#             .fetch_fixtures()
-#         )
-#         build = Build(fixture_data.json())
-#         build.points_table()
-#         build.home_points_table()
-#         build.away_points_table()
-#         time.sleep(10)
+for league_id, league_name in TOP5_LEAGUES.items():
+    print(f"\nProcessing {league_name}")
+    for season in SEASONS:
+        print(f"Season {season}")
+        fixture_data = (
+            Fetch(
+                league_id=league_id,
+                season=season
+            )
+            .fetch_fixtures()
+        )
+        build = Build(fixture_data.json())
+        build.points_table()
+        build.home_points_table()
+        build.away_points_table()
+        time.sleep(10)
 
-# for league_id,league_name in COMPETITIONS.items():
-#     print(f"Fetching {league_name} , {league_id} : ")
-#     league_data = Fetch(0,0).fetch_leagues(league_id)
-#     build = Build(league_data.json())
-#     build.league_table()
-#     print(f"Stored {league_name}")
-#     time.sleep(10)
+for league_id,league_name in COMPETITIONS.items():
+    print(f"Fetching {league_name} , {league_id} : ")
+    league_data = Fetch(0,0).fetch_leagues(league_id)
+    build = Build(league_data.json())
+    build.league_table()
+    print(f"Stored {league_name}")
+    time.sleep(10)
 
 for league_id, league_name in TOP5_LEAGUES.items():
     print(f"\nFetching teams for {league_name}")
@@ -102,6 +102,9 @@ for league_id, league_name in TOP5_LEAGUES.items():
 db = session()
 try:
     venue_ids = db.query(Teams.venue_id).all()
+    v_id = db.query(Venues.venue_id).all()
+    for venue in v_id:
+        visited_venues.add(venue[0])
     for venue_tuple in venue_ids:
         venue_id = venue_tuple[0]
         if venue_id in visited_venues:
