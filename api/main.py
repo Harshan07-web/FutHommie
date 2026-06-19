@@ -177,6 +177,13 @@ def fetch_team_details(team_id: int, db : Session = Depends(get_db)):
     
     return team_exists
 
+@app.get("/teams/{league_id}")
+def get_teams_by_league(league_id: int, db: Session = Depends(get_db)):
+
+    teams = db.query(Teams).filter(Teams.league_id == league_id).all()
+
+    return teams
+
 @app.get("/fetch_venue_details/{venue_id}")
 def fetch_venue_details(venue_id : int, db : Session = Depends(get_db)):
     venue = db.query(Venues).filter(Venues.venue_id==venue_id).first()
@@ -186,7 +193,23 @@ def fetch_venue_details(venue_id : int, db : Session = Depends(get_db)):
     
     return venue
 
+@app.get("/all_teams")
+def get_all_teams(db:Session = Depends(get_db)):
+    teams = db.query(Teams).all()
 
+    if not teams:
+        raise HTTPException(status_code=404, detail=f"No teams found to display")
+    
+    return teams
+
+@app.get("/fetch_squads/{team_id}")
+def fetch_squads(team_id : int, db : Session = Depends(get_db)):
+    squads = db.query(Squad).filter(Squad.team_id==team_id).all()
+
+    if not squads:
+        raise HTTPException(status_code=404,detail=f"SQUAD for {team_id} not found")
+    
+    return squads
 
 app.add_middleware(
     CORSMiddleware,
