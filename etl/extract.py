@@ -69,7 +69,7 @@ class Fetch:
                 'x-apisports-key' : API
             }
 
-            response = requests.request("GET",url=player_url,headers=header,params=params)
+            response = requests.request("GET",url=player_url+"/squads",headers=header,params=params)
 
             with open(f"data/raw/squad_{team_id}_results.json","w") as f:
                 json.dump(response.json(),f,indent=5)

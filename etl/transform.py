@@ -333,6 +333,8 @@ class Build:
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index':'player_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
 
         return table
     

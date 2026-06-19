@@ -1,0 +1,58 @@
+.home-container {
+    min-height: 100vh;
+    padding: 40px;
+    background: #eef2f7;
+    color: #1e293b;
+
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.home-title {
+    text-align: center;
+    font-size: 3rem;
+}
+
+.home-subtitle {
+    text-align: center;
+    color: #94a3b8;
+    margin-bottom: 40px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(250px, 1fr)
+    );
+    gap: 25px;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.home-title {
+    text-align: center;
+    font-size: 3rem;
+    color: #0f172a;
+}
+
+.home-subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 40px;
+}

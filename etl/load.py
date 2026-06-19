@@ -213,6 +213,7 @@ class StoreData:
 
     def squad_table(self):
         try:
+            import pandas as pd
             db = session()
             for index,row in self.table.iterrows():
                 exists = (db.query(Squad)

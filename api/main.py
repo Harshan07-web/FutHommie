@@ -5,7 +5,7 @@ from sqlalchemy import func
 from pydantic import BaseModel
 import json
 
-from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams
+from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams, Venues, Squad
 from database.database import get_db
 
 app = FastAPI()
@@ -132,18 +132,17 @@ def fetch_away_table(season: int,league_id : int, db: Session = Depends(get_db))
         for standing, logo in results
     ]
 
-@app.get("/fetch_team_performance/{season}/{name}")
-def fetch_team_performance(name: str, season:int, db : Session = Depends(get_db)):
-    team = name.strip().lower()
+@app.get("/fetch_team_performance/{season}/{team_id}")
+def fetch_team_performance(team_id : int , season:int, db : Session = Depends(get_db)):
     team_exists = (
         db.query(OverallStanding)
         .filter(OverallStanding.season==season)
-        .filter(func.lower(OverallStanding.team)==team)
+        .filter(func.lower(OverallStanding.team_id)==team_id)
         .first()
     )
 
     if not team_exists:
-        raise HTTPException(status_code=404, detail=f"Team with the name {name} was not found")
+        raise HTTPException(status_code=404, detail=f"Team with the name {team_id} was not found")
     
     return team_exists
 
@@ -164,21 +163,6 @@ def get_top_teams(season : int , n : int , db : Session = Depends(get_db)):
 
     return top_teams
     
-
-@app.get("/fetch_teams/{season}/{league_id}")
-def get_league_teams(season:int , league_id:int , db : Session = Depends(get_db)):
-    teams = (
-            db.query(Teams)
-            .filter(Teams.season==season)
-            .filter(Teams.league_id==league_id)
-            .all()
-            )
-    
-    if not teams:
-        raise HTTPException(status_code=500,detail="Internal server error,no teams to fetch")
-    
-    return teams
-
 @app.get("/fetch_team_details/{team_id}")
 def fetch_team_details(team_id: int, db : Session = Depends(get_db)):
 
@@ -192,6 +176,16 @@ def fetch_team_details(team_id: int, db : Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Team with the name {team_id} was not found")
     
     return team_exists
+
+@app.get("/fetch_venue_details/{venue_id}")
+def fetch_venue_details(venue_id : int, db : Session = Depends(get_db)):
+    venue = db.query(Venues).filter(Venues.venue_id==venue_id).first()
+
+    if not venue:
+        raise HTTPException(status_code=404, detail=f"{venue_id} not found !")
+    
+    return venue
+
 
 
 app.add_middleware(
