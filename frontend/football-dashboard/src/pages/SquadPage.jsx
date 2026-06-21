@@ -7,18 +7,38 @@ function SquadPage() {
     const { teamId } = useParams();
 
     const [players, setPlayers] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchSquad();
-    }, []);
+    }, [teamId]);
 
     async function fetchSquad() {
 
-        const response = await api.get(
-            `/fetch_squads/${teamId}`
-        );
+        try {
 
-        setPlayers(response.data);
+            setLoading(true);
+
+            const response = await api.get(
+                `/fetch_squads/${teamId}`
+            );
+
+            setPlayers(response.data);
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+            setPlayers([]);
+
+        }
+
+        finally {
+
+            setLoading(false);
+
+        }
     }
 
     return (
@@ -26,6 +46,12 @@ function SquadPage() {
         <div>
 
             <h1>Squad</h1>
+
+            {loading ? (
+                <h2>Loading...</h2>
+            ) : players.length === 0 ? (
+                <h2>No squad data found.</h2>
+            ) : (
 
             <div className="player-grid">
 
@@ -54,6 +80,8 @@ function SquadPage() {
                 ))}
 
             </div>
+
+            )}
 
         </div>
     );

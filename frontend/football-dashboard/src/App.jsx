@@ -7,6 +7,8 @@ import VenuePage from "./pages/VenuePage";
 import TeamsPage from "./pages/TeamsPage";
 import PlayersPage from "./pages/PlayersPage";
 import SquadPage from "./pages/SquadPage";
+import LeaguesPage from "./pages/LeaguesPage";
+import LeaguePage from "./pages/LeaguePage";
 
 function App() {
 
@@ -48,6 +50,16 @@ function App() {
             <Route
                 path="/squad/:teamId"
                 element={<SquadPage />}
+            />
+
+            <Route
+                path="/leagues"
+                element={<LeaguesPage />}
+            />
+
+            <Route
+                path="/league/:leagueId"
+                element={<LeaguePage />}
             />
 
         </Routes>

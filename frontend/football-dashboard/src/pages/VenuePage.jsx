@@ -12,7 +12,7 @@ function VenuePage() {
     useEffect(() => {
         fetchVenue();
         fetchTeam();
-    },[]);
+    },[venueId, teamId]);
 
     async function fetchTeam() {
 
@@ -59,11 +59,11 @@ function VenuePage() {
 
             <img
                 src={team.logo}
-                alt={team.name}
+                alt={team.team}
             />
 
             <h1>{venue.name}</h1>
-            <h1>{team.name}</h1>
+            <h1>{team.team}</h1>
             
             <p>Address : {venue.address}</p>
 

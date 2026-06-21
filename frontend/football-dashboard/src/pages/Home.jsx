@@ -29,7 +29,7 @@ function Home() {
         },
         {
             title: "Competitions",
-            route: "/competitions"
+            route: "/leagues"
         }
     ];
 

@@ -30,7 +30,6 @@ function StandingsTable({ standings }) {
                         
                         <td
                             onClick={() => {
-                                console.log(team.team_id);
                                 navigate(`/team/${team.team_id}`);
                             }}
                             style={{ cursor: "pointer" }}

@@ -12,7 +12,7 @@ function TeamPage() {
 
     useEffect(() => {
         fetchTeam();
-    }, []);
+    }, [teamId]);
 
     async function fetchTeam() {
 
@@ -54,8 +54,7 @@ function TeamPage() {
             <p>Code: {team.code}</p>
 
             <p  onClick={() => {
-                                console.log(team.venue_id);
-                                navigate(`/venues/${team.venue_id}/${team.team_id}`);;
+                                navigate(`/venues/${team.venue_id}/${team.team_id}`);
                             }}
                             style={{ cursor: "pointer" }}>
                                 Venue ID: {team.venue_id}</p>
