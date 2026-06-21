@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import api from "../api/footballApi";
 import StandingsTable from "../components/StandingsTable";
 
-import "../styles/standings.css";
-
 function Standings() {
 
     const [standings, setStandings] = useState([]);
@@ -89,14 +87,16 @@ async function fetchStandings() {
 
     return (
 
-        <div className="dashboard">
+        <div className="page">
 
-            <div className="header">
+            <div className="detail-header">
 
-                <img
-                    src={selectedLeague.logo}
-                    alt={selectedLeague.name}
-                />
+                <div className="badge badge-lg">
+                    <img
+                        src={selectedLeague.logo}
+                        alt={selectedLeague.name}
+                    />
+                </div>
 
                 <h1>
                     {selectedLeague.name}
@@ -149,24 +149,25 @@ async function fetchStandings() {
                     ))}
 
                 </select>
-                <div className="table-buttons">
+
+                <div className="btn-group">
 
                     <button
-                        className={tableType === "overall" ? "active-btn" : ""}
+                        className={tableType === "overall" ? "active" : ""}
                         onClick={() => setTableType("overall")}
                     >
                         Overall
                     </button>
 
                     <button
-                        className={tableType === "home" ? "active-btn" : ""}
+                        className={tableType === "home" ? "active" : ""}
                         onClick={() => setTableType("home")}
                     >
                         Home
                     </button>
 
                     <button
-                        className={tableType === "away" ? "active-btn" : ""}
+                        className={tableType === "away" ? "active" : ""}
                         onClick={() => setTableType("away")}
                     >
                         Away
@@ -177,7 +178,7 @@ async function fetchStandings() {
             </div>
 
             {loading ? (
-                <h2>Loading...</h2>
+                <p className="state">Loading...</p>
             ) : (
                 <StandingsTable
                     standings={standings}

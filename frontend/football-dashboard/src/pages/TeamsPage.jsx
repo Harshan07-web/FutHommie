@@ -46,43 +46,48 @@ function TeamsPage() {
 
             <h1>Teams</h1>
 
-            <select
-                value={league}
-                onChange={(e) =>
-                    setLeague(Number(e.target.value))
-                }
-            >
+            <div className="controls">
 
-                {leagues.map((league) => (
+                <select
+                    value={league}
+                    onChange={(e) =>
+                        setLeague(Number(e.target.value))
+                    }
+                >
 
-                    <option
-                        key={league.id}
-                        value={league.id}
-                    >
-                        {league.name}
-                    </option>
+                    {leagues.map((league) => (
 
-                ))}
+                        <option
+                            key={league.id}
+                            value={league.id}
+                        >
+                            {league.name}
+                        </option>
 
-            </select>
+                    ))}
 
-            <div className="team-grid">
+                </select>
+
+            </div>
+
+            <div className="grid">
 
                 {teams.map((team) => (
 
                     <div
                         key={team.team_id}
-                        className="team-card"
+                        className="card"
                         onClick={() =>
                             navigate(`/team/${team.team_id}`)
                         }
                     >
 
-                        <img
-                            src={team.logo}
-                            alt={team.team}
-                            width="80"
-                        />
+                        <div className="badge badge-lg">
+                            <img
+                                src={team.logo}
+                                alt={team.team}
+                            />
+                        </div>
 
                         <h3>{team.team}</h3>
 

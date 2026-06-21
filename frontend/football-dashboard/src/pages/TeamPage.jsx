@@ -33,31 +33,53 @@ function TeamPage() {
     }
 
     if (!team) {
-        return <h1>Loading...</h1>;
+        return <p className="state">Loading...</p>;
     }
 
     return (
-        <div>
+        <div className="page">
 
-            <img
-                src={team.logo}
-                alt={team.team}
-                width="120"
-            />
+            <div className="detail-header">
 
-            <h1>{team.team}</h1>
+                <div className="badge badge-lg">
+                    <img
+                        src={team.logo}
+                        alt={team.team}
+                    />
+                </div>
 
-            <p>Country: {team.country}</p>
+                <h1>{team.team}</h1>
 
-            <p>Founded: {team.founded}</p>
+            </div>
 
-            <p>Code: {team.code}</p>
+            <dl className="meta-list">
 
-            <p  onClick={() => {
-                                navigate(`/venues/${team.venue_id}/${team.team_id}`);
-                            }}
-                            style={{ cursor: "pointer" }}>
-                                Venue ID: {team.venue_id}</p>
+                <div className="meta-row">
+                    <dt>Country</dt>
+                    <dd>{team.country}</dd>
+                </div>
+
+                <div className="meta-row">
+                    <dt>Founded</dt>
+                    <dd>{team.founded}</dd>
+                </div>
+
+                <div className="meta-row">
+                    <dt>Code</dt>
+                    <dd>{team.code}</dd>
+                </div>
+
+                <div
+                    className="meta-row link"
+                    onClick={() => {
+                        navigate(`/venues/${team.venue_id}/${team.team_id}`);
+                    }}
+                >
+                    <dt>Venue</dt>
+                    <dd>View venue →</dd>
+                </div>
+
+            </dl>
 
         </div>
     );

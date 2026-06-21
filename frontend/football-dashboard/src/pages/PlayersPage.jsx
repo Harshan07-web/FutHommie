@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/footballApi";
-import "../styles/teams.css";
 
 function PlayersPage() {
 
@@ -47,45 +46,50 @@ function PlayersPage() {
 
             <h1>Players</h1>
 
-            <select
-                value={league}
-                onChange={(e) =>
-                    setLeague(Number(e.target.value))
-                }
-            >
+            <p className="page-subtitle">Select a team to view its squad</p>
 
-                {leagues.map((league) => (
+            <div className="controls">
 
-                    <option
-                        key={league.id}
-                        value={league.id}
-                    >
-                        {league.name}
-                    </option>
+                <select
+                    value={league}
+                    onChange={(e) =>
+                        setLeague(Number(e.target.value))
+                    }
+                >
 
-                ))}
+                    {leagues.map((league) => (
 
-            </select>
+                        <option
+                            key={league.id}
+                            value={league.id}
+                        >
+                            {league.name}
+                        </option>
 
-            <h2>Select Team</h2>
+                    ))}
 
-            <div className="team-grid">
+                </select>
+
+            </div>
+
+            <div className="grid">
 
                 {teams.map((team) => (
 
                     <div
                         key={team.team_id}
-                        className="team-card"
+                        className="card"
                         onClick={() =>
                             navigate(`/squad/${team.team_id}`)
                         }
                     >
 
-                        <img
-                            src={team.logo}
-                            alt={team.team}
-                            width="80"
-                        />
+                        <div className="badge badge-lg">
+                            <img
+                                src={team.logo}
+                                alt={team.team}
+                            />
+                        </div>
 
                         <h3>{team.team}</h3>
 

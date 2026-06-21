@@ -47,33 +47,64 @@ function VenuePage() {
     }
 
     if (!venue || !team) {
-        return <h1>Loading...</h1>;
+        return <p className="state">Loading...</p>;
     }
-    
+
     return(
-        <div>
+        <div className="page">
+
             <img
+                className="venue-photo"
                 src={venue.image}
                 alt={venue.name}
             />
 
-            <img
-                src={team.logo}
-                alt={team.team}
-            />
+            <div className="detail-header">
 
-            <h1>{venue.name}</h1>
-            <h1>{team.team}</h1>
-            
-            <p>Address : {venue.address}</p>
+                <div className="badge badge-md">
+                    <img
+                        src={team.logo}
+                        alt={team.team}
+                    />
+                </div>
 
-            <p>city : {venue.city} </p>
+                <h1>{venue.name}</h1>
 
-            <p>Country : {venue.country}</p>
+            </div>
 
-            <p>Capacity: {venue.capacity}</p>
+            <dl className="meta-list">
 
-            <p>Surface : {venue.surface}</p>
+                <div className="meta-row">
+                    <dt>Team</dt>
+                    <dd>{team.team}</dd>
+                </div>
+
+                <div className="meta-row">
+                    <dt>Address</dt>
+                    <dd>{venue.address}</dd>
+                </div>
+
+                <div className="meta-row">
+                    <dt>City</dt>
+                    <dd>{venue.city}</dd>
+                </div>
+
+                <div className="meta-row">
+                    <dt>Country</dt>
+                    <dd>{venue.country}</dd>
+                </div>
+
+                <div className="meta-row">
+                    <dt>Capacity</dt>
+                    <dd>{venue.capacity}</dd>
+                </div>
+
+                <div className="meta-row">
+                    <dt>Surface</dt>
+                    <dd>{venue.surface}</dd>
+                </div>
+
+            </dl>
 
         </div>
     )

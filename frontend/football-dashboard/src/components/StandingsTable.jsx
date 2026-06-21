@@ -5,6 +5,8 @@ function StandingsTable({ standings }) {
     const navigate = useNavigate();
 
     return (
+        <div className="table-wrap">
+
         <table>
 
             <thead>
@@ -21,48 +23,51 @@ function StandingsTable({ standings }) {
             </thead>
 
             <tbody>
-
                 {standings.map((team) => (
-
                     <tr key={team.team_id}>
-
-                        <td>{team.rank}</td>
-                        
+                        <td className="num">{team.rank}</td>
                         <td
                             onClick={() => {
                                 navigate(`/team/${team.team_id}`);
                             }}
-                            style={{ cursor: "pointer" }}
                         >
 
                             <div className="team-cell">
-
-                                <img
-                                    src={team.logo}
-                                    alt={team.team}
-                                    className="team-logo"
-                                />
+                                <div className="badge badge-sm">
+                                    <img
+                                        src={team.logo}
+                                        alt={team.team}
+                                    />
+                                </div>
 
                                 {team.team}
-
                             </div>
-
                         </td>
 
-                        <td>{team.played}</td>
-                        <td>{team.wins}</td>
-                        <td>{team.draws}</td>
-                        <td>{team.losses}</td>
-                        <td>{team.goal_diff}</td>
-                        <td>{team.points}</td>
+                        <td className="num">{team.played}</td>
+                        <td className="num">{team.wins}</td>
+                        <td className="num">{team.draws}</td>
+                        <td className="num">{team.losses}</td>
+
+                        <td className={
+                            "num " + (team.goal_diff > 0
+                                ? "gd-positive"
+                                : team.goal_diff < 0
+                                ? "gd-negative"
+                                : "")
+                        }>
+                            {team.goal_diff > 0 ? `+${team.goal_diff}` : team.goal_diff}
+                        </td>
+
+                        <td className="num">{team.points}</td>
 
                     </tr>
 
                 ))}
 
             </tbody>
-
         </table>
+        </div>
     );
 }
 

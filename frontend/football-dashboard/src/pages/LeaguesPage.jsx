@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/footballApi";
-import "../styles/teams.css";
 
 function LeaguesPage() {
 
@@ -49,32 +48,33 @@ function LeaguesPage() {
             <h1>Competitions</h1>
 
             {loading ? (
-                <h2>Loading...</h2>
+                <p className="state">Loading...</p>
             ) : leagues.length === 0 ? (
-                <h2>No leagues found.</h2>
+                <p className="state">No leagues found.</p>
             ) : (
 
-            <div className="team-grid">
+            <div className="grid">
 
                 {leagues.map((league) => (
 
                     <div
                         key={league.league_id}
-                        className="team-card"
+                        className="card"
                         onClick={() =>
                             navigate(`/league/${league.league_id}`)
                         }
                     >
 
-                        <img
-                            src={league.logo}
-                            alt={league.league_name}
-                            width="80"
-                        />
+                        <div className="badge badge-lg">
+                            <img
+                                src={league.logo}
+                                alt={league.league_name}
+                            />
+                        </div>
 
                         <h3>{league.league_name}</h3>
 
-                        <p>{league.country}</p>
+                        <p className="page-subtitle">{league.country}</p>
 
                     </div>
 

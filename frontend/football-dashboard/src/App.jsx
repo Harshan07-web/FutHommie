@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
+import TopBar from "./components/TopBar";
+
 import Home from "./pages/Home";
 import Standings from "./pages/Standings";
 import TeamPage from "./pages/TeamPage";
@@ -13,9 +15,9 @@ import LeaguePage from "./pages/LeaguePage";
 function App() {
 
     return (
-
+        <>
+        <TopBar />
         <Routes>
-
             <Route
                 path="/"
                 element={<Home />}
@@ -61,9 +63,8 @@ function App() {
                 path="/league/:leagueId"
                 element={<LeaguePage />}
             />
-
         </Routes>
-
+        </>
     );
 }
 

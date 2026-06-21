@@ -43,37 +43,37 @@ function SquadPage() {
 
     return (
 
-        <div>
+        <div className="page">
 
             <h1>Squad</h1>
 
             {loading ? (
-                <h2>Loading...</h2>
+                <p className="state">Loading...</p>
             ) : players.length === 0 ? (
-                <h2>No squad data found.</h2>
+                <p className="state">No squad data found.</p>
             ) : (
 
-            <div className="player-grid">
+            <div className="grid">
 
                 {players.map(player => (
 
                     <div
                         key={player.player_id}
-                        className="player-card"
+                        className="card"
                     >
 
-                        <img
-                            src={player.photo}
-                            alt={player.name}
-                        />
+                        <div className="badge badge-lg">
+                            <img
+                                src={player.photo}
+                                alt={player.name}
+                            />
+                        </div>
 
-                        <h4>{player.name}</h4>
+                        <h3>{player.name}</h3>
 
-                        <p>{player.position}</p>
+                        <p className="page-subtitle">{player.position}</p>
 
-                        <p>#{player.number}</p>
-
-                        <p>{player.age} yrs</p>
+                        <p className="num">#{player.number} · {player.age} yrs</p>
 
                     </div>
 

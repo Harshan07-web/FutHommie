@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../api/footballApi";
-import "../styles/teams.css";
 
 function LeaguePage() {
 
@@ -65,54 +64,66 @@ function LeaguePage() {
     }
 
     if (!league) {
-        return <h1>Loading...</h1>;
+        return <p className="state">Loading...</p>;
     }
 
     return (
 
         <div className="page">
 
-            <div className="header">
+            <div className="detail-header">
 
-                <img
-                    src={league.logo}
-                    alt={league.league_name}
-                    width="80"
-                />
+                <div className="badge badge-lg">
+                    <img
+                        src={league.logo}
+                        alt={league.league_name}
+                    />
+                </div>
 
                 <h1>{league.league_name}</h1>
 
             </div>
 
-            <p>Type: {league.league_type}</p>
+            <dl className="meta-list">
 
-            <p>Country: {league.country}</p>
+                <div className="meta-row">
+                    <dt>Type</dt>
+                    <dd>{league.league_type}</dd>
+                </div>
+
+                <div className="meta-row">
+                    <dt>Country</dt>
+                    <dd>{league.country}</dd>
+                </div>
+
+            </dl>
 
             <h2>Teams</h2>
 
             {loading ? (
-                <h2>Loading...</h2>
+                <p className="state">Loading...</p>
             ) : teams.length === 0 ? (
-                <h2>No teams found.</h2>
+                <p className="state">No teams found.</p>
             ) : (
 
-            <div className="team-grid">
+            <div className="grid">
 
                 {teams.map((team) => (
 
                     <div
                         key={team.team_id}
-                        className="team-card"
+                        className="card"
                         onClick={() =>
                             navigate(`/team/${team.team_id}`)
                         }
                     >
 
-                        <img
-                            src={team.logo}
-                            alt={team.team}
-                            width="80"
-                        />
+                        <div className="badge badge-lg">
+                            <img
+                                src={team.logo}
+                                alt={team.team}
+                            />
+                        </div>
 
                         <h3>{team.team}</h3>
 
