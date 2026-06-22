@@ -212,10 +212,12 @@ class Build:
     def team_table(self):
         final_data = {}
         tot_teams = self.json_data['results']
+        league_id = self.json_data['parameters']['league']
+        season = self.json_data['parameters']['season']
         for i in range(tot_teams):
             response = self.json_data['response']
             team = response[i]['team']['name']
-            league_id = self.json_data['parameters']['league']
+            
             final_data[team] = {
                                 'team_id' : response[i]['team']['id'],
                                 'code' : response[i]['team']['code'],
@@ -223,6 +225,7 @@ class Build:
                                 'founded' : response[i]['team']['founded'],
                                 "logo" : response[i]['team']['logo'],
                                 "venue_id" : response[i]['venue']['id'],
+                                "season" : season,
                                 "league_id" : league_id,
                                 }
 
@@ -316,6 +319,8 @@ class Build:
         table.sort_values(["points", "goal diff", "goals"],ascending=False,inplace=True)
         table.reset_index(inplace=True,drop=True)
         table.insert(0, "rank", range(1, len(table) + 1))
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
 
         return table
 
@@ -326,6 +331,8 @@ class Build:
         table.reset_index(inplace=True)
         table.rename(columns={'index':'teams'},inplace=True)
         table.reset_index(inplace=True,drop=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
 
         return table
     
@@ -342,6 +349,8 @@ class Build:
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index':'league_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
 
         return table
     
@@ -349,5 +358,7 @@ class Build:
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index':'venue_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
 
         return table

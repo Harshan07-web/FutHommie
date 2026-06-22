@@ -10,11 +10,20 @@ function LeaguePage() {
     const [league, setLeague] = useState(null);
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [season, setSeason] = useState(null);
+
+    const seasons = [2022, 2023, 2024];
 
     useEffect(() => {
         fetchLeague();
-        fetchTeams();
+        fetchTeams(null);
     }, [leagueId]);
+
+    useEffect(() => {
+        if (season !== null) {
+            fetchTeams(season);
+        }
+    }, [season]);
 
     async function fetchLeague() {
 
@@ -35,17 +44,26 @@ function LeaguePage() {
         }
     }
 
-    async function fetchTeams() {
+    async function fetchTeams(selectedSeason) {
 
         try {
 
             setLoading(true);
 
-            const response = await api.get(
-                `/teams/${leagueId}`
-            );
+            let response;
 
-            setTeams(response.data);
+            if (selectedSeason) {
+                response = await api.get(
+                    `/fetch_teams/${leagueId}/${selectedSeason}`
+                );
+                setTeams(response.data);
+
+            } else {
+                response = await api.get(
+                    `/teams/${leagueId}`
+                );
+                setTeams(response.data);
+            }
 
         }
 
@@ -80,25 +98,40 @@ function LeaguePage() {
                     />
                 </div>
 
-                <h1>{league.league_name}</h1>
+                <div>
+
+                    <h1>{league.league_name}</h1>
+
+                    <p className="page-subtitle">{league.country} · {league.league_type}</p>
+
+                </div>
 
             </div>
 
-            <dl className="meta-list">
+            <div className="controls">
 
-                <div className="meta-row">
-                    <dt>Type</dt>
-                    <dd>{league.league_type}</dd>
-                </div>
+                <select
+                    value={season ?? ""}
+                    onChange={(e) =>
+                        setSeason(e.target.value ? Number(e.target.value) : null)
+                    }
+                >
 
-                <div className="meta-row">
-                    <dt>Country</dt>
-                    <dd>{league.country}</dd>
-                </div>
+                    <option value="">All seasons</option>
 
-            </dl>
+                    {seasons.map((s) => (
 
-            <h2>Teams</h2>
+                        <option key={s} value={s}>
+                            {s}
+                        </option>
+
+                    ))}
+
+                </select>
+
+            </div>
+
+            <h2>Teams {season ? `· ${season}` : ""}</h2>
 
             {loading ? (
                 <p className="state">Loading...</p>

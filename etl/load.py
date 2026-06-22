@@ -182,7 +182,8 @@ class StoreData:
             db = session()
             for index,row in self.table.iterrows():
                 exists = (db.query(Teams)
-                        .filter(Teams.team_id==row['team_id'])
+                        .filter(Teams.league_id==row['league_id'])
+                        .filter(Teams.season==row['season'])
                         .first()
                 )
 
@@ -199,6 +200,7 @@ class StoreData:
                     founded = row["founded"],
                     league_id = row["league_id"],
                     logo = row["logo"],
+                    season = row['season'],
                     venue_id = row["venue_id"]                   
                     )
 

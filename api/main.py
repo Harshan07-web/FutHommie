@@ -202,6 +202,15 @@ def get_all_teams(db:Session = Depends(get_db)):
     
     return teams
 
+@app.get("/fetch_teams/{league_id}/{season}")
+def fetch_season_teams(league_id : int , season : int , db : Session = Depends(get_db)):
+    teams = db.query(Teams).filter(Teams.league_id==league_id).filter(Teams.season==season).all()
+
+    if not teams:
+        raise HTTPException(status_code=404, detail=f"No teams found to display")
+    
+    return teams
+
 @app.get("/fetch_squads/{team_id}")
 def fetch_squads(team_id : int, db : Session = Depends(get_db)):
     squads = db.query(Squad).filter(Squad.team_id==team_id).all()

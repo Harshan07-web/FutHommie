@@ -58,95 +58,107 @@ STATE_FILE = r"D:\Football\data\raw\state.json"
 LOG_FILE = r"D:\Football\logs\pipeline.log"
 visited_venues = set()
 visited_teams = set()
+visited_leagues = set()
 
-for league_id, league_name in TOP5_LEAGUES.items():
-    print(f"\nProcessing {league_name}")
-    for season in SEASONS:
-        print(f"Season {season}")
-        fixture_data = (
-            Fetch(
-                league_id=league_id,
-                season=season
+def run_fixture_fetch():
+    for league_id, league_name in TOP5_LEAGUES.items():
+        print(f"\nProcessing {league_name}")
+        for season in SEASONS:
+            print(f"Season {season}")
+            fixture_data = (
+                Fetch(
+                    league_id=league_id,
+                    season=season
+                )
+                .fetch_fixtures()
             )
-            .fetch_fixtures()
-        )
-        build = Build(fixture_data.json())
-        build.points_table()
-        build.home_points_table()
-        build.away_points_table()
-        time.sleep(10)
+            build = Build(fixture_data.json())
+            build.points_table()
+            build.home_points_table()
+            build.away_points_table()
+            time.sleep(10)
 
-for league_id,league_name in COMPETITIONS.items():
-    print(f"Fetching {league_name} , {league_id} : ")
-    league_data = Fetch(0,0).fetch_leagues(league_id)
-    build = Build(league_data.json())
-    build.league_table()
-    print(f"Stored {league_name}")
-    time.sleep(10)
-
-for league_id, league_name in TOP5_LEAGUES.items():
-    print(f"\nFetching teams for {league_name}")
-    for season in SEASONS:
-        team_data = (
-            Fetch(
-                league_id=league_id,
-                season=season
-            )
-            .fetch_teams()
-        )
-        build = Build(team_data.json())
-        build.team_table()
+def run_league_info_fetch():
+    for league_id,league_name in COMPETITIONS.items():
+        print(f"Fetching {league_name} , {league_id} : ")
+        league_data = Fetch(0,0).fetch_leagues(league_id)
+        build = Build(league_data.json())
+        build.league_table()
         print(f"Stored {league_name}")
         time.sleep(10)
 
-db = session()
-try:
-    venue_ids = db.query(Teams.venue_id).all()
-    v_id = db.query(Venues.venue_id).all()
-    for venue in v_id:
-        visited_venues.add(venue[0])
-    for venue_tuple in venue_ids:
-        venue_id = venue_tuple[0]
-        if venue_id in visited_venues:
+def run_team_info_fetch():
+    for league_id, league_name in COMPETITIONS.items():
+        if league_id in visited_leagues:
             continue
-
-        print(f"Fetching venue {venue_id}")
-        venue_data = (
-            Fetch(
-                league_id=0,
-                season=0
+        print(f"\nFetching teams for {league_name}")
+        for season in SEASONS:
+            team_data = (
+                Fetch(
+                    league_id=league_id,
+                    season=season
+                )
+                .fetch_teams()
             )
-            .fetch_venues(venue_id)
-        )
-        build = Build(venue_data.json())
-        build.venue_table()
-        visited_venues.add(venue_id)
-        print(f"stored {venue_id}")
-        time.sleep(10)
-finally:
-    db.close()
-
-db = session()
-try:
-    team_ids = db.query(Teams.team_id).all()
-    existing_squad = db.query(Squad.team_id).distinct().all()
-    for i in existing_squad:
-        visited_teams.add(i[0])
-    for team in team_ids:
-        team_id = team[0]
-        if team_id not in visited_teams:
-            print(f"Fetching squad for {team_id}")
-            response = Fetch(0,0).fetch_squad(team_id=team_id)
-            Build(response.json()).squad_table()
-            visited_teams.add(team_id)
-            print(f"Store squads for {team_id}")
+            build = Build(team_data.json())
+            build.team_table()
+            print(f"Stored {league_name} for {season}")
+            visited_leagues.add(league_id)
             time.sleep(10)
-        else:
-            print(f"{team_id} in visited teams, skipping..")
-except Exception as e:
-    db.rollback()
-    raise e
 
-finally:
-    db.close()
+def run_venues_fetch():
+    db = session()
+    try:
+        venue_ids = db.query(Teams.venue_id).all()
+        v_id = db.query(Venues.venue_id).all()
+        for venue in v_id:
+            visited_venues.add(venue[0])
+        for venue_tuple in venue_ids:
+            venue_id = venue_tuple[0]
+            if venue_id in visited_venues:
+                continue
+
+            print(f"Fetching venue {venue_id}")
+            venue_data = (
+                Fetch(
+                    league_id=0,
+                    season=0
+                )
+                .fetch_venues(venue_id)
+            )
+            build = Build(venue_data.json())
+            build.venue_table()
+            visited_venues.add(venue_id)
+            print(f"stored {venue_id}")
+            time.sleep(10)
+    finally:
+        db.close()
+
+def run_squad_fetch():
+    db = session()
+    try:
+        team_ids = db.query(Teams.team_id).all()
+        existing_squad = db.query(Squad.team_id).distinct().all()
+        for i in existing_squad:
+            visited_teams.add(i[0])
+        for team in team_ids:
+            team_id = team[0]
+            if team_id not in visited_teams:
+                print(f"Fetching squad for {team_id}")
+                response = Fetch(0,0).fetch_squad(team_id=team_id)
+                Build(response.json()).squad_table()
+                visited_teams.add(team_id)
+                print(f"Store squads for {team_id}")
+                time.sleep(10)
+            else:
+                print(f"{team_id} in visited teams, skipping..")
+    except Exception as e:
+        db.rollback()
+        raise e
+
+    finally:
+        db.close()
+
+if __name__ == '__main__':
+    run_team_info_fetch()
     
