@@ -284,6 +284,11 @@ class Build:
             'position' : player['position'],
             'photo' :player['photo']
         }
+
+        table = self.build_player_details_table(final_data=final_data)
+        table.to_csv(rf"data\processed\player_{player['id']}.csv",index=False)
+        StoreData(table).player_table()
+
         
 
     def league_table(self):
@@ -349,6 +354,15 @@ class Build:
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index':'league_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
+
+        return table
+    
+    def build_player_details_table(self,final_data:dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index':'player_id'},inplace=True)
         table = table.astype(object)
         table = table.where(pd.notnull(table), None)
 

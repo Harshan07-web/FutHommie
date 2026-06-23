@@ -1,5 +1,5 @@
 from database.database import session
-from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues
+from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues, PlayerInfo
 
 
 class StoreData:
@@ -328,6 +328,40 @@ class StoreData:
             raise e
         finally:
             db.close()
+
+    def player_table(self):
+        try:
+            db = session()
+            for index,row in self.table.iterrows():
+                exists = db.query(PlayerInfo).filter(PlayerInfo.player_id==row['player_id']).first()
+
+                if exists:
+                    continue
+
+                else:
+                    player = PlayerInfo(
+                        player_id = row['player_id'],
+                        name = row['name'],
+                        firstname = row['firstname'],
+                        lastname = row['lastname'],
+                        age = row['age'],
+                        nationality = row['nationality'],
+                        height = row['height'],
+                        weight = row['weight'],
+                        position = row['position'],
+                        photo = row['photo']
+                    )
+
+                    db.add(player)
+            db.commit()
+        
+        except Exception as e:
+            db.rollback()
+            raise e
+        finally:
+            db.close()
+                
+
 
 
 

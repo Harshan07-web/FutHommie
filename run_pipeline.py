@@ -6,7 +6,7 @@ import os
 import logging
 from datetime import date
 
-from database.fixture_models import Teams, OverallStanding, Venues, Squad
+from database.fixture_models import Teams, OverallStanding, Venues, Squad, PlayerInfo
 from database.database import session
 
 
@@ -59,6 +59,7 @@ LOG_FILE = r"D:\Football\logs\pipeline.log"
 visited_venues = set()
 visited_teams = set()
 visited_leagues = set()
+visited_players = set()
 
 def run_fixture_fetch():
     for league_id, league_name in TOP5_LEAGUES.items():
@@ -159,6 +160,29 @@ def run_squad_fetch():
     finally:
         db.close()
 
+def run_pplayer_details_fetch():
+    db = session()
+    try:
+        player_ids = db.query(Squad.player_id).all()
+        existing_player = db.query(PlayerInfo.player_id).all()
+        for player in existing_player:
+            visited_players.add(player[0])
+        for player in player_ids:
+            player_id = player[0]
+            if player_id in visited_players:
+                print(f"player {player_id} already exists")
+                continue
+            print(f"fetching player detail for {player_id}")
+            response = Fetch(0,0).fetch_player_details(player_id=player_id)
+            Build(response.json()).player_details_table()
+            print(f"Stored player {player_id}")
+            time.sleep(10)
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        db.close()
+
 if __name__ == '__main__':
-    run_team_info_fetch()
+    run_pplayer_details_fetch()
     

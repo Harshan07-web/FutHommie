@@ -132,7 +132,8 @@ class League(base):
 class PlayerInfo(base):
     __tablename__ = 'player_info'
 
-    player_id = Column(Integer, primary_key=True)
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    player_id = Column(Integer)
     name = Column(VARCHAR(255))
     firstname = Column(VARCHAR(255))
     lastname = Column(VARCHAR(255))
