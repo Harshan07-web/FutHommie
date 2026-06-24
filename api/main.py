@@ -241,7 +241,9 @@ def featch_league(league_id : int, db : Session = Depends(get_db)):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+    "http://localhost:5173",
+    "https://your-app.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
