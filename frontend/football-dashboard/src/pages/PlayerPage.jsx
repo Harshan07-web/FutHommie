@@ -5,10 +5,15 @@ import api from "../api/footballApi";
 function PlayerPage() {
 
     const { playerId } = useParams();
-    const { state } = useLocation();   // { name, team, team_id, number, position, photo } from SquadPage
+    const { state } = useLocation();
     const navigate = useNavigate();
 
     const [player, setPlayer] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+
+    // squad state passed from SquadPage — only used for team/number (not in PlayerInfo)
+    const squad = state ?? {};
 
     useEffect(() => {
         fetchPlayer();
@@ -18,30 +23,33 @@ function PlayerPage() {
 
         try {
 
+            setLoading(true);
+            setError(false);
+
             const response = await api.get(
                 `/fetch_player/${playerId}`
             );
 
             setPlayer(response.data);
 
-        }
+        } catch (err) {
 
-        catch (error) {
+            console.error(err);
+            setError(true);
 
-            console.error(error);
+        } finally {
+
+            setLoading(false);
 
         }
     }
 
-    // squad data passed via navigate state — used as fallback while player loads
-    const squad = state ?? {};
+    if (loading) {
+        return <p className="state">Loading player...</p>;
+    }
 
-    const displayPhoto   = player?.photo   ?? squad.photo;
-    const displayName    = player?.name    ?? squad.name;
-    const displayPos     = player?.position ?? squad.position;
-
-    if (!player && !squad.name) {
-        return <p className="state">Loading...</p>;
+    if (error || !player) {
+        return <p className="state">Player details not found.</p>;
     }
 
     return (
@@ -52,19 +60,18 @@ function PlayerPage() {
 
                 <div className="badge badge-xl">
                     <img
-                        src={displayPhoto}
-                        alt={displayName}
+                        src={player.photo}
+                        alt={player.name}
                     />
                 </div>
 
                 <div className="player-hero-info">
 
-                    <p className="eyebrow">{displayPos}</p>
+                    <p className="eyebrow">{player.position}</p>
 
-                    <h1>{displayName}</h1>
+                    <h1>{player.name}</h1>
 
                     {squad.team && (
-
                         <p
                             className="player-team-link"
                             onClick={() =>
@@ -74,62 +81,47 @@ function PlayerPage() {
                             {squad.team}
                             {squad.number ? ` · #${squad.number}` : ""}
                         </p>
-
                     )}
 
                 </div>
 
             </div>
 
-            {player ? (
+            <dl className="meta-list">
 
-                <dl className="meta-list">
+                <div className="meta-row">
+                    <dt>First name</dt>
+                    <dd>{player.firstname ?? "—"}</dd>
+                </div>
 
-                    <div className="meta-row">
-                        <dt>First name</dt>
-                        <dd>{player.firstname}</dd>
-                    </div>
+                <div className="meta-row">
+                    <dt>Last name</dt>
+                    <dd>{player.lastname ?? "—"}</dd>
+                </div>
 
-                    <div className="meta-row">
-                        <dt>Last name</dt>
-                        <dd>{player.lastname}</dd>
-                    </div>
+                <div className="meta-row">
+                    <dt>Age</dt>
+                    <dd>{player.age ?? "—"}</dd>
+                </div>
 
-                    <div className="meta-row">
-                        <dt>Age</dt>
-                        <dd>{player.age}</dd>
-                    </div>
+                <div className="meta-row">
+                    <dt>Nationality</dt>
+                    <dd>{player.nationality ?? "—"}</dd>
+                </div>
 
-                    <div className="meta-row">
-                        <dt>Nationality</dt>
-                        <dd>{player.nationality}</dd>
-                    </div>
+                <div className="meta-row">
+                    <dt>Height</dt>
+                    <dd>{player.height ?? "—"}</dd>
+                </div>
 
-                    <div className="meta-row">
-                        <dt>Height</dt>
-                        <dd>{player.height ?? "—"}</dd>
-                    </div>
+                <div className="meta-row">
+                    <dt>Weight</dt>
+                    <dd>{player.weight ?? "—"}</dd>
+                </div>
 
-                    <div className="meta-row">
-                        <dt>Weight</dt>
-                        <dd>{player.weight ?? "—"}</dd>
-                    </div>
-
-                    <div className="meta-row">
-                        <dt>Position</dt>
-                        <dd>{player.position}</dd>
-                    </div>
-
-                </dl>
-
-            ) : (
-
-                <p className="state">Loading player details...</p>
-
-            )}
+            </dl>
 
         </div>
-
     );
 }
 
