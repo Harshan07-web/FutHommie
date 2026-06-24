@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../api/footballApi";
 
 function SquadPage() {
 
     const { teamId } = useParams();
+    const navigate = useNavigate();
 
     const [players, setPlayers] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -60,6 +61,18 @@ function SquadPage() {
                     <div
                         key={player.player_id}
                         className="card"
+                        onClick={() =>
+                            navigate(`/player/${player.player_id}`, {
+                                state: {
+                                    name:     player.name,
+                                    team:     player.team,
+                                    team_id:  player.team_id,
+                                    number:   player.number,
+                                    position: player.position,
+                                    photo:    player.photo,
+                                }
+                            })
+                        }
                     >
 
                         <div className="badge badge-lg">

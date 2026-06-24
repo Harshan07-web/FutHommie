@@ -5,7 +5,7 @@ from sqlalchemy import func
 from pydantic import BaseModel
 import json
 
-from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams, Venues, Squad, League
+from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams, Venues, Squad, League, PlayerInfo
 from database.database import get_db
 
 app = FastAPI()
@@ -237,6 +237,15 @@ def featch_league(league_id : int, db : Session = Depends(get_db)):
         raise HTTPException(status_code=404,detail=f"league not found for {league_id}")
     
     return league
+
+@app.get("/fetch_player/{player_id}")
+def fetch_player(player_id: int, db: Session = Depends(get_db)):
+    player = db.query(PlayerInfo).filter(PlayerInfo.player_id == player_id).first()
+
+    if not player:
+        raise HTTPException(status_code=404, detail=f"Player not found for {player_id}")
+    
+    return player
 
 
 app.add_middleware(

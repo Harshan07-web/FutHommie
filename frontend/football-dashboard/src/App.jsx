@@ -11,13 +11,18 @@ import PlayersPage from "./pages/PlayersPage";
 import SquadPage from "./pages/SquadPage";
 import LeaguesPage from "./pages/LeaguesPage";
 import LeaguePage from "./pages/LeaguePage";
+import PlayerPage from "./pages/PlayerPage";
 
 function App() {
 
     return (
+
         <>
+
         <TopBar />
+
         <Routes>
+
             <Route
                 path="/"
                 element={<Home />}
@@ -63,8 +68,16 @@ function App() {
                 path="/league/:leagueId"
                 element={<LeaguePage />}
             />
+
+            <Route
+                path="/player/:playerId"
+                element={<PlayerPage />}
+            />
+
         </Routes>
+
         </>
+
     );
 }
 

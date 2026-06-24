@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+/* ============================================================
+   TOKENS
+   ============================================================ */
+
 :root {
   --bg: #f6f8fa;
   --surface: #ffffff;
@@ -7,12 +11,14 @@
   --border: #d0d7de;
   --ink: #1f2328;
   --ink-muted: #59636e;
+
   --pitch: #166534;
   --pitch-soft: #dcfce7;
   --amber: #92400e;
   --amber-soft: #fef3c7;
   --negative: #991b1b;
   --negative-soft: #fee2e2;
+
   --dark: #0d1117;
   --dark-surface: #161b22;
   --dark-border: rgba(255, 255, 255, 0.08);
@@ -27,6 +33,10 @@
   --radius-md: 10px;
   --radius-pill: 999px;
 }
+
+/* ============================================================
+   RESET
+   ============================================================ */
 
 *,
 *::before,
@@ -68,18 +78,22 @@ h1, h2, h3 {
   color: var(--ink);
   margin: 0 0 4px;
 }
+
 h1 { font-size: 32px; letter-spacing: -0.5px; }
 h2 { font-size: 20px; }
 h3 { font-size: 15px; }
 
 p { margin: 0; }
-
 a { color: inherit; text-decoration: none; }
 
 .num {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
+
+/* ============================================================
+   TOPBAR — dark broadcast strip
+   ============================================================ */
 
 .topbar {
   display: flex;
@@ -107,6 +121,7 @@ a { color: inherit; text-decoration: none; }
   transition: color 0.15s ease, border-color 0.15s ease;
   white-space: nowrap;
 }
+
 .topbar-back:hover {
   color: var(--dark-ink);
   border-color: rgba(255, 255, 255, 0.25);
@@ -122,6 +137,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--dark-ink);
   letter-spacing: 0.1px;
 }
+
 .topbar-brand .mark {
   display: flex;
   align-items: center;
@@ -133,11 +149,19 @@ a { color: inherit; text-decoration: none; }
   font-size: 13px;
 }
 
+/* ============================================================
+   PAGE SHELL
+   ============================================================ */
+
 .page {
   max-width: 1080px;
   margin: 0 auto;
   padding: 36px 32px;
 }
+
+/* ============================================================
+   EYEBROW — mono section label
+   ============================================================ */
 
 .eyebrow {
   font-family: var(--font-mono);
@@ -154,6 +178,10 @@ a { color: inherit; text-decoration: none; }
   font-size: 14px;
 }
 
+/* ============================================================
+   HOME HERO — full bleed dark band
+   ============================================================ */
+
 .home-hero {
   background: var(--dark);
   background-image:
@@ -166,6 +194,7 @@ a { color: inherit; text-decoration: none; }
     );
   padding: 64px 32px 56px;
 }
+
 .home-hero-inner {
   max-width: 1080px;
   margin: 0 auto;
@@ -186,6 +215,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.1;
   margin: 0 0 16px;
 }
+
 .home-hero h1 .accent {
   color: var(--pitch);
 }
@@ -196,6 +226,10 @@ a { color: inherit; text-decoration: none; }
   max-width: 520px;
   line-height: 1.6;
 }
+
+/* ============================================================
+   NAV CARDS (home page)
+   ============================================================ */
 
 .nav-grid {
   display: grid;
@@ -213,6 +247,7 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
   transition: border-left-color 0.15s ease, background 0.15s ease;
 }
+
 .nav-card:hover {
   border-left-color: var(--pitch);
   background: #fafcfa;
@@ -227,15 +262,21 @@ a { color: inherit; text-decoration: none; }
 .nav-card .eyebrow {
   margin-bottom: 2px;
 }
+
 .nav-card h3 {
   font-size: 16px;
   margin: 0 0 4px;
 }
+
 .nav-card p {
   font-size: 13px;
   color: var(--ink-muted);
   line-height: 1.4;
 }
+
+/* ============================================================
+   ENTITY GRID + CARDS (teams, leagues, players, squad)
+   ============================================================ */
 
 .grid {
   display: grid;
@@ -254,6 +295,7 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
   transition: border-left-color 0.15s ease, background 0.15s ease;
 }
+
 .card:hover {
   border-left-color: var(--pitch);
   background: #fafcfa;
@@ -267,6 +309,10 @@ a { color: inherit; text-decoration: none; }
   margin: 0 auto;
 }
 
+/* ============================================================
+   BADGE — logo frame (fixes whitespace in third-party images)
+   ============================================================ */
+
 .badge {
   display: flex;
   align-items: center;
@@ -277,14 +323,50 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   flex-shrink: 0;
 }
+
 .badge img {
   width: 65%;
   height: 65%;
   object-fit: contain;
 }
+
 .badge-sm  { width: 28px;  height: 28px; }
 .badge-md  { width: 48px;  height: 48px; }
 .badge-lg  { width: 88px;  height: 88px; }
+.badge-xl  { width: 120px; height: 120px; }
+
+/* ============================================================
+   PLAYER HERO
+   ============================================================ */
+
+.player-hero {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-bottom: 8px;
+}
+
+.player-hero-info h1 {
+  font-size: 40px;
+  letter-spacing: -0.7px;
+  margin: 4px 0 8px;
+}
+
+.player-team-link {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--pitch);
+  cursor: pointer;
+  display: inline-block;
+}
+
+.player-team-link:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   DETAIL HEADER (team / league / venue)
+   ============================================================ */
 
 .detail-header {
   display: flex;
@@ -314,6 +396,7 @@ a { color: inherit; text-decoration: none; }
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
+
 .meta-row:last-child {
   border-right: none;
 }
@@ -326,6 +409,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink-muted);
   margin-bottom: 3px;
 }
+
 .meta-row dd {
   margin: 0;
   font-family: var(--font-mono);
@@ -338,6 +422,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--pitch);
   cursor: pointer;
 }
+
 .meta-row.link dd:hover {
   text-decoration: underline;
 }
@@ -350,6 +435,10 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--border);
   margin-bottom: 20px;
 }
+
+/* ============================================================
+   CONTROLS (selects + btn-group)
+   ============================================================ */
 
 .controls {
   display: flex;
@@ -369,6 +458,7 @@ select {
   color: var(--ink);
   cursor: pointer;
 }
+
 select:focus {
   outline: 2px solid var(--pitch);
   outline-offset: 1px;
@@ -382,6 +472,7 @@ select:focus {
   padding: 3px;
   gap: 2px;
 }
+
 .btn-group button {
   font-family: var(--font-body);
   font-size: 13px;
@@ -393,11 +484,16 @@ select:focus {
   cursor: pointer;
   transition: background 0.12s ease, color 0.12s ease;
 }
+
 .btn-group button.active {
   background: var(--surface);
   color: var(--ink);
   box-shadow: 0 1px 3px rgba(31, 35, 40, 0.1);
 }
+
+/* ============================================================
+   STANDINGS TABLE
+   ============================================================ */
 
 .table-wrap {
   background: var(--surface);
@@ -450,18 +546,22 @@ tbody tr:hover {
   text-align: left;
   white-space: nowrap;
 }
+
 .team-cell:hover {
   color: var(--pitch);
 }
 
+/* rank zone semantics */
 .rank-cl {
   color: var(--pitch);
   font-weight: 600;
 }
+
 .rank-el {
   color: var(--amber);
   font-weight: 600;
 }
+
 .rank-relegation {
   color: var(--negative);
   font-weight: 600;
@@ -475,13 +575,22 @@ tbody tr:hover {
 .gd-positive { color: var(--pitch); }
 .gd-negative { color: var(--negative); }
 
+/* ============================================================
+   SECTION HEADING (inside pages, above grids)
+   ============================================================ */
+
 .section-heading {
   margin: 32px 0 4px;
 }
+
 .section-heading h2 {
   font-size: 18px;
   letter-spacing: -0.2px;
 }
+
+/* ============================================================
+   LOADING / EMPTY STATES
+   ============================================================ */
 
 .state {
   color: var(--ink-muted);
