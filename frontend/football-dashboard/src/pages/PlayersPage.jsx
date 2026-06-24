@@ -8,6 +8,7 @@ function PlayersPage() {
 
     const [teams, setTeams] = useState([]);
     const [league, setLeague] = useState(39);
+    const [season, setSeason] = useState(2024);
 
     const leagues = [
         { id: 39, name: "Premier League" },
@@ -17,16 +18,20 @@ function PlayersPage() {
         { id: 61, name: "Ligue 1" }
     ];
 
+    const seasons = [2024, 2023, 2022];
+
     useEffect(() => {
         fetchTeams();
-    }, [league]);
+    }, [league, season]);
 
     async function fetchTeams() {
+
+        setTeams([]);
 
         try {
 
             const response = await api.get(
-                `/teams/${league}`
+                `/fetch_teams/${league}/${season}`
             );
 
             setTeams(response.data);
@@ -64,6 +69,23 @@ function PlayersPage() {
                             value={league.id}
                         >
                             {league.name}
+                        </option>
+
+                    ))}
+
+                </select>
+
+                <select
+                    value={season}
+                    onChange={(e) =>
+                        setSeason(Number(e.target.value))
+                    }
+                >
+
+                    {seasons.map((s) => (
+
+                        <option key={s} value={s}>
+                            {s}/{s + 1}
                         </option>
 
                     ))}
