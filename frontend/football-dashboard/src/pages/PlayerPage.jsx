@@ -48,7 +48,20 @@ function PlayerPage() {
         return <p className="state">Loading player...</p>;
     }
 
-    if (error || !player) {
+    // PlayerInfo may not exist for every squad player — fall back to squad state
+    const display = player ?? {
+        name:     squad.name,
+        photo:    squad.photo,
+        position: squad.position,
+        age:      squad.age,
+        firstname:  null,
+        lastname:   null,
+        nationality: null,
+        height:     null,
+        weight:     null,
+    };
+
+    if (!display.name) {
         return <p className="state">Player details not found.</p>;
     }
 
@@ -60,16 +73,16 @@ function PlayerPage() {
 
                 <div className="badge badge-xl">
                     <img
-                        src={player.photo}
-                        alt={player.name}
+                        src={display.photo}
+                        alt={display.name}
                     />
                 </div>
 
                 <div className="player-hero-info">
 
-                    <p className="eyebrow">{player.position}</p>
+                    <p className="eyebrow">{display.position}</p>
 
-                    <h1>{player.name}</h1>
+                    <h1>{display.name}</h1>
 
                     {squad.team && (
                         <p
@@ -91,32 +104,32 @@ function PlayerPage() {
 
                 <div className="meta-row">
                     <dt>First name</dt>
-                    <dd>{player.firstname ?? "—"}</dd>
+                    <dd>{display.firstname ?? "—"}</dd>
                 </div>
 
                 <div className="meta-row">
                     <dt>Last name</dt>
-                    <dd>{player.lastname ?? "—"}</dd>
+                    <dd>{display.lastname ?? "—"}</dd>
                 </div>
 
                 <div className="meta-row">
                     <dt>Age</dt>
-                    <dd>{player.age ?? "—"}</dd>
+                    <dd>{display.age ?? "—"}</dd>
                 </div>
 
                 <div className="meta-row">
                     <dt>Nationality</dt>
-                    <dd>{player.nationality ?? "—"}</dd>
+                    <dd>{display.nationality ?? "—"}</dd>
                 </div>
 
                 <div className="meta-row">
                     <dt>Height</dt>
-                    <dd>{player.height ?? "—"}</dd>
+                    <dd>{display.height ?? "—"}</dd>
                 </div>
 
                 <div className="meta-row">
                     <dt>Weight</dt>
-                    <dd>{player.weight ?? "—"}</dd>
+                    <dd>{display.weight ?? "—"}</dd>
                 </div>
 
             </dl>
