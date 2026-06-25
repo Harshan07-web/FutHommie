@@ -418,19 +418,6 @@ Football/
 * CI/CD pipeline using GitHub Actions
 
 ---
-
-## Screenshots
-
-Add screenshots of:
-
-* Home Page
-* Standings Page
-* Team Page
-* Player Page
-* Venue Page
-
----
-
 ## Author
 
 **Harshan**
