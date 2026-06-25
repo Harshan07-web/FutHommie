@@ -183,6 +183,28 @@ def get_teams_by_league(league_id: int, db: Session = Depends(get_db)):
     teams = db.query(Teams).filter(Teams.league_id == league_id).all()
 
     return teams
+@app.get("/fetch_all_venues")
+def fetch_all_venues(db : Session = Depends(get_db)):
+    venues = (
+        db.query(
+        Venues.venue_id,
+        Venues.name,
+        Teams.logo,
+        Teams.venue_id
+    ).outerjoin(
+        Teams, Venues.venue_id == Teams.venue_id
+    ).distinct(Teams.team_id)
+    .all()
+    )
+
+    return [
+        {
+        "venue_id" : venue.venue_id,
+        "name" : venue.name,
+        "logo" : venue.logo,
+        }
+        for venue in venues
+    ]
 
 @app.get("/fetch_venue_details/{venue_id}")
 def fetch_venue_details(venue_id : int, db : Session = Depends(get_db)):
@@ -252,7 +274,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
     "http://localhost:5173",
-    "https://premier-league-elt.vercel.app"],
+    "https://football-data-hub.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
