@@ -183,6 +183,7 @@ def get_teams_by_league(league_id: int, db: Session = Depends(get_db)):
     teams = db.query(Teams).filter(Teams.league_id == league_id).all()
 
     return teams
+
 @app.get("/fetch_all_venues")
 def fetch_all_venues(db : Session = Depends(get_db)):
     venues = (
@@ -190,6 +191,7 @@ def fetch_all_venues(db : Session = Depends(get_db)):
         Venues.venue_id,
         Venues.name,
         Teams.logo,
+        Teams.team_id,
         Teams.venue_id
     ).outerjoin(
         Teams, Venues.venue_id == Teams.venue_id
@@ -202,6 +204,7 @@ def fetch_all_venues(db : Session = Depends(get_db)):
         "venue_id" : venue.venue_id,
         "name" : venue.name,
         "logo" : venue.logo,
+        "team_id" : venue.team_id
         }
         for venue in venues
     ]
