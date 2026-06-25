@@ -1,5 +1,3 @@
-Here's a README tailored to your project and tech stack.
-
 # Football Data Hub 
 
 A full-stack football analytics platform that collects, transforms, stores, and visualizes football data from Europe's Top 5 leagues.
