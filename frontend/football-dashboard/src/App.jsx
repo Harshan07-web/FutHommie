@@ -3,7 +3,9 @@ import { Routes, Route } from "react-router-dom";
 import TopBar from "./components/TopBar";
 
 import Home from "./pages/Home";
-import Standings from "./pages/Standings";
+import StandingsPage from "./pages/StandingsPage";
+import HomeStandingsPage from "./pages/HomeStandingsPage";
+import AwayStandingsPage from "./pages/AwayStandingsPage";
 import TeamPage from "./pages/TeamPage";
 import VenuePage from "./pages/VenuePage";
 import TeamsPage from "./pages/TeamsPage";
@@ -30,7 +32,17 @@ function App() {
 
             <Route
                 path="/standings"
-                element={<Standings />}
+                element={<StandingsPage />}
+            />
+
+            <Route
+                path="/home-standings"
+                element={<HomeStandingsPage />}
+            />
+
+            <Route
+                path="/away-standings"
+                element={<AwayStandingsPage />}
             />
 
             <Route
