@@ -274,12 +274,21 @@ def fetch_player(player_id: int, db: Session = Depends(get_db)):
 
 @app.get("/fetch_fixtures/{league_id}/{season}")
 def fetch_fixtures(league_id : int , season : int , db : Session = Depends(get_db)):
-    fixtures = db.query(Fixtures).filter(Fixtures.season==season).filter(Fixtures.league_id==league_id)
+    fixtures = db.query(Fixtures).filter(Fixtures.season==season).filter(Fixtures.league_id==league_id).all()
 
     if not fixtures:
         raise HTTPException(status_code=404, detail= f"Fixtures not found for {league_id} and season {season}")
     
     return fixtures
+
+@app.get("/fetch_fixture/{fixture_id}")
+def fetch_fixture(fixture_id : int, db : Session = Depends(get_db)):
+    fixture = db.query(Fixtures).filter(Fixtures.fixture_id==fixture_id).first()
+
+    if not fixture:
+        raise HTTPException(status_code=404, detail= f"Fixtures not found for {fixture_id}")
+    
+    return fixture
 
 
 app.add_middleware(

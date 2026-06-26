@@ -5,7 +5,7 @@
    ============================================================ */
 
 :root {
-  --bg: #2B7FD4;;
+  --bg: #156ECA;
   --pitch: #C084FC;
 
   --surface: #FFFFFF;
@@ -697,4 +697,194 @@ tbody tr:hover {
   border-radius: var(--radius-md);
   margin-top: 24px;
   background: rgba(255, 255, 255, 0.02);
+}
+/* ============================================================
+   FIXTURES
+   ============================================================ */
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.fixture-group {
+  margin-bottom: 28px;
+}
+
+.fixture-group-header {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--pitch);
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  margin-bottom: 8px;
+}
+
+.fixture-list {
+  background: var(--surface);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-crisp);
+  overflow: hidden;
+}
+
+.fixture-card {
+  display: grid;
+  grid-template-columns: 1fr 120px 1fr;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.fixture-card:last-child {
+  border-bottom: none;
+}
+
+.fixture-card:hover {
+  background: var(--surface-muted);
+}
+
+.fixture-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fixture-home {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.fixture-away {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.fixture-team-name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.fixture-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.fixture-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.fixture-score-sep {
+  color: var(--ink-muted);
+  font-weight: 400;
+}
+
+.fixture-vs {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-muted);
+}
+
+.fixture-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+
+.fixture-status {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.fixture-status--done {
+  background: var(--surface-muted);
+  color: var(--ink-muted);
+  border: 1px solid var(--border);
+}
+
+.fixture-status--live {
+  background: #fee2e2;
+  color: var(--negative);
+  border: 1px solid var(--negative);
+}
+
+.fixture-status--cancelled {
+  background: #fef3c7;
+  color: var(--amber);
+  border: 1px solid var(--amber);
+}
+
+/* ============================================================
+   FIXTURE DETAIL (match hero)
+   ============================================================ */
+
+.match-hero {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  background: var(--surface);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-crisp);
+  padding: 32px 24px;
+  margin-bottom: 24px;
+}
+
+.match-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.match-team h2 {
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.match-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 140px;
+}
+
+.match-score {
+  font-family: var(--font-mono);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1px;
+}
+
+.match-vs {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink-muted);
 }

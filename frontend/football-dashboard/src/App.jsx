@@ -15,6 +15,8 @@ import SquadPage from "./pages/SquadPage";
 import LeaguesPage from "./pages/LeaguesPage";
 import LeaguePage from "./pages/LeaguePage";
 import PlayerPage from "./pages/PlayerPage";
+import FixturesPage from "./pages/FixturesPage";
+import FixturePage from "./pages/FixturePage";
 
 function App() {
 
@@ -90,6 +92,16 @@ function App() {
             <Route
                 path="/player/:playerId"
                 element={<PlayerPage />}
+            />
+
+            <Route
+                path="/results"
+                element={<FixturesPage />}
+            />
+ 
+            <Route
+                path="/results/:fixtureId"
+                element={<FixturePage />}
             />
 
         </Routes>
