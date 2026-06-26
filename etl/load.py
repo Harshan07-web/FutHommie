@@ -1,5 +1,5 @@
 from database.database import session
-from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues, PlayerInfo
+from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues, PlayerInfo, Fixtures
 
 
 class StoreData:
@@ -358,6 +358,57 @@ class StoreData:
         except Exception as e:
             db.rollback()
             raise e
+        finally:
+            db.close()
+
+    def fixture_table(self):
+        try:
+            db = session()
+            existing_ids = {
+                    row[0]
+                    for row in db.query(Fixtures.fixture_id).all()
+                }
+            for index,row in self.table.iterrows():
+                if row['fixture_id'] in existing_ids:
+                    continue
+
+                fixture = Fixtures(
+                    fixture_id = row['fixture_id'],
+                    league_id = row['league_id'],
+                    season = row['season'],
+                    league_round = row['league_round'],
+                    venue_id = row['venue_id'],
+                    date = row['date'],
+                    timezone = row['timezone'],
+                    timestamp = row['timestamp'],
+                    first_period = row['first_period'],
+                    second_period = row['second_period'],
+                    referee = row['referee'],
+                    status = row['status'],
+                    elapsed = row['elapsed'],
+                    home_id = row['home_id'],
+                    away_id = row['away_id'],
+                    winner = row['winner'],
+                    home_goals = row['home_goals'],
+                    away_goals = row['away_goals'],
+                    standings = row['standings'],
+                    ht_home_goals = row['ht_home_goals'],
+                    ht_away_goals = row['ht_away_goals'],
+                    ft_home_goals = row['ft_home_goals'],
+                    ft_away_goals = row['ft_away_goals'],
+                    et_home_goals = row['et_home_goals'],
+                    et_away_goals = row['et_away_goals'],
+                    pen_home_goals = row['pen_home_goals'],
+                    pen_away_goals = row['pen_away_goals'],
+                )
+
+                db.add(fixture)
+            db.commit()
+
+        except Exception as e:
+            db.rollback()
+            raise e
+        
         finally:
             db.close()
                 

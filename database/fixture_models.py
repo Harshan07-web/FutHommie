@@ -1,4 +1,4 @@
-from sqlalchemy import Column,VARCHAR,Integer,Float, UniqueConstraint, ForeignKey
+from sqlalchemy import Column,VARCHAR,Integer,Float, UniqueConstraint, ForeignKey, DateTime, Boolean
 from database.base import base
 
 class OverallStanding(base):
@@ -144,6 +144,40 @@ class PlayerInfo(base):
     position = Column(VARCHAR(255))
     photo = Column(VARCHAR(255))
 
+class Fixtures(base):
+    __tablename__ = 'fixture_table'
+
+    fixture_id = Column(Integer,primary_key=True)
+    league_id = Column(Integer)
+    season = Column(Integer)
+    league_round = Column(VARCHAR(255))
+    venue_id = Column(Integer)
+
+    date = Column(DateTime)
+    timezone = Column(VARCHAR(20))
+    timestamp = Column(Integer)
+    first_period = Column(Integer)
+    second_period = Column(Integer)
+
+    referee = Column(VARCHAR(255))
+    status = Column(VARCHAR(225))
+    elapsed = Column(Integer)
+
+    home_id = Column(Integer)
+    away_id = Column(Integer)
+    winner = Column(Integer) #has to store winning team id
+    home_goals = Column(Integer)
+    away_goals = Column(Integer)
+    standings = Column(Boolean)
+
+    ht_home_goals = Column(Integer)
+    ht_away_goals = Column(Integer)
+    ft_home_goals = Column(Integer)
+    ft_away_goals = Column(Integer)
+    et_home_goals = Column(Integer)
+    et_away_goals = Column(Integer)
+    pen_home_goals = Column(Integer)
+    pen_away_goals = Column(Integer)
 
 
     

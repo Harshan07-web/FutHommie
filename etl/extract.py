@@ -31,7 +31,7 @@ class Fetch:
             }
 
             response = requests.request("GET",url=url,headers=headers,params=params)
-            with open("data/raw/fixture_results.json","w") as f:
+            with open(f"data/raw/fixture_results_{self.league_id}_{self.season}.json","w") as f:
                 json.dump(response.json(),f,indent=5)
 
             return response

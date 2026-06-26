@@ -2,11 +2,64 @@ import json
 import pandas as pd
 from etl.extract import Fetch
 from etl.load import StoreData
+from datetime import datetime
 # from load import StoreData
 
 class Build:
     def __init__(self,json_data):
         self.json_data = json_data
+
+    def fixtures_table(self):
+        final_data = {}
+        res = self.json_data['response']
+        tot_matches = self.json_data['results']
+        for i in range (tot_matches):
+            fixture = res[i]['fixture']
+            league = res[i]['league']
+            teams = res[i]['teams']
+            goals = res[i]['goals']
+            score = res[i]['score']
+            date = datetime.fromisoformat(fixture["date"])
+
+            if teams['home']['winner']:
+                winner = teams['home']['id']
+            elif teams['away']['winner']:
+                winner = teams['away']['id']
+            else:
+                winner = None
+
+            final_data[fixture['id']] = {
+                 "league_id" : league['id'],
+                 "season" : league['season'],
+                 "league_round" : league['round'],
+                 "venue_id" : fixture['venue']['id'],
+                 "date" : date,
+                 "timezone" : fixture['timezone'],
+                 "timestamp" : fixture['timestamp'],
+                 "first_period" : fixture['periods']['first'],
+                 "second_period" : fixture['periods']['second'],
+                 "referee" : fixture['referee'],
+                 "status" : fixture['status']['long'],
+                 "elapsed" : fixture['status']['elapsed'],
+                 "home_id" : teams['home']['id'],
+                 "away_id" : teams['away']['id'],
+                 "winner" : winner,
+                 "home_goals" : goals['home'],
+                 "away_goals" : goals['away'],
+                 "standings" : league['standings'],
+                 "ht_home_goals" : score['halftime']['home'],
+                 "ht_away_goals" : score['halftime']['away'],
+                 "ft_home_goals" : score['fulltime']['home'],
+                 "ft_away_goals" : score['fulltime']['away'],
+                 "et_home_goals" : score['extratime']['home'],
+                 "et_away_goals" : score['extratime']['away'],
+                 "pen_home_goals" : score['penalty']['home'],
+                 "pen_away_goals" : score['penalty']['away'],
+            }
+
+        table = self.build_fixtures_table(final_data=final_data)
+        table.to_csv(rf"data\processed\fixtures_{league['id']}_{league['season']}.csv",index=False)
+        StoreData(table).fixture_table()
 
     def points_table(self):
         tot_matches = self.json_data["results"]
@@ -372,6 +425,15 @@ class Build:
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index':'venue_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
+
+        return table
+    
+    def build_fixtures_table(self,final_data : dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index' : 'fixture_id'},inplace=True)
         table = table.astype(object)
         table = table.where(pd.notnull(table), None)
 

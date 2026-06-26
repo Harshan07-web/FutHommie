@@ -5,8 +5,8 @@
    ============================================================ */
 
 :root {
-  --bg: #156ECA;
-  --pitch: #1EE693;
+  --bg: #2B7FD4;;
+  --pitch: #C084FC;
 
   --surface: #FFFFFF;
   --surface-muted: #EBF3FA;
@@ -17,7 +17,7 @@
   --ink: #0A294A;
   --ink-muted: #497096;
 
-  --pitch-soft: #D3FCE9;
+  --pitch-soft: #F3E8FF;
   --amber: #F59E0B;
   --negative: #E11D48;
 
@@ -32,7 +32,7 @@
   --shadow-crisp: 4px 4px 0 rgba(10, 41, 74, 0.4);
   --shadow-hover: 6px 6px 0 rgba(10, 41, 74, 0.6);
   --card-hover-bg: #F8FBFF;
-  --table-hover-bg: #D3FCE9;
+  --table-hover-bg: #F3E8FF;
 }
 
 /* ============================================================
@@ -65,8 +65,13 @@ body,
 
 body {
   background-color: var(--bg);
-  background-image: radial-gradient(rgba(255,255,255,0.1) 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.045) 0px,
+    rgba(255, 255, 255, 0.045) 52px,
+    transparent 52px,
+    transparent 104px
+  );
   color: var(--text-inverse);
   font-family: var(--font-body);
   font-size: 16px;
@@ -204,7 +209,6 @@ a { color: inherit; text-decoration: none; }
 
 .home-hero {
   padding: 80px 32px 72px;
-  background-image: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
 }
 
 .home-hero-inner {

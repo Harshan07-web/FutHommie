@@ -6,7 +6,7 @@ import os
 import logging
 from datetime import date
 
-from database.fixture_models import Teams, OverallStanding, Venues, Squad, PlayerInfo
+from database.fixture_models import Teams, OverallStanding, Venues, Squad, PlayerInfo, Fixtures
 from database.database import session
 
 
@@ -51,8 +51,7 @@ COMPETITIONS = {
 
 SEASONS = [2022, 2023, 2024]
 TEAM_DISCOVERY_SEASON = 2024
-DAILY_REQUEST_LIMIT = 100
-REQUEST_DELAY = 10          
+DAILY_REQUEST_LIMIT = 100        
 
 STATE_FILE = r"D:\Football\data\raw\state.json"
 LOG_FILE = r"D:\Football\logs\pipeline.log"
@@ -60,8 +59,37 @@ visited_venues = set()
 visited_teams = set()
 visited_leagues = set()
 visited_players = set()
+visited_fixtures = set()
 
-def run_fixture_fetch():
+def fixture_exists(league_id,season):
+    try:
+        db = session()
+        exists = (
+            db.query(Fixtures)
+            .filter(Fixtures.league_id==league_id)
+            .filter(Fixtures.season==season)
+            .first()
+        )
+
+        return exists
+    finally:
+        db.close()
+
+def run_fetch_fixtures():
+    for league_id,league_name in COMPETITIONS.items():
+        print(f"fetching for {league_name}")
+        for i in SEASONS:
+            print(f"season {i}")
+            if fixture_exists(league_id,i):
+                print(f"already exists {i} {league_id}")
+                continue
+            response = Fetch(league_id,i).fetch_fixtures()
+            Build(response.json()).fixtures_table()
+            print(f"stored season{i}")
+            time.sleep(10)
+            
+
+def run_fetch_fixture_build_table():
     for league_id, league_name in TOP5_LEAGUES.items():
         print(f"\nProcessing {league_name}")
         for season in SEASONS:
@@ -184,5 +212,5 @@ def run_pplayer_details_fetch():
         db.close()
 
 if __name__ == '__main__':
-    run_pplayer_details_fetch()
+    run_fetch_fixtures()
     
