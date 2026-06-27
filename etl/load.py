@@ -1,5 +1,5 @@
 from database.database import session
-from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues, PlayerInfo, Fixtures
+from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues, PlayerInfo, Fixtures, PlayerLeaderBoard
 
 
 class StoreData:
@@ -403,6 +403,58 @@ class StoreData:
                 )
 
                 db.add(fixture)
+            db.commit()
+
+        except Exception as e:
+            db.rollback()
+            raise e
+        
+        finally:
+            db.close()
+
+    def leaderboard_table(self):
+        try:
+            db = session()
+            existing = {
+                (
+                    row.league_id,
+                    row.season,
+                    row.player_id
+                )
+                for row in db.query(
+                    PlayerLeaderBoard.league_id,
+                    PlayerLeaderBoard.season,
+                    PlayerLeaderBoard.player_id
+                ).all()
+            }
+            for index,row in self.table.iterrows():
+                key = (
+                    row["league_id"],
+                    row["season"],
+                    row["player_id"]
+                )
+                if key in existing:
+                    continue
+
+                player = PlayerLeaderBoard(
+                    league_id = row['league_id'],
+                    season = row['season'],
+                    player_id =row['player_id'],
+                    team_id = row['team_id'],
+                    goals_tot = row['goals_tot'],
+                    assists_tot = row['assists_tot'],
+                    conceded = row['conceded'],
+                    saves = row['saves'],
+                    yellow_tot = row['yellow_tot'],
+                    yellowred_tot = row['yellowred_tot'],
+                    red_tot = row['red_tot'],
+                    position = row['position'],
+                    rating = row['rating'],
+                    appearances = row['appearances'],
+                    leaderboard_type = row['leaderboard_type']
+                )
+
+                db.add(player)
             db.commit()
 
         except Exception as e:

@@ -342,7 +342,38 @@ class Build:
         table.to_csv(rf"data\processed\player_{player['id']}.csv",index=False)
         StoreData(table).player_table()
 
-        
+    def player_leaderboard(self,table_name):
+        final_data = {}
+        res = self.json_data['response']
+        top = self.json_data['results']
+        for i in range(top):
+            player = res[i]['player']
+            team = res[i]['statistics'][0]['team']
+            league = res[i]['statistics'][0]['league']
+            game = res[i]['statistics'][0]['games']
+            goals = res[i]['statistics'][0]['goals']
+            cards = res[i]['statistics'][0]['cards']
+            final_data[player['id']] = {
+                'league_id' : league['id'],
+                'season' : league['season'],
+                'team_id' : team['id'],
+                'goals_tot' : goals['total'],
+                'assists_tot' : goals['assists'],
+                'conceded' : goals['conceded'],
+                'saves' : goals['saves'],
+                'yellow_tot' : cards['yellow'],
+                'yellowred_tot' : cards['yellowred'],
+                'red_tot' : cards['red'],
+                'position' : game['position'],
+                'rating' : game['rating'],
+                'appearances' : game['appearences'],
+                'leaderboard_type' : table_name
+            }
+
+        table = self.build_leaderboard_table(final_data)
+        table.to_csv(rf"data\processed\leaderboard_{table_name}{league['season']}{league['id']}.csv",index=False)
+        StoreData(table).leaderboard_table()
+
 
     def league_table(self):
         final_data = {}
@@ -434,6 +465,15 @@ class Build:
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index' : 'fixture_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
+
+        return table
+
+    def build_leaderboard_table(self,final_data : dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index' : 'player_id'},inplace=True)
         table = table.astype(object)
         table = table.where(pd.notnull(table), None)
 

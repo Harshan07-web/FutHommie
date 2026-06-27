@@ -179,6 +179,26 @@ class Fixtures(base):
     pen_home_goals = Column(Integer)
     pen_away_goals = Column(Integer)
 
+class PlayerLeaderBoard(base):
+    __tablename__ = 'player_leaderboard'
+
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    league_id = Column(Integer)
+    season = Column(Integer)
+    player_id = Column(Integer)
+    team_id = Column(Integer)
+    goals_tot = Column(Integer)
+    assists_tot = Column(Integer)
+    conceded = Column(Integer)
+    saves = Column(Integer)
+    yellow_tot = Column(Integer)
+    yellowred_tot = Column(Integer)
+    red_tot = Column(Integer)
+    position = Column(VARCHAR(100))
+    rating = Column(Float)
+    appearances = Column(Integer)
+    leaderboard_type = Column(VARCHAR(20))
+
 
     
 

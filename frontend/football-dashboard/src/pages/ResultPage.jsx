@@ -33,7 +33,7 @@ function ScoreBlock({ label, home, away }) {
     );
 }
 
-function FixturePage() {
+function ResultPage() {
 
     const { fixtureId } = useParams();
     const { state }     = useLocation();
@@ -198,4 +198,4 @@ function FixturePage() {
     );
 }
 
-export default FixturePage;
+export default ResultPage;

@@ -13,6 +13,10 @@ team_url = os.getenv("TEAM_URL")
 player_url = os.getenv("PLAYER_URL")
 league_url = os.getenv("LEAGUE_URL")
 venue_url = os.getenv("VENUES_URL")
+topscorers_url = os.getenv("PLAYER_TOPSCORERS")
+topassists_url = os.getenv("PLAYER_TOPASSISTS")
+topyellow_url = os.getenv("PLAYER_YELLOW")
+topred_url = os.getenv("PLAYER_RED")
 
 class Fetch:
     def __init__(self,league_id:int,season:int):
@@ -131,6 +135,90 @@ class Fetch:
 
             with open(f"data/raw/player_{player_id}_details.json","w") as f:
                 json.dump(response.json(),f,indent=5)
+
+            return response
+
+        except Exception as e:
+            raise e
+        
+    def fetch_topscorers(self):
+
+        try:
+            params = {
+                'league' : self.league_id,
+                'season' : self.season 
+            }
+
+            header = {
+                'x-apisports-key' : API
+            }
+
+            response = requests.request("GET",url = topscorers_url ,headers=header,params=params)
+            with open(f"data/raw/{self.league_id}_{self.season}_topscorers.json","w") as f:
+                    json.dump(response.json(),f,indent=5)
+
+            return response
+
+        except Exception as e:
+            raise e
+        
+    def fetch_topassists(self):
+
+        try:
+            params = {
+                'league' : self.league_id,
+                'season' : self.season 
+            }
+
+            header = {
+                'x-apisports-key' : API
+            }
+
+            response = requests.request("GET",url = topassists_url ,headers=header,params=params)
+            with open(f"data/raw/{self.league_id}_{self.season}_topassists.json","w") as f:
+                    json.dump(response.json(),f,indent=5)
+
+            return response
+
+        except Exception as e:
+            raise e
+        
+    def fetch_topyellow(self):
+
+        try:
+            params = {
+                'league' : self.league_id,
+                'season' : self.season 
+            }
+
+            header = {
+                'x-apisports-key' : API
+            }
+
+            response = requests.request("GET",url = topyellow_url ,headers=header,params=params)
+            with open(f"data/raw/{self.league_id}_{self.season}_topassists.json","w") as f:
+                    json.dump(response.json(),f,indent=5)
+
+            return response
+
+        except Exception as e:
+            raise e
+        
+    def fetch_topred(self):
+
+        try:
+            params = {
+                'league' : self.league_id,
+                'season' : self.season 
+            }
+
+            header = {
+                'x-apisports-key' : API
+            }
+
+            response = requests.request("GET",url = topred_url ,headers=header,params=params)
+            with open(f"data/raw/{self.league_id}_{self.season}_topassists.json","w") as f:
+                    json.dump(response.json(),f,indent=5)
 
             return response
 

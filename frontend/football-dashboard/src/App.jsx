@@ -15,8 +15,9 @@ import SquadPage from "./pages/SquadPage";
 import LeaguesPage from "./pages/LeaguesPage";
 import LeaguePage from "./pages/LeaguePage";
 import PlayerPage from "./pages/PlayerPage";
+import ResultsPage from "./pages/ResultsPage";
+import ResultPage from "./pages/ResultPage";
 import FixturesPage from "./pages/FixturesPage";
-import FixturePage from "./pages/FixturePage";
 
 function App() {
 
@@ -96,12 +97,17 @@ function App() {
 
             <Route
                 path="/results"
-                element={<FixturesPage />}
+                element={<ResultsPage />}
             />
  
             <Route
                 path="/results/:fixtureId"
-                element={<FixturePage />}
+                element={<ResultPage />}
+            />
+
+            <Route 
+                path="/fixtures"
+                element={<FixturesPage />}
             />
 
         </Routes>

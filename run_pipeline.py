@@ -6,7 +6,7 @@ import os
 import logging
 from datetime import date
 
-from database.fixture_models import Teams, OverallStanding, Venues, Squad, PlayerInfo, Fixtures
+from database.fixture_models import Teams, OverallStanding, Venues, Squad, PlayerInfo, Fixtures, PlayerLeaderBoard
 from database.database import session
 
 
@@ -188,7 +188,7 @@ def run_squad_fetch():
     finally:
         db.close()
 
-def run_pplayer_details_fetch():
+def run_player_details_fetch():
     db = session()
     try:
         player_ids = db.query(Squad.player_id).all()
@@ -211,6 +211,83 @@ def run_pplayer_details_fetch():
     finally:
         db.close()
 
+def leaderboard_exists(league_id,season,league_type):
+    db = session()
+
+    exists = (
+        db.query(PlayerLeaderBoard)
+        .filter(PlayerLeaderBoard.season==season)
+        .filter(PlayerLeaderBoard.league_id==league_id)
+        .filter(PlayerLeaderBoard.leaderboard_type==league_type)
+        .first()
+    )
+
+    db.close()
+
+    return exists
+
+def run_fetch_topscorer_leaderbaord():
+    for league_id,league_name in COMPETITIONS.items():
+        print(f"fetching for {league_name}")
+        for i in SEASONS:
+            if (league_id==528 and i==2023) or (league_id==15 and i==2024):
+                continue
+            print(f"season {i}")
+            if leaderboard_exists(league_id,i,"topscorer"):
+                print(f"already exists {i} {league_id}")
+                continue
+            response = Fetch(league_id,i).fetch_topscorers()
+            Build(response.json()).player_leaderboard("topscorer")
+            print(f"stored season{i}")
+            time.sleep(10)
+
+def run_fetch_topassists_leaderbaord():
+    for league_id,league_name in COMPETITIONS.items():
+        print(f"fetching for {league_name}")
+        for i in SEASONS:
+            if (league_id==528 and i==2023) or (league_id==15 and i==2024):
+                continue
+            print(f"season {i}")
+            if leaderboard_exists(league_id,i,"topassists"):
+                print(f"already exists {i} {league_id}")
+                continue
+            response = Fetch(league_id,i).fetch_topassists()
+            Build(response.json()).player_leaderboard("topassists")
+            print(f"stored season{i}")
+            time.sleep(10)
+
+def run_fetch_topyellow_leaderbaord():
+    for league_id,league_name in COMPETITIONS.items():
+        print(f"fetching for {league_name}")
+        for i in SEASONS:
+            if (league_id==528 and i==2023) or (league_id==15 and i==2024):
+                continue
+            print(f"season {i}")
+            if leaderboard_exists(league_id,i,"topyellowcards"):
+                print(f"already exists {i} {league_id}")
+                continue
+            response = Fetch(league_id,i).fetch_topyellow()
+            Build(response.json()).player_leaderboard("topyellowcards")
+            print(f"stored season{i}")
+            time.sleep(10)
+
+def run_fetch_topred_leaderbaord():
+    for league_id,league_name in COMPETITIONS.items():
+        print(f"fetching for {league_name}")
+        for i in SEASONS:
+            if (league_id==528 and i==2023) or (league_id==15 and i==2024):
+                continue
+            print(f"season {i}")
+            if leaderboard_exists(league_id,i,"topredcards"):
+                print(f"already exists {i} {league_id}")
+                continue
+            response = Fetch(league_id,i).fetch_topred()
+            Build(response.json()).player_leaderboard("topredcards")
+            print(f"stored season{i}")
+            time.sleep(10)
+
 if __name__ == '__main__':
-    run_fetch_fixtures()
-    
+    run_fetch_topscorer_leaderbaord()
+    run_fetch_topassists_leaderbaord()
+    run_fetch_topyellow_leaderbaord()
+    run_fetch_topred_leaderbaord()
