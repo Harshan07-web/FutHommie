@@ -17,7 +17,8 @@ import PlayerPage from "./pages/PlayerPage";
 import FixturesPage from "./pages/FixturesPage";
 import ResultPage from "./pages/ResultPage";
 import ResultsPage from "./pages/ResultsPage";
-import LeaderboardPage from "./pages/LeaderboardPage";
+import LeaderboardPage from "./pages/LeaderBoardPage";
+
 
 function App() {
 

@@ -292,21 +292,24 @@ if __name__ == '__main__':
     # run_fetch_topyellow_leaderbaord()
     # run_fetch_topred_leaderbaord()
 
-    import json
-    from pathlib import Path
+    db= session()
+    to_check_players = set()
+    visited_player_det = set()
+    to_check = db.query(PlayerLeaderBoard.player_id).all()
+    for i in to_check:
+        to_check_players.add(i[0])
 
-    RAW_DIR = Path(r"D:\Football\data\raw")
+    existing = db.query(PlayerInfo.player_id).all()
+    for i in existing:
+        visited_player_det.add(i[0])
 
-    for json_file in RAW_DIR.glob("*_topscorers.json"):
-
-        with open(json_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        Build(data).player_leaderboard("topscorer")
-
-    for json_file in RAW_DIR.glob("*_topassists.json"):
-
-        with open(json_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        Build(data).player_leaderboard("topassists")
+    for i in to_check_players:
+        print(f"Player {i}")
+        if i in visited_player_det:
+            print(f"Player {i} exists , skipping")
+            continue
+        print(f"fetching for player {i}")
+        res = Fetch(0,0).fetch_player_details(i)
+        Build(res.json()).player_details_table()
+        print(f"Stored for player {i}")
+        time.sleep(7)
