@@ -888,3 +888,38 @@ tbody tr:hover {
   font-weight: 700;
   color: var(--ink-muted);
 }
+
+/* ============================================================
+   LEADERBOARD TABLE
+   ============================================================ */
+
+.lb-rank {
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+.lb-player,
+.lb-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  font-family: var(--font-body);
+}
+
+.lb-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.lb-team span {
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+.lb-stat-primary {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+}

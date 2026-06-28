@@ -419,19 +419,22 @@ class StoreData:
                 (
                     row.league_id,
                     row.season,
-                    row.player_id
+                    row.player_id,
+                    row.team_id
                 )
                 for row in db.query(
                     PlayerLeaderBoard.league_id,
                     PlayerLeaderBoard.season,
-                    PlayerLeaderBoard.player_id
+                    PlayerLeaderBoard.player_id,
+                    PlayerLeaderBoard.team_id
                 ).all()
             }
             for index,row in self.table.iterrows():
                 key = (
                     row["league_id"],
                     row["season"],
-                    row["player_id"]
+                    row["player_id"],
+                    row["team_id"]
                 )
                 if key in existing:
                     continue

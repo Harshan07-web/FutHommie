@@ -198,6 +198,7 @@ class PlayerLeaderBoard(base):
     rating = Column(Float)
     appearances = Column(Integer)
     leaderboard_type = Column(VARCHAR(20))
+    
 
 
     

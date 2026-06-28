@@ -287,7 +287,26 @@ def run_fetch_topred_leaderbaord():
             time.sleep(10)
 
 if __name__ == '__main__':
-    run_fetch_topscorer_leaderbaord()
-    run_fetch_topassists_leaderbaord()
-    run_fetch_topyellow_leaderbaord()
-    run_fetch_topred_leaderbaord()
+    # run_fetch_topscorer_leaderbaord()
+    # run_fetch_topassists_leaderbaord()
+    # run_fetch_topyellow_leaderbaord()
+    # run_fetch_topred_leaderbaord()
+
+    import json
+    from pathlib import Path
+
+    RAW_DIR = Path(r"D:\Football\data\raw")
+
+    for json_file in RAW_DIR.glob("*_topscorers.json"):
+
+        with open(json_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        Build(data).player_leaderboard("topscorer")
+
+    for json_file in RAW_DIR.glob("*_topassists.json"):
+
+        with open(json_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        Build(data).player_leaderboard("topassists")

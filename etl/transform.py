@@ -342,38 +342,48 @@ class Build:
         table.to_csv(rf"data\processed\player_{player['id']}.csv",index=False)
         StoreData(table).player_table()
 
-    def player_leaderboard(self,table_name):
+    def player_leaderboard(self, table_name):
         final_data = {}
-        res = self.json_data['response']
-        top = self.json_data['results']
-        for i in range(top):
-            player = res[i]['player']
-            team = res[i]['statistics'][0]['team']
-            league = res[i]['statistics'][0]['league']
-            game = res[i]['statistics'][0]['games']
-            goals = res[i]['statistics'][0]['goals']
-            cards = res[i]['statistics'][0]['cards']
-            final_data[player['id']] = {
-                'league_id' : league['id'],
-                'season' : league['season'],
-                'team_id' : team['id'],
-                'goals_tot' : goals['total'],
-                'assists_tot' : goals['assists'],
-                'conceded' : goals['conceded'],
-                'saves' : goals['saves'],
-                'yellow_tot' : cards['yellow'],
-                'yellowred_tot' : cards['yellowred'],
-                'red_tot' : cards['red'],
-                'position' : game['position'],
-                'rating' : game['rating'],
-                'appearances' : game['appearences'],
-                'leaderboard_type' : table_name
-            }
+        res = self.json_data["response"]
+        for entry in res:
+            player = entry["player"]
+            for stats in entry["statistics"]:
 
-        table = self.build_leaderboard_table(final_data)
-        table.to_csv(rf"data\processed\leaderboard_{table_name}{league['season']}{league['id']}.csv",index=False)
-        StoreData(table).leaderboard_table()
+                team = stats["team"]
+                league = stats["league"]
+                game = stats["games"]
+                goals = stats["goals"]
+                cards = stats["cards"]
 
+                key = (
+                    player["id"],
+                    league["id"],
+                    league["season"],
+                    team["id"],
+                    table_name
+                )
+
+                final_data[key] = {
+                    "player_id": player["id"],
+                    "league_id": league["id"],
+                    "season": league["season"],
+                    "team_id": team["id"],
+                    "goals_tot": goals["total"],
+                    "assists_tot": goals["assists"],
+                    "conceded": goals["conceded"],
+                    "saves": goals["saves"],
+                    "yellow_tot": cards["yellow"],
+                    "yellowred_tot": cards["yellowred"],
+                    "red_tot": cards["red"],
+                    "position": game["position"],
+                    "rating": float(game["rating"]) if game["rating"] else None,
+                    "appearances": game["appearences"],
+                    "leaderboard_type": table_name,
+                }
+
+            table = self.build_leaderboard_table(final_data)
+            table.to_csv(rf"data\processed\leaderboard_{table_name}_{league['season']}_{league['id']}.csv",index=False)
+            StoreData(table).leaderboard_table()
 
     def league_table(self):
         final_data = {}

@@ -5,7 +5,7 @@ from sqlalchemy import func
 from pydantic import BaseModel
 import json
 
-from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams, Venues, Squad, League, PlayerInfo, Fixtures
+from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams, Venues, Squad, League, PlayerInfo, Fixtures, PlayerLeaderBoard
 from database.database import get_db
 
 app = FastAPI()
@@ -290,6 +290,135 @@ def fetch_fixture(fixture_id : int, db : Session = Depends(get_db)):
     
     return fixture
 
+@app.get("/fetch/topscorers/{league_id}/{season}")
+def fetch_topscorers(league_id:int,season:int,db:Session = Depends(get_db)):
+    topscorer = (db.query(PlayerLeaderBoard,PlayerInfo)
+                 .join(
+                     PlayerInfo,
+                     PlayerLeaderBoard.player_id==PlayerInfo.player_id
+                 )
+                 .filter(PlayerLeaderBoard.season==season)
+                 .filter(PlayerLeaderBoard.league_id==league_id)
+                 .filter(PlayerLeaderBoard.leaderboard_type=='topscorer')
+                 .order_by(PlayerLeaderBoard.goals_tot.desc())
+                 .limit(20)
+                 .all()
+            )
+    
+    if not topscorer:
+        raise HTTPException(status_code=404, detail= f"stats not found for {season} and {league_id}")
+    
+    return [
+        {
+            "player_id": stats.player_id,
+            "name": player.name,
+            "photo": player.photo,
+            "team_id": stats.team_id,
+            "goals": stats.goals_tot,
+            "assists": stats.assists_tot,
+            "appearance" : stats.appearances,
+            "rating": stats.rating,
+            "position": stats.position,
+        }
+        for stats, player in topscorer
+    ]
+
+@app.get("/fetch/topassists/{league_id}/{season}")
+def fetch_topassists(league_id:int,season:int,db:Session = Depends(get_db)):
+    topassist = (db.query(PlayerLeaderBoard,PlayerInfo)
+                 .join(
+                     PlayerInfo,
+                     PlayerLeaderBoard.player_id==PlayerInfo.player_id
+                 )
+                 .filter(PlayerLeaderBoard.season==season)
+                 .filter(PlayerLeaderBoard.league_id==league_id)
+                 .filter(PlayerLeaderBoard.leaderboard_type=='topassists')
+                 .order_by(PlayerLeaderBoard.assists_tot.desc())
+                 .limit(20)
+                 .all()
+            )
+    
+    if not topassist:
+        raise HTTPException(status_code=404, detail= f"stats not found for {season} and {league_id}")
+    
+    return [
+        {
+            "player_id": stats.player_id,
+            "name": player.name,
+            "photo": player.photo,
+            "team_id": stats.team_id,
+            "goals": stats.goals_tot,
+            "assists": stats.assists_tot,
+            "appearance" : stats.appearances,
+            "rating": stats.rating,
+            "position": stats.position,
+        }
+        for stats, player in topassist
+    ]
+
+@app.get("/fetch/topyellowcards/{league_id}/{season}")
+def fetch_topyellow(league_id:int,season:int,db:Session = Depends(get_db)):
+    topyellow = (db.query(PlayerLeaderBoard,PlayerInfo)
+                 .join(
+                     PlayerInfo,
+                     PlayerLeaderBoard.player_id==PlayerInfo.player_id
+                 )
+                 .filter(PlayerLeaderBoard.season==season)
+                 .filter(PlayerLeaderBoard.league_id==league_id)
+                 .filter(PlayerLeaderBoard.leaderboard_type=='topyellowcards')
+                 .order_by(PlayerLeaderBoard.assists_tot.desc())
+                 .limit(20)
+                 .all()
+            )
+    
+    if not topyellow:
+        raise HTTPException(status_code=404, detail= f"stats not found for {season} and {league_id}")
+    
+    return [
+        {
+            "player_id": stats.player_id,
+            "name": player.name,
+            "photo": player.photo,
+            "team_id": stats.team_id,
+            "yellow_cards" : stats.yellow_tot,
+            "appearance" : stats.appearances,
+            "rating": stats.rating,
+            "position": stats.position,
+        }
+        for stats, player in topyellow
+    ]
+
+@app.get("/fetch/topredcards/{league_id}/{season}")
+def fetch_topred(league_id:int,season:int,db:Session = Depends(get_db)):
+    topred = (db.query(PlayerLeaderBoard,PlayerInfo)
+                 .join(
+                     PlayerInfo,
+                     PlayerLeaderBoard.player_id==PlayerInfo.player_id
+                 )
+                 .filter(PlayerLeaderBoard.season==season)
+                 .filter(PlayerLeaderBoard.league_id==league_id)
+                 .filter(PlayerLeaderBoard.leaderboard_type=='topredcards')
+                 .order_by(PlayerLeaderBoard.assists_tot.desc())
+                 .limit(20)
+                 .all()
+            )
+    
+    if not topred:
+        raise HTTPException(status_code=404, detail= f"stats not found for {season} and {league_id}")
+    
+    return [
+        {
+            "player_id": stats.player_id,
+            "name": player.name,
+            "photo": player.photo,
+            "team_id": stats.team_id,
+            "red_tot" : stats.red_tot,
+            "appearance" : stats.appearances,
+            "rating": stats.rating,
+            "position": stats.position,
+        }
+        for stats, player in topred
+    ]
 
 app.add_middleware(
     CORSMiddleware,

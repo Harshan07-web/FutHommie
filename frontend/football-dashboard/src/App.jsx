@@ -8,16 +8,16 @@ import HomeStandingsPage from "./pages/HomeStandingsPage";
 import AwayStandingsPage from "./pages/AwayStandingsPage";
 import TeamPage from "./pages/TeamPage";
 import VenuePage from "./pages/VenuePage";
-import VenuesPage from "./pages/VenuesPage";
 import TeamsPage from "./pages/TeamsPage";
 import PlayersPage from "./pages/PlayersPage";
 import SquadPage from "./pages/SquadPage";
 import LeaguesPage from "./pages/LeaguesPage";
 import LeaguePage from "./pages/LeaguePage";
 import PlayerPage from "./pages/PlayerPage";
-import ResultsPage from "./pages/ResultsPage";
-import ResultPage from "./pages/ResultPage";
 import FixturesPage from "./pages/FixturesPage";
+import ResultPage from "./pages/ResultPage";
+import ResultsPage from "./pages/ResultsPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
 
 function App() {
 
@@ -60,11 +60,6 @@ function App() {
             />
 
             <Route
-                path="/venues"
-                element={<VenuesPage />}
-            />
-
-            <Route
                 path="/teams"
                 element={<TeamsPage />}
             />
@@ -99,15 +94,71 @@ function App() {
                 path="/results"
                 element={<ResultsPage />}
             />
- 
+
             <Route
                 path="/results/:fixtureId"
                 element={<ResultPage />}
             />
 
-            <Route 
+            <Route
                 path="/fixtures"
                 element={<FixturesPage />}
+            />
+            
+            <Route
+                path="/top-scorers"
+                element={
+                    <LeaderboardPage
+                        title="Top Scorers"
+                        endpoint="topscorers"
+                        statKey="goals"
+                        statLabel="Goals"
+                        secondaryStats={[
+                            { key: "assists", label: "Assists" },
+                        ]}
+                    />
+                }
+            />
+
+            <Route
+                path="/top-assists"
+                element={
+                    <LeaderboardPage
+                        title="Top Assists"
+                        endpoint="topassists"
+                        statKey="assists"
+                        statLabel="Assists"
+                        secondaryStats={[
+                            { key: "goals", label: "Goals" },
+                        ]}
+                    />
+                }
+            />
+
+            <Route
+                path="/top-yellow-cards"
+                element={
+                    <LeaderboardPage
+                        title="Yellow Cards"
+                        endpoint="topyellowcards"
+                        statKey="yellow_cards"
+                        statLabel="Yellows"
+                        secondaryStats={[]}
+                    />
+                }
+            />
+
+            <Route
+                path="/top-red-cards"
+                element={
+                    <LeaderboardPage
+                        title="Red Cards"
+                        endpoint="topredcards"
+                        statKey="red_tot"
+                        statLabel="Reds"
+                        secondaryStats={[]}
+                    />
+                }
             />
 
         </Routes>
