@@ -75,7 +75,13 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
                 }
             }
 
-            setPlayers(Object.values(seen));
+            const sorted = Object.values(seen).sort(
+                (a, b) => (b[statKey] ?? 0) - (a[statKey] ?? 0)
+            );
+
+            console.table(sorted.map(p => ({ name: p.name, stat: p[statKey] })));
+
+            setPlayers(sorted);
 
         } catch (err) {
 
@@ -90,6 +96,8 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
     }
 
     return (
+
+
 
         <div className="page">
 
