@@ -1130,3 +1130,128 @@ tbody tr:hover {
     font-weight: 600;
     color: #7a8799;
 }
+
+.footer {
+  height: 42px;
+  padding: 0 24px;
+  border-top: 1px solid #e5e7eb;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.footer a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+  padding-left: 10px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================
+   MOBILE - WORLD CUP PAGE
+=========================== */
+@media (max-width: 768px) {
+
+  /* Page */
+  .page {
+    padding: 16px;
+  }
+
+  /* Header */
+  .detail-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .detail-header h1 {
+    font-size: 2rem;
+    line-height: 1.1;
+  }
+
+  .badge-lg {
+    width: 90px;
+    height: 90px;
+  }
+
+  /* Tabs */
+  .btn-group {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .btn-group::-webkit-scrollbar {
+    display: none;
+  }
+
+  .btn-group button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    padding: 10px 18px;
+  }
+
+  /* Match cards */
+  .fixture-card {
+    grid-template-columns: 1fr 70px 1fr;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .fixture-team-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.95rem;
+  }
+
+  .fixture-score {
+    font-size: 1.4rem;
+  }
+
+  .fixture-group-tag {
+    min-width: 30px;
+    width: 30px;
+    padding: 12px 6px;
+    font-size: 0.8rem;
+  }
+
+  .fixture-status,
+  .fixture-date {
+    font-size: 0.75rem;
+  }
+
+  /* Knockout cards */
+  .bracket-match {
+    width: 100%;
+  }
+
+  .bracket-team-name {
+    font-size: 0.9rem;
+  }
+
+  .bracket-extra {
+    font-size: 0.72rem;
+  }
+
+  /* Tables */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

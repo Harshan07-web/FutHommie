@@ -124,6 +124,30 @@ function Home() {
                 ))}
 
             </div>
+            <footer className="footer">
+            <p>
+                Made for <span className="heart">❤️</span> of the game.
+            </p>
+
+            <div className="footer-links">
+                <span>Built by Harshan B  </span>
+
+                <a
+                href="https://github.com/Harshan07-web/premier_league_elt.git"
+                target="_blank"
+                rel="noopener noreferrer"
+                >
+                source code
+                </a>
+                  <a
+                href="https://github.com/Harshan07-web"
+                target="_blank"
+                rel="noopener noreferrer"
+                >
+                GitHub 
+                </a>
+            </div>
+            </footer>
 
         </>
 
