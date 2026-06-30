@@ -930,3 +930,141 @@ tbody tr:hover {
   font-weight: 800;
   color: var(--ink);
 }
+/* ============================================================
+   GROUP STAGE — matchday rows with group tag
+   ============================================================ */
+
+.fixture-row-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.fixture-row-wrap .fixture-card {
+  flex: 1;
+}
+
+.fixture-group-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  background: var(--surface-muted);
+  border-right: 1px solid var(--border-strong);
+  padding: 14px 12px;
+  min-width: 36px;
+  text-align: center;
+}
+
+/* ============================================================
+   KNOCKOUT BRACKET
+   ============================================================ */
+
+.bracket-wrap {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.bracket {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-width: max-content;
+  padding: 8px 4px 24px;
+}
+
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.bracket-round-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--pitch);
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.bracket-round-matches {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 16px;
+}
+
+.bracket-match {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-crisp);
+  margin: 0 20px;
+  overflow: hidden;
+}
+
+.bracket-team-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+}
+
+.bracket-team-row:first-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.bracket-team-name {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bracket-team-score {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--pitch);
+}
+
+.bracket-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+  text-align: center;
+  padding: 4px 0 6px;
+}
+
+/* connector lines between rounds */
+.bracket-round:not(:last-child) .bracket-match::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  width: 20px;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+.bracket-round:not(:first-child) .bracket-match::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  width: 20px;
+  height: 1px;
+  background: var(--border-strong);
+}

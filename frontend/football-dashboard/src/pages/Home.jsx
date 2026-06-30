@@ -2,11 +2,17 @@ import { useNavigate } from "react-router-dom";
 
 const sections = [
     {
+        label: "World Cup",
+        cards: [
+            { title: "World Cup Hub", description: "Fixtures, results and top scorers — all in one place", route: "/world-cup" },
+        ]
+    },
+    {
         label: "Standings",
         cards: [
             { title: "League Tables",  description: "Overall standings for all five top European leagues",       route: "/standings" },
-            { title: "Home Form",      description: "League table ranked exclusively by home record",            route: "/home-standings" },
-            { title: "Away Form",      description: "League table ranked exclusively by away record",            route: "/away-standings" },
+            { title: "Home Form",      description: "League table ranked exclusively by home record",            route: "/standings/home" },
+            { title: "Away Form",      description: "League table ranked exclusively by away record",            route: "/standings/away" },
             { title: "Form Table",     description: "Clubs ranked by form across their last 5 matches",          route: "/form-table" },
         ]
     },

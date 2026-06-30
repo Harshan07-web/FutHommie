@@ -1,4 +1,5 @@
 from etl.extract import Fetch
+from etl.extract_2 import Fetch_2
 from etl.transform import Build
 import time
 import json
@@ -286,30 +287,58 @@ def run_fetch_topred_leaderbaord():
             print(f"stored season{i}")
             time.sleep(10)
 
+def run_dataorg_fetch_teams():
+    print("Fetching World Cup Teams...")
+
+    data = Fetch_2().fetch_teams(2026)
+    Build(data.json()).dataorg_teams()
+    Build(data.json()).dataorg_players()
+    print("Stored teams and players.")
+
+
+def run_dataorg_fetch_matches():
+    print("Fetching World Cup Matches...")
+    data = Fetch_2().fetch_matches(2026)
+    Build(data.json()).dataorg_matches()
+    Build(data.json()).dataorg_competition()
+    print("Stored competition and matches.")
+    return data
+
+def run_dataorg_fetch_tscorers():
+    print("Fetching World Cup top scorers...")
+    data = Fetch_2().fetch_top_scorer(2026)
+    Build(data.json()).dataorg_scorers()
+    print("Stored competition and matches.")
+    return data
+
+
+
 if __name__ == '__main__':
     # run_fetch_topscorer_leaderbaord()
     # run_fetch_topassists_leaderbaord()
     # run_fetch_topyellow_leaderbaord()
     # run_fetch_topred_leaderbaord()
 
-    db= session()
-    to_check_players = set()
-    visited_player_det = set()
-    to_check = db.query(PlayerLeaderBoard.player_id).all()
-    for i in to_check:
-        to_check_players.add(i[0])
+    # db= session()
+    # to_check_players = set()
+    # visited_player_det = set()
+    # to_check = db.query(PlayerLeaderBoard.player_id).all()
+    # for i in to_check:
+    #     to_check_players.add(i[0])
 
-    existing = db.query(PlayerInfo.player_id).all()
-    for i in existing:
-        visited_player_det.add(i[0])
+    # existing = db.query(PlayerInfo.player_id).all()
+    # for i in existing:
+    #     visited_player_det.add(i[0])
 
-    for i in to_check_players:
-        print(f"Player {i}")
-        if i in visited_player_det:
-            print(f"Player {i} exists , skipping")
-            continue
-        print(f"fetching for player {i}")
-        res = Fetch(0,0).fetch_player_details(i)
-        Build(res.json()).player_details_table()
-        print(f"Stored for player {i}")
-        time.sleep(7)
+    # for i in to_check_players:
+    #     print(f"Player {i}")
+    #     if i in visited_player_det:
+    #         print(f"Player {i} exists , skipping")
+    #         continue
+    #     print(f"fetching for player {i}")
+    #     res = Fetch(0,0).fetch_player_details(i)
+    #     Build(res.json()).player_details_table()
+    #     print(f"Stored for player {i}")
+    #     time.sleep(7)
+
+    run_dataorg_fetch_tscorers()

@@ -6,6 +6,7 @@ from pydantic import BaseModel
 import json
 
 from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams, Venues, Squad, League, PlayerInfo, Fixtures, PlayerLeaderBoard
+from database.fixture_models import DataORGScorers,DataORGComp,DataORGMatch,DataORGPlayers,DataORGTeams
 from database.database import get_db
 
 app = FastAPI()
@@ -419,6 +420,179 @@ def fetch_topred(league_id:int,season:int,db:Session = Depends(get_db)):
         }
         for stats, player in topred
     ]
+
+@app.get("/dataorg/matches")
+def get_dataorg_matches(db: Session = Depends(get_db)):
+
+    matches = (
+        db.query(DataORGMatch)
+        .order_by(DataORGMatch.date)
+        .all()
+    )
+
+    if not matches:
+        raise HTTPException(status_code=404, detail="No matches found")
+
+    return matches
+
+
+@app.get("/dataorg/matches/{fixture_id}")
+def get_dataorg_match(fixture_id: int, db: Session = Depends(get_db)):
+
+    match = (
+        db.query(DataORGMatch)
+        .filter(DataORGMatch.fixture_id == fixture_id)
+        .first()
+    )
+
+    if not match:
+        raise HTTPException(status_code=404, detail="Match not found")
+
+    return match
+
+
+@app.get("/dataorg/teams")
+def get_dataorg_teams(db: Session = Depends(get_db)):
+
+    teams = (
+        db.query(DataORGTeams)
+        .order_by(DataORGTeams.name)
+        .all()
+    )
+
+    if not teams:
+        raise HTTPException(status_code=404, detail="No teams found")
+
+    return teams
+
+
+@app.get("/dataorg/teams/{team_id}")
+def get_dataorg_team(team_id: int, db: Session = Depends(get_db)):
+
+    team = (
+        db.query(DataORGTeams)
+        .filter(DataORGTeams.team_id == team_id)
+        .first()
+    )
+
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    return team
+
+
+@app.get("/dataorg/players")
+def get_dataorg_players(db: Session = Depends(get_db)):
+
+    players = (
+        db.query(DataORGPlayers)
+        .order_by(DataORGPlayers.name)
+        .all()
+    )
+
+    if not players:
+        raise HTTPException(status_code=404, detail="No players found")
+
+    return players
+
+
+@app.get("/dataorg/players/{player_id}")
+def get_dataorg_player(player_id: int, db: Session = Depends(get_db)):
+
+    player = (
+        db.query(DataORGPlayers)
+        .filter(DataORGPlayers.player_id == player_id)
+        .first()
+    )
+
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+
+    return player
+
+
+@app.get("/dataorg/competitions")
+def get_dataorg_competitions(db: Session = Depends(get_db)):
+
+    comps = (
+        db.query(DataORGComp)
+        .all()
+    )
+
+    if not comps:
+        raise HTTPException(status_code=404, detail="No competitions found")
+
+    return comps
+
+
+@app.get("/dataorg/scorers")
+def get_dataorg_scorers(db: Session = Depends(get_db)):
+
+    scorers = (
+        db.query(DataORGScorers)
+        .order_by(DataORGScorers.goals.desc())
+        .all()
+    )
+
+    if not scorers:
+        raise HTTPException(status_code=404, detail="No scorers found")
+
+    return scorers
+
+
+@app.get("/dataorg/scorers/{competition_id}")
+def get_dataorg_competition_scorers(
+    competition_id: int,
+    db: Session = Depends(get_db)
+):
+
+    scorers = (
+        db.query(DataORGScorers)
+        .filter(DataORGScorers.competition_id == competition_id)
+        .order_by(DataORGScorers.goals.desc())
+        .all()
+    )
+
+    if not scorers:
+        raise HTTPException(status_code=404, detail="No scorers found")
+
+    return scorers
+
+
+@app.get("/dataorg/team/{team_id}/players")
+def get_team_players(team_id: int, db: Session = Depends(get_db)):
+
+    players = (
+        db.query(DataORGPlayers)
+        .filter(DataORGPlayers.team_id == team_id)
+        .order_by(DataORGPlayers.name)
+        .all()
+    )
+
+    if not players:
+        raise HTTPException(status_code=404, detail="No players found")
+
+    return players
+
+
+@app.get("/dataorg/team/{team_id}/matches")
+def get_team_matches(team_id: int, db: Session = Depends(get_db)):
+
+    matches = (
+        db.query(DataORGMatch)
+        .filter(
+            (DataORGMatch.home_id == team_id) |
+            (DataORGMatch.away_id == team_id)
+        )
+        .order_by(DataORGMatch.date)
+        .all()
+    )
+
+    if not matches:
+        raise HTTPException(status_code=404, detail="No matches found")
+
+    return matches
+
 
 app.add_middleware(
     CORSMiddleware,

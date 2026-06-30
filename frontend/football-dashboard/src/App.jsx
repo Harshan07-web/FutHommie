@@ -18,7 +18,7 @@ import FixturesPage from "./pages/FixturesPage";
 import ResultPage from "./pages/ResultPage";
 import ResultsPage from "./pages/ResultsPage";
 import LeaderboardPage from "./pages/LeaderBoardPage";
-
+import WorldCupPage from "./pages/Worldcuppage";
 
 function App() {
 
@@ -160,6 +160,11 @@ function App() {
                         secondaryStats={[]}
                     />
                 }
+            />
+
+            <Route
+                path="/world-cup"
+                element={<WorldCupPage />}
             />
 
         </Routes>

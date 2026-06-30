@@ -199,6 +199,98 @@ class PlayerLeaderBoard(base):
     appearances = Column(Integer)
     leaderboard_type = Column(VARCHAR(20))
     
+class DataORGMatch(base):
+    __tablename__ = "fd_matches"
+
+    fixture_id = Column(Integer, primary_key=True)
+
+    competition_id = Column(Integer)
+    competition_name = Column(VARCHAR(100))
+    competition_code = Column(VARCHAR(20))
+    competition_logo = Column(VARCHAR(255))
+
+    current_matchday = Column(Integer)
+    matchday = Column(Integer)
+
+    referee_id = Column(Integer)
+    referee = Column(VARCHAR(255))
+    referee_nationality = Column(VARCHAR(100))
+
+    date = Column(DateTime)
+    last_updated = Column(DateTime)
+
+    status = Column(VARCHAR(50))
+    stage = Column(VARCHAR(50))
+    group = Column(VARCHAR(50))
+    duration = Column(VARCHAR(50))
+    winner = Column(VARCHAR(20))
+
+    home_id = Column(Integer)
+    away_id = Column(Integer)
+
+    ht_home_goals = Column(Integer)
+    ht_away_goals = Column(Integer)
+    ft_home_goals = Column(Integer)
+    ft_away_goals = Column(Integer)
+    et_home_goals = Column(Integer)
+    et_away_goals = Column(Integer)
+    pen_home_goals = Column(Integer)
+    pen_away_goals = Column(Integer)
+
+
+class DataORGTeams(base):
+    __tablename__ = 'DO_Teams'
+
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    team_id = Column(Integer)
+    name = Column(VARCHAR(255))
+    tla = Column(VARCHAR(10))
+    logo = Column(VARCHAR(255))
+
+class DataORGComp(base):
+    __tablename__ = 'DO_comps'
+
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    league_id = Column(Integer)
+    name = Column(VARCHAR(50))
+    logo = Column(VARCHAR(225))
+
+class DataORGPlayers(base):
+    __tablename__ = 'DO_Players'
+
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    player_id = Column(Integer)
+    name = Column(VARCHAR(225))
+    position = Column(VARCHAR(100))
+    national_team_id = Column(Integer)
+    dob = Column(VARCHAR(50))
+    team_id = Column(Integer)
+
+class DataORGScorers(base):
+    __tablename__ = "DO_Scorers"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    competition_id = Column(Integer)
+    season = Column(Integer)
+
+    player_id = Column(Integer)
+    player_name = Column(VARCHAR(255))
+    firstname = Column(VARCHAR(255))
+    lastname = Column(VARCHAR(255))
+    dob = Column(VARCHAR(225))
+    nationality = Column(VARCHAR(100))
+    section = Column(VARCHAR(100))
+    position = Column(VARCHAR(100))
+    shirt_number = Column(Integer)
+
+    team_id = Column(Integer)
+    team_name = Column(VARCHAR(255))
+
+    played_matches = Column(Integer)
+    goals = Column(Integer)
+    assists = Column(Integer)
+    penalties = Column(Integer)
 
 
     

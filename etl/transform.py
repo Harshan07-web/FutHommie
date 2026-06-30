@@ -399,6 +399,160 @@ class Build:
         table = self.build_league_table(final_data)
         StoreData(table).league_table()
 
+#=============================================vibe coded starts
+
+    def dataorg_matches(self):
+        final_data = {}
+
+        for match in self.json_data["matches"]:
+
+            referee = match["referees"][0] if match["referees"] else {}
+
+            score = match.get("score", {})
+            ht = score.get("halfTime", {})
+            ft = score.get("fullTime", {})
+            et = score.get("extraTime", {})
+            pen = score.get("penalties", {})
+
+            final_data[match["id"]] = {
+
+                "competition_id": match["competition"]["id"],
+                "competition_name": match["competition"]["name"],
+                "competition_code": match["competition"]["code"],
+                "competition_logo": match["competition"]["emblem"],
+
+                "current_matchday": match["season"]["currentMatchday"],
+                "matchday": match["matchday"],
+
+                "referee_id": referee.get("id"),
+                "referee": referee.get("name"),
+                "referee_nationality": referee.get("nationality"),
+
+                "date": datetime.fromisoformat(
+                    match["utcDate"].replace("Z", "+00:00")
+                ),
+
+                "last_updated": datetime.fromisoformat(
+                    match["lastUpdated"].replace("Z", "+00:00")
+                ),
+
+                "status": match["status"],
+                "stage": match["stage"],
+                "group": match.get("group"),
+
+                "duration": score.get("duration"),
+                "winner": score.get("winner"),
+
+                "home_id": match["homeTeam"]["id"],
+                "away_id": match["awayTeam"]["id"],
+
+                "ht_home_goals": ht.get("home"),
+                "ht_away_goals": ht.get("away"),
+
+                "ft_home_goals": ft.get("home"),
+                "ft_away_goals": ft.get("away"),
+
+                "et_home_goals": et.get("home"),
+                "et_away_goals": et.get("away"),
+
+                "pen_home_goals": pen.get("home"),
+                "pen_away_goals": pen.get("away"),
+            }
+
+        table = self.build_dataorg_matches(final_data)
+        StoreData(table).dataorg_matches()
+
+    def dataorg_teams(self):
+        final_data = {}
+
+        for team in self.json_data["teams"]:
+
+            final_data[team["id"]] = {
+                "name": team["name"],
+                "tla": team["tla"],
+                "logo": team["crest"]
+            }
+
+        table = self.build_dataorg_teams(final_data)
+        StoreData(table).dataorg_teams()
+
+    def dataorg_competition(self):
+
+        comp = self.json_data["competition"]
+
+        final_data = {
+            comp["id"]: {
+                "name": comp["name"],
+                "logo": comp["emblem"]
+            }
+        }
+
+        table = self.build_dataorg_competitions(final_data)
+        StoreData(table).dataorg_comp()
+
+    def dataorg_players(self):
+        final_data = {}
+
+        for team in self.json_data["teams"]:
+
+            for player in team["squad"]:
+
+                final_data[player["id"]] = {
+                    "name": player["name"],
+                    "position": player["position"],
+                    "national_team_id": team["id"],
+                    "dob": player["dateOfBirth"],
+                    "team_id": team["id"]
+                }
+
+        table = self.build_dataorg_players(final_data)
+        StoreData(table).dataorg_players()
+
+    from datetime import datetime
+
+    def dataorg_scorers(self):
+
+        final_data = {}
+
+        competition = self.json_data["competition"]
+        season = self.json_data["season"]
+
+        for scorer in self.json_data["scorers"]:
+
+            player = scorer["player"]
+            team = scorer["team"]
+
+            final_data[player["id"]] = {
+
+                "competition_id": competition["id"],
+                "season": season["id"],
+
+                "player_name": player["name"],
+                "firstname": player["firstName"],
+                "lastname": player["lastName"],
+                "dob": datetime.strptime(
+                    player["dateOfBirth"],
+                    "%Y-%m-%d"
+                ).date(),
+                "nationality": player["nationality"],
+                "section": player["section"],
+                "position": player["position"],
+                "shirt_number": player["shirtNumber"],
+
+                "team_id": team["id"],
+                "team_name": team["name"],
+
+                "played_matches": scorer["playedMatches"],
+                "goals": scorer["goals"],
+                "assists": scorer["assists"],
+                "penalties": scorer["penalties"],
+            }
+
+        table = self.build_dataorg_top_scorers(final_data)
+        StoreData(table).dataorg_scorers()
+
+
+#=================================================vibe code ends
 
 
     def calculate_addition_data(self,final_data:dict):
@@ -481,6 +635,51 @@ class Build:
         return table
 
     def build_leaderboard_table(self,final_data : dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index' : 'player_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
+
+        return table
+    
+    def build_dataorg_matches(self,final_data : dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index' : 'fixture_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
+
+        return table
+    
+    def build_dataorg_teams(self,final_data : dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index' : 'team_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
+
+        return table
+    
+    def build_dataorg_competitions(self,final_data : dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index' : 'league_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
+
+        return table
+    
+    def build_dataorg_players(self,final_data : dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index' : 'player_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
+
+        return table
+    
+    def build_dataorg_top_scorers(self,final_data : dict):
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index' : 'player_id'},inplace=True)
