@@ -7,6 +7,8 @@ import pandas as pd
 load_dotenv()
 #39	7293
 
+os.makedirs("data/raw", exist_ok=True)
+
 FOOTBALL_API = os.getenv("FOOTBALL_API")
 url = os.getenv("BASE_URL")
 team_url = os.getenv("TEAM_URL")

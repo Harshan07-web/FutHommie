@@ -11,6 +11,8 @@ team_url = os.getenv("DATAORG_TEAMS_URL")
 match_url = os.getenv("DATAORG_MATCH_URL")
 top_scorer_url = os.getenv("DATAORG_TOP_SCORER")
 
+os.makedirs("data/raw", exist_ok=True)
+
 
 class Fetch_2:
      def __init__(self):
