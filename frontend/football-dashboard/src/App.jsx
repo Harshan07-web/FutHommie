@@ -8,6 +8,7 @@ import HomeStandingsPage from "./pages/HomeStandingsPage";
 import AwayStandingsPage from "./pages/AwayStandingsPage";
 import TeamPage from "./pages/TeamPage";
 import VenuePage from "./pages/VenuePage";
+import VenuesPage from "./pages/VenuesPage";
 import TeamsPage from "./pages/TeamsPage";
 import PlayersPage from "./pages/PlayersPage";
 import SquadPage from "./pages/SquadPage";
@@ -53,6 +54,11 @@ function App() {
             <Route
                 path="/team/:teamId"
                 element={<TeamPage />}
+            />
+
+            <Route
+                path="/venues"
+                element={<VenuesPage />}
             />
 
             <Route
