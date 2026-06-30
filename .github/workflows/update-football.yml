@@ -1,0 +1,51 @@
+name: Football Data Pipeline
+
+on:
+  schedule:
+    # Runs every 12 hours
+    - cron: "0 */12 * * *"
+
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ETL Pipeline
+        env:
+          FOOTBALL_API: ${{ secrets.FOOTBALL_API }}
+          DATAORGTOKEN: ${{ secrets.DATAORGTOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+          BASE_URL: ${{ secrets.BASE_URL }}
+          TEAM_URL: ${{ secrets.TEAM_URL }}
+          PLAYER_URL: ${{ secrets.PLAYER_URL }}
+          LEAGUE_URL: ${{ secrets.LEAGUE_URL }}
+          VENUES_URL: ${{ secrets.VENUES_URL }}
+
+          PLAYER_TOPSCORERS: ${{ secrets.PLAYER_TOPSCORERS }}
+          PLAYER_TOPASSISTS: ${{ secrets.PLAYER_TOPASSISTS }}
+          PLAYER_YELLOW: ${{ secrets.PLAYER_YELLOW }}
+          PLAYER_RED: ${{ secrets.PLAYER_RED }}
+
+          DATAORG_MATCHES_URL: ${{ secrets.DATAORG_MATCHES_URL }}
+          DATAORG_TEAMS_URL: ${{ secrets.DATAORG_TEAMS_URL }}
+          DATAORG_MATCH_URL: ${{ secrets.DATAORG_MATCH_URL }}
+          DATAORG_TOP_SCORER: ${{ secrets.DATAORG_TOP_SCORER }}
+
+        run: |
+          python run_pipeline.py

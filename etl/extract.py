@@ -7,7 +7,7 @@ import pandas as pd
 load_dotenv()
 #39	7293
 
-API = os.getenv("FOOTBALL_API")
+FOOTBALL_API = os.getenv("FOOTBALL_API")
 url = os.getenv("BASE_URL")
 team_url = os.getenv("TEAM_URL")
 player_url = os.getenv("PLAYER_URL")
@@ -31,7 +31,7 @@ class Fetch:
             }
 
             headers = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET",url=url,headers=headers,params=params)
@@ -51,7 +51,7 @@ class Fetch:
             }
 
             headers = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET", url=team_url,headers=headers,params=params)
@@ -70,7 +70,7 @@ class Fetch:
             }
 
             header = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET",url=player_url+"/squads",headers=header,params=params)
@@ -90,7 +90,7 @@ class Fetch:
             }
 
             header = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET" , url= venue_url,headers=header, params=param)
@@ -109,7 +109,7 @@ class Fetch:
             }
 
             header = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET" , url= league_url,headers=header, params=param)
@@ -128,7 +128,7 @@ class Fetch:
             }
 
             header = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET",url=player_url,headers=header,params=params)
@@ -150,7 +150,7 @@ class Fetch:
             }
 
             header = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET",url = topscorers_url ,headers=header,params=params)
@@ -171,7 +171,7 @@ class Fetch:
             }
 
             header = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET",url = topassists_url ,headers=header,params=params)
@@ -192,7 +192,7 @@ class Fetch:
             }
 
             header = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET",url = topyellow_url ,headers=header,params=params)
@@ -213,7 +213,7 @@ class Fetch:
             }
 
             header = {
-                'x-apisports-key' : API
+                'x-apisports-key' : FOOTBALL_API
             }
 
             response = requests.request("GET",url = topred_url ,headers=header,params=params)
