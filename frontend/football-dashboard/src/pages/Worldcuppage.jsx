@@ -63,8 +63,8 @@ function groupByStageKey(matches) {
 
 function MatchCard({ m, teamMap, compact }) {
 
-    const home = teamMap[m.home_id] ?? { name: `Team ${m.home_id}`, logo: null };
-    const away = teamMap[m.away_id] ?? { name: `Team ${m.away_id}`, logo: null };
+    const home = { name: teamMap[m.home_id]?.name ?? "TBD", logo: teamMap[m.home_id]?.logo ?? null };
+    const away = { name: teamMap[m.away_id]?.name ?? "TBD", logo: teamMap[m.away_id]?.logo ?? null };
     const done = isFinished(m.status);
 
     if (compact) {
