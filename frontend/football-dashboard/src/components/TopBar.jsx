@@ -24,7 +24,7 @@ function TopBar() {
                 to="/"
                 className="topbar-brand"
             >
-                Football Data Hub
+                FutHommie
             </Link>
 
         </div>

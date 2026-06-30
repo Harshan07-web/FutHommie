@@ -109,9 +109,9 @@ a { color: inherit; text-decoration: none; }
   gap: 16px;
   padding: 0 32px;
   height: 60px;
-  background:#091E42;
-  border-bottom:none;
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  background:#060f29;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  box-shadow:0 2px 12px rgba(0,0,0,.25);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -292,6 +292,46 @@ a { color: inherit; text-decoration: none; }
 
 .home-section:first-child {
   margin-top: 0;
+  margin-left: -32px;
+  margin-right: -32px;
+  padding: 28px 32px 32px;
+  background: linear-gradient(135deg, #fff7e6, #fff1d6);
+  border-bottom: 1px solid #f3dca0;
+  margin-bottom: 16px;
+}
+
+.home-section:first-child .home-section-label span {
+  color: #b8860b;
+}
+
+.home-section:first-child .home-section-label::after {
+  background: #e9c878;
+}
+
+.home-section:first-child .nav-grid {
+  grid-template-columns: minmax(0, 360px);
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.home-section:first-child .nav-card {
+  border-left: 3px solid #d4a017;
+  box-shadow: 0 10px 28px rgba(184,134,11,.18);
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.home-section:first-child .nav-card h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.home-section:first-child .nav-card:hover {
+  background: #fffaf0;
+  border-left-color: #d4a017;
+  box-shadow: 0 14px 32px rgba(184,134,11,.28);
 }
 
 .home-section-label {
@@ -1079,14 +1119,4 @@ tbody tr:hover {
   width: 20px;
   height: 1px;
   background: var(--border-strong);
-}
-
-.bracket-extra {
-    margin-top: 0.5rem;
-    padding-top: 0.4rem;
-    border-top: 1px solid var(--line);
-    text-align: center;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--text-muted);
 }

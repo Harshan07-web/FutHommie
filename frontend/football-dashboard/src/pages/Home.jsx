@@ -69,7 +69,7 @@ function Home() {
 
                 <div className="home-hero-inner">
 
-                    <span className="eyebrow">Football Data Hub</span>
+                    <span className="eyebrow">FutHommie</span>
 
                     <h1>
                         Europe's top leagues,<br />
@@ -79,7 +79,10 @@ function Home() {
                     <p>
                         Standings, squads, venues and player stats
                         across the Premier League, La Liga, Bundesliga,
-                        Serie A and Ligue 1.
+                        Serie A and Ligue 1. 
+                    </p>
+                    <p>
+                        2026 WORLD CUP IS LIVE !
                     </p>
 
                 </div>

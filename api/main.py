@@ -598,7 +598,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
     "http://localhost:5173",
-    "https://football-data-hub.vercel.app"],
+    "https://football-data-hub.vercel.app",
+    "https://futhommie.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
