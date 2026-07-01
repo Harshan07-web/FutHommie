@@ -2,8 +2,8 @@ name: Football Data Pipeline
 
 on:
   schedule:
-    # Runs every 12 hours
-    - cron: "0 */12 * * *"
+    # Runs every 4 hours
+    - cron: "0 */4 * * *"
 
   workflow_dispatch:
 

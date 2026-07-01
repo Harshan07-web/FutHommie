@@ -333,7 +333,7 @@ if __name__ == '__main__':
             print(f"Player {i} exists , skipping")
             continue
         print(f"fetching for player {i}")
-        if no_of_requests==50:
+        if no_of_requests>=16:
             break
         res = Fetch(0,0).fetch_player_details(i)
         no_of_requests+=1
