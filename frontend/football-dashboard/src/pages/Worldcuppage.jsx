@@ -90,13 +90,13 @@ function MatchCard({ m, teamMap, compact }) {
 
                 {done && m.duration === "EXTRA_TIME" && (
                     <div className="bracket-extra">
-                        FT {m.ft_home_goals}-{m.ft_away_goals} • ET {m.et_home_goals}-{m.et_away_goals}
+                        FT {m.rt_home_goals}-{m.rt_away_goals} • ET {m.et_home_goals}-{m.et_away_goals}
                     </div>
                 )}
 
                 {done && m.duration === "PENALTY_SHOOTOUT" && (
                     <div className="bracket-extra">
-                        FT {m.ft_home_goals}-{m.ft_away_goals} • ET {m.et_home_goals}-{m.et_away_goals} • Pens {m.pen_home_goals}-{m.pen_away_goals}
+                        FT {m.rt_home_goals}-{m.rt_away_goals} • ET {m.et_home_goals}-{m.et_away_goals} • Pens {m.pen_home_goals}-{m.pen_away_goals}
                     </div>
                 )}
 

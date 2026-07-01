@@ -125,10 +125,6 @@ function Home() {
 
             </div>
             <footer className="footer">
-            <p>
-                Made for <span className="heart">❤️</span> of the game.
-            </p>
-
             <div className="footer-links">
                 <span>Built by Harshan B  </span>
 
@@ -137,7 +133,7 @@ function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 >
-                source code
+                repo
                 </a>
                   <a
                 href="https://github.com/Harshan07-web"

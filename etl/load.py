@@ -507,6 +507,8 @@ class StoreData:
 
                     exists.ht_home_goals = row["ht_home_goals"]
                     exists.ht_away_goals = row["ht_away_goals"]
+                    exists.rt_home_goals = row["rt_home_goals"]
+                    exists.rt_away_goals = row["rt_away_goals"]
                     exists.ft_home_goals = row["ft_home_goals"]
                     exists.ft_away_goals = row["ft_away_goals"]
                     exists.et_home_goals = row["et_home_goals"]
@@ -545,6 +547,8 @@ class StoreData:
 
                         ht_home_goals=row["ht_home_goals"],
                         ht_away_goals=row["ht_away_goals"],
+                        rt_home_goals=row["rt_home_goals"],
+                        rt_away_goals=row["rt_away_goals"],
                         ft_home_goals=row["ft_home_goals"],
                         ft_away_goals=row["ft_away_goals"],
                         et_home_goals=row["et_home_goals"],

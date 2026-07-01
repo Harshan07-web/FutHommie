@@ -410,6 +410,7 @@ class Build:
 
             score = match.get("score", {})
             ht = score.get("halfTime", {})
+            rt = score.get("regularTime",{})
             ft = score.get("fullTime", {})
             et = score.get("extraTime", {})
             pen = score.get("penalties", {})
@@ -448,6 +449,9 @@ class Build:
 
                 "ht_home_goals": ht.get("home"),
                 "ht_away_goals": ht.get("away"),
+
+                "rt_home_goals": rt.get("home"),
+                "rt_away_goals": rt.get("away"),
 
                 "ft_home_goals": ft.get("home"),
                 "ft_away_goals": ft.get("away"),

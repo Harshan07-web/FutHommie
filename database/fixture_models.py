@@ -232,6 +232,8 @@ class DataORGMatch(base):
     ht_away_goals = Column(Integer)
     ft_home_goals = Column(Integer)
     ft_away_goals = Column(Integer)
+    rt_home_goals = Column(Integer)
+    rt_away_goals = Column(Integer)
     et_home_goals = Column(Integer)
     et_away_goals = Column(Integer)
     pen_home_goals = Column(Integer)
