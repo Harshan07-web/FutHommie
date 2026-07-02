@@ -99,4 +99,19 @@ class Fetch_2:
             print(e)
 
 if __name__ == '__main__':
-     Fetch_2().fetch_top_scorer(2026)
+    url = f"https://api.football-data.org/v4/competitions/{2021}/matches"
+    params = {
+        'season' : 2023
+    }
+
+    headers = {
+    "X-Auth-Token": API
+    }
+
+    res = requests.request("GET",url=url,params=params,headers=headers)
+
+    print(res.status_code)
+
+
+    with open(f"data/raw/3premier_league_matches.json","w") as f:
+            json.dump(res.json(),f,indent=5)

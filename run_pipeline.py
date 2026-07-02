@@ -314,34 +314,37 @@ def run_dataorg_fetch_tscorers():
 
 
 if __name__ == '__main__':
-    no_of_requests = 0
+    try:
+        no_of_requests = 0
 
-    db= session()
-    to_check_players = set()
-    visited_player_det = set()
-    to_check = db.query(PlayerLeaderBoard.player_id).all()
-    for i in to_check:
-        to_check_players.add(i[0])
+        db= session()
+        to_check_players = set()
+        visited_player_det = set()
+        to_check = db.query(PlayerLeaderBoard.player_id).all()
+        for i in to_check:
+            to_check_players.add(i[0])
 
-    existing = db.query(PlayerInfo.player_id).all()
-    for i in existing:
-        visited_player_det.add(i[0])
+        existing = db.query(PlayerInfo.player_id).all()
+        for i in existing:
+            visited_player_det.add(i[0])
 
-    for i in to_check_players:
-        print(f"Player {i}")
-        if i in visited_player_det:
-            print(f"Player {i} exists , skipping")
-            continue
-        print(f"fetching for player {i}")
-        if no_of_requests>=16:
-            break
-        res = Fetch(0,0).fetch_player_details(i)
-        no_of_requests+=1
-        Build(res.json()).player_details_table()
-        print(f"Stored for player {i}")
+        for i in to_check_players:
+            print(f"Player {i}")
+            if i in visited_player_det:
+                print(f"Player {i} exists , skipping")
+                continue
+            print(f"fetching for player {i}")
+            if no_of_requests>=16:
+                break
+            res = Fetch(0,0).fetch_player_details(i)
+            no_of_requests+=1
+            Build(res.json()).player_details_table()
+            print(f"Stored for player {i}")
+            time.sleep(7)
+    except Exception as e:
+        print(e)
+
+    finally:
+        run_dataorg_fetch_matches()
         time.sleep(7)
-
-
-    run_dataorg_fetch_matches()
-    time.sleep(7)
-    run_dataorg_fetch_tscorers()
+        run_dataorg_fetch_tscorers()

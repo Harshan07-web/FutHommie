@@ -1,6 +1,7 @@
 .env
 __pycache__
 
+etl/data
 data/raw
 data/processed
 pipeline.log
