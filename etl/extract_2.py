@@ -98,20 +98,57 @@ class Fetch_2:
         except Exception as e:
             print(e)
 
-if __name__ == '__main__':
-    url = f"https://api.football-data.org/v4/competitions/{2021}/matches"
-    params = {
-        'season' : 2023
-    }
+     def fetch_pl_matches(self,season:int):
+        url = f"https://api.football-data.org/v4/competitions/{2021}/matches"
+        params = {
+            'season' : season
+        }
 
-    headers = {
-    "X-Auth-Token": API
-    }
+        headers = {
+        "X-Auth-Token": API
+        }
 
-    res = requests.request("GET",url=url,params=params,headers=headers)
+        res = requests.request("GET",url=url,params=params,headers=headers)
 
-    print(res.status_code)
+        print(res.status_code)
+        with open(f"data/raw/premier_league_{season}_matches.json","w") as f:
+                json.dump(res.json(),f,indent=5)
 
+        return res
 
-    with open(f"data/raw/3premier_league_matches.json","w") as f:
-            json.dump(res.json(),f,indent=5)
+     def fetch_pl_teams(self,season:int):
+        url = f"https://api.football-data.org/v4/competitions/{2021}/teams"
+        params = {
+            'season' : season
+        }
+
+        headers = {
+        "X-Auth-Token": API
+        }
+
+        res = requests.request("GET",url=url,params=params,headers=headers)
+
+        print(res.status_code)
+        with open(f"data/raw/premier_league_{season}_matches.json","w") as f:
+                json.dump(res.json(),f,indent=5)
+
+        return res
+     
+     def fetch_pl_scorers(self,season:int):
+        url = f"https://api.football-data.org/v4/competitions/{2021}/scorers"
+        params = {
+            'season' : season,
+            'limit' : 20
+        }
+
+        headers = {
+        "X-Auth-Token": API
+        }
+
+        res = requests.request("GET",url=url,params=params,headers=headers)
+
+        print(res.status_code)
+        with open(f"data/raw/premier_league_{season}_matches.json","w") as f:
+                json.dump(res.json(),f,indent=5)
+
+        return res

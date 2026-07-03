@@ -435,6 +435,22 @@ def get_dataorg_matches(db: Session = Depends(get_db)):
 
     return matches
 
+@app.get("/dataorg/matches/{comp_id}/{season}")
+def get_dataorg_matches(comp_id : int, season : int,db: Session = Depends(get_db)):
+
+    matches = (
+        db.query(DataORGMatch)
+        .filter(DataORGMatch.competition_id==comp_id)
+        .filter(DataORGMatch.season==season)
+        .order_by(DataORGMatch.date)
+        .all()
+    )
+
+    if not matches:
+        raise HTTPException(status_code=404, detail="No matches found")
+
+    return matches
+
 
 @app.get("/dataorg/matches/{fixture_id}")
 def get_dataorg_match(fixture_id: int, db: Session = Depends(get_db)):
@@ -540,7 +556,7 @@ def get_dataorg_scorers(db: Session = Depends(get_db)):
     return scorers
 
 
-@app.get("/dataorg/scorers/{competition_id}")
+@app.get("/dataorg/scorers/{competition_id}/{season}")
 def get_dataorg_competition_scorers(
     competition_id: int,
     db: Session = Depends(get_db)

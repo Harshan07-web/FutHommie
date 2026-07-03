@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../api/footballApi";
 
-const COMPETITIONS = [
+// API-Football competitions (all seasons up to 2024)
+const COMPETITIONS_APIFOOTBALL = [
     { id: 39,  name: "Premier League",               group: "England" },
     { id: 45,  name: "FA Cup",                       group: "England" },
     { id: 48,  name: "Carabao Cup",                  group: "England" },
@@ -25,8 +26,29 @@ const COMPETITIONS = [
     { id: 15,  name: "FIFA Club World Cup",           group: "World" },
 ];
 
-const GROUPS   = [...new Set(COMPETITIONS.map(c => c.group))];
-const SEASONS  = [2022, 2023, 2024];
+// DataORG competitions (2025+) — top 5 + UCL only
+const COMPETITIONS_DATAORG = [
+    { id: 2021, name: "Premier League",          group: "England" },
+    { id: 2014, name: "La Liga",                  group: "Spain" },
+    { id: 2002, name: "Bundesliga",               group: "Germany" },
+    { id: 2019, name: "Serie A",                  group: "Italy" },
+    { id: 2015, name: "Ligue 1",                  group: "France" },
+    { id: 2001, name: "UEFA Champions League",    group: "Europe" },
+];
+
+// API-Football league ID → DataORG competition ID
+const AF_TO_DO_COMP = {
+    39:  2021,
+    140: 2014,
+    78:  2002,
+    135: 2019,
+    61:  2015,
+    2:   2001,
+};
+
+const SEASONS_APIFOOTBALL = [2022, 2023, 2024];
+const SEASONS_DATAORG     = [2025, 2026];
+const ALL_SEASONS         = [...SEASONS_APIFOOTBALL, ...SEASONS_DATAORG];
 
 function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats = [] }) {
 
@@ -36,9 +58,23 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
     const [teamMap, setTeamMap] = useState({});
     const [loading, setLoading] = useState(false);
 
+    const isDataOrg = season >= 2025;
+
+    const competitions = isDataOrg ? COMPETITIONS_DATAORG : COMPETITIONS_APIFOOTBALL;
+    const groups       = [...new Set(competitions.map(c => c.group))];
+
+    // When switching to DataOrg season, reset league to PL equivalent
     useEffect(() => {
-        buildTeamMap();
-    }, [league]);
+        if (isDataOrg && !COMPETITIONS_DATAORG.find(c => c.id === league)) {
+            setLeague(2021);
+        } else if (!isDataOrg && !COMPETITIONS_APIFOOTBALL.find(c => c.id === league)) {
+            setLeague(39);
+        }
+    }, [season]);
+
+    useEffect(() => {
+        if (!isDataOrg) buildTeamMap();
+    }, [league, isDataOrg]);
 
     useEffect(() => {
         fetchLeaderboard();
@@ -62,26 +98,55 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
         try {
 
             setLoading(true);
+            setPlayers([]);
 
-            const res = await api.get(`/fetch/${endpoint}/${league}/${season}`);
-            const raw = res.data ?? [];
+            if (isDataOrg) {
 
-            // deduplicate by player_id — keep highest primary stat per player
-            const seen = {};
-            for (const p of raw) {
-                const existing = seen[p.player_id];
-                if (!existing || (p[statKey] ?? 0) > (existing[statKey] ?? 0)) {
-                    seen[p.player_id] = p;
+                // For DataOrg seasons, league state holds DataOrg comp ID directly
+                const compId = COMPETITIONS_DATAORG.find(c => c.id === league)
+                    ? league
+                    : AF_TO_DO_COMP[league] ?? 2021;
+
+                const res = await api.get(`/dataorg/scorers/${compId}/${season}`);
+                const raw = res.data ?? [];
+
+                // normalise DataORG shape → same display shape
+                const normalised = raw.map(p => ({
+                    player_id:  p.player_id,
+                    name:       p.player_name,
+                    photo:      null,       // DataORG scorers have no photo
+                    team_id:    p.team_id,
+                    team_name:  p.team_name,
+                    position:   p.position,
+                    appearance: p.played_matches,
+                    goals:      p.goals,
+                    assists:    p.assists,
+                    penalties:  p.penalties,
+                    rating:     null,
+                }));
+
+                setPlayers(normalised);
+
+            } else {
+
+                const res = await api.get(`/fetch/${endpoint}/${league}/${season}`);
+                const raw = res.data ?? [];
+
+                // deduplicate — keep highest primary stat per player
+                const seen = {};
+                for (const p of raw) {
+                    const existing = seen[p.player_id];
+                    if (!existing || (p[statKey] ?? 0) > (existing[statKey] ?? 0)) {
+                        seen[p.player_id] = p;
+                    }
                 }
+
+                const sorted = Object.values(seen).sort(
+                    (a, b) => (b[statKey] ?? 0) - (a[statKey] ?? 0)
+                );
+
+                setPlayers(sorted);
             }
-
-            const sorted = Object.values(seen).sort(
-                (a, b) => (b[statKey] ?? 0) - (a[statKey] ?? 0)
-            );
-
-            console.table(sorted.map(p => ({ name: p.name, stat: p[statKey] })));
-
-            setPlayers(sorted);
 
         } catch (err) {
 
@@ -95,9 +160,17 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
         }
     }
 
+    // For DataOrg, primary stat is always goals; secondary always assists
+    const displayStatKey   = isDataOrg ? "goals"   : statKey;
+    const displayStatLabel = isDataOrg ? "Goals"   : statLabel;
+    const displaySecondary = isDataOrg
+        ? [{ key: "assists", label: "Assists" }, { key: "penalties", label: "Penalties" }]
+        : secondaryStats;
+
+    const hasApps   = players[0]?.appearance != null;
+    const hasRating = !isDataOrg;
+
     return (
-
-
 
         <div className="page">
 
@@ -109,9 +182,9 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
             <div className="controls">
 
                 <select value={league} onChange={e => setLeague(Number(e.target.value))}>
-                    {GROUPS.map(group => (
+                    {groups.map(group => (
                         <optgroup key={group} label={group}>
-                            {COMPETITIONS.filter(c => c.group === group).map(c => (
+                            {competitions.filter(c => c.group === group).map(c => (
                                 <option key={c.id} value={c.id}>{c.name}</option>
                             ))}
                         </optgroup>
@@ -119,7 +192,7 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
                 </select>
 
                 <select value={season} onChange={e => setSeason(Number(e.target.value))}>
-                    {SEASONS.map(s => (
+                    {ALL_SEASONS.map(s => (
                         <option key={s} value={s}>{s}</option>
                     ))}
                 </select>
@@ -144,18 +217,20 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
                                 <th style={{ textAlign: "left" }}>Player</th>
                                 <th style={{ textAlign: "left" }}>Team</th>
                                 <th>Pos</th>
-                                {players[0]?.appearance != null && <th>Apps</th>}
-                                <th>{statLabel}</th>
-                                {secondaryStats.map(s => (
+                                {hasApps   && <th>Apps</th>}
+                                <th>{displayStatLabel}</th>
+                                {displaySecondary.map(s => (
                                     <th key={s.key}>{s.label}</th>
                                 ))}
-                                <th>Rating</th>
+                                {hasRating && <th>Rating</th>}
                             </tr>
                         </thead>
                         <tbody>
                             {players.map((p, i) => {
 
-                                const team = teamMap[p.team_id];
+                                const team = isDataOrg
+                                    ? { name: p.team_name, logo: null }
+                                    : teamMap[p.team_id];
 
                                 return (
                                     <tr key={`${p.player_id}-${i}`}>
@@ -164,11 +239,11 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
 
                                         <td>
                                             <div className="lb-player">
-                                                <div className="badge badge-sm">
-                                                    {p.photo && (
+                                                {p.photo && (
+                                                    <div className="badge badge-sm">
                                                         <img src={p.photo} alt={p.name} />
-                                                    )}
-                                                </div>
+                                                    </div>
+                                                )}
                                                 <span className="lb-name">
                                                     {p.name ?? `Player #${p.player_id}`}
                                                 </span>
@@ -188,23 +263,25 @@ function LeaderboardPage({ title, endpoint, statKey, statLabel, secondaryStats =
 
                                         <td className="num">{p.position ?? "—"}</td>
 
-                                        {players[0]?.appearance != null && (
+                                        {hasApps && (
                                             <td className="num">{p.appearance ?? "—"}</td>
                                         )}
 
                                         <td className="lb-stat-primary num">
-                                            {p[statKey] ?? 0}
+                                            {p[displayStatKey] ?? 0}
                                         </td>
 
-                                        {secondaryStats.map(s => (
+                                        {displaySecondary.map(s => (
                                             <td key={s.key} className="num">
                                                 {p[s.key] ?? 0}
                                             </td>
                                         ))}
 
-                                        <td className="num">
-                                            {p.rating != null ? Number(p.rating).toFixed(1) : "—"}
-                                        </td>
+                                        {hasRating && (
+                                            <td className="num">
+                                                {p.rating != null ? Number(p.rating).toFixed(1) : "—"}
+                                            </td>
+                                        )}
 
                                     </tr>
                                 );

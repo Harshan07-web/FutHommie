@@ -403,7 +403,7 @@ class Build:
 
     def dataorg_matches(self):
         final_data = {}
-
+        season = self.json_data['filters']['season']
         for match in self.json_data["matches"]:
 
             referee = match["referees"][0] if match["referees"] else {}
@@ -415,8 +415,24 @@ class Build:
             et = score.get("extraTime", {})
             pen = score.get("penalties", {})
 
-            final_data[match["id"]] = {
+            if score.get("duration")=='REGULAR':
+                et_home_goals = None
+                et_away_goals = None
+                pen_home_goals = None
+                pen_away_goals = None
+                rt_home_goals = None
+                rt_away_goals = None
+            else:
+                et_home_goals  = et.get("home")
+                et_away_goals  = et.get("away")
+                pen_home_goals = pen.get("home")
+                pen_away_goals = pen.get("away")
+                rt_home_goals = rt.get("home")
+                rt_away_goals = rt.get("away")
 
+            final_data[match["id"]] = {
+                
+                "season" : season,
                 "competition_id": match["competition"]["id"],
                 "competition_name": match["competition"]["name"],
                 "competition_code": match["competition"]["code"],
@@ -450,17 +466,17 @@ class Build:
                 "ht_home_goals": ht.get("home"),
                 "ht_away_goals": ht.get("away"),
 
-                "rt_home_goals": rt.get("home"),
-                "rt_away_goals": rt.get("away"),
+                "rt_home_goals": rt_home_goals,
+                "rt_away_goals": rt_away_goals,
 
                 "ft_home_goals": ft.get("home"),
                 "ft_away_goals": ft.get("away"),
 
-                "et_home_goals": et.get("home"),
-                "et_away_goals": et.get("away"),
+                "et_home_goals": et_home_goals,
+                "et_away_goals": et_away_goals,
 
-                "pen_home_goals": pen.get("home"),
-                "pen_away_goals": pen.get("away"),
+                "pen_home_goals": pen_home_goals,
+                "pen_away_goals": pen_away_goals,
             }
 
         table = self.build_dataorg_matches(final_data)
@@ -557,7 +573,6 @@ class Build:
 
 
 #=================================================vibe code ends
-
 
     def calculate_addition_data(self,final_data:dict):
         for team in final_data:

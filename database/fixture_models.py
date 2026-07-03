@@ -203,7 +203,7 @@ class DataORGMatch(base):
     __tablename__ = "fd_matches"
 
     fixture_id = Column(Integer, primary_key=True)
-
+    season = Column(Integer)
     competition_id = Column(Integer)
     competition_name = Column(VARCHAR(100))
     competition_code = Column(VARCHAR(20))

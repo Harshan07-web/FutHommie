@@ -278,7 +278,7 @@ function WorldCupPage() {
                 api.get(`/dataorg/competitions`),
                 api.get(`/dataorg/matches`),
                 api.get(`/dataorg/teams`),
-                api.get(`/dataorg/scorers/${WORLD_CUP_ID}`).catch(() => ({ data: [] })),
+                api.get(`/dataorg/scorers/${WORLD_CUP_ID}/${2026}`).catch(() => ({ data: [] })),
             ]);
 
             const wcComp = (compsRes.data ?? []).find(c => c.league_id === WORLD_CUP_ID);

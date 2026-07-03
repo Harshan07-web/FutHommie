@@ -480,7 +480,7 @@ class StoreData:
                 )
 
                 if exists:
-
+                    exists.season = row['season']
                     exists.competition_id = row["competition_id"]
                     exists.competition_name = row["competition_name"]
                     exists.competition_code = row["competition_code"]
@@ -520,7 +520,7 @@ class StoreData:
 
                     match = DataORGMatch(
                         fixture_id=row["fixture_id"],
-
+                        season = row['season'],
                         competition_id=row["competition_id"],
                         competition_name=row["competition_name"],
                         competition_code=row["competition_code"],
