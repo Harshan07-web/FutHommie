@@ -255,14 +255,97 @@ function BracketView({ matches, teamMap }) {
     );
 }
 
+function GroupStandingsView({ standings, teamMap }) {
+
+    if (!standings || standings.length === 0) {
+        return <p className="state">No standings data found.</p>;
+    }
+
+    // group by group name
+    const grouped = standings.reduce((acc, row) => {
+        const key = row.group ?? "Unknown";
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(row);
+        return acc;
+    }, {});
+
+    const groups = Object.keys(grouped).sort();
+
+    return (
+
+        <div className="wc-groups-grid">
+
+            {groups.map(group => (
+
+                <div key={group} className="wc-group">
+
+                    <div className="fixture-group-header">
+                        <span>Group {group.replace(/^GROUP[_\s]?/i, "")}</span>
+                    </div>
+
+                    <div className="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style={{ width: 28 }}>#</th>
+                                    <th style={{ textAlign: "left" }}>Team</th>
+                                    <th>P</th>
+                                    <th>W</th>
+                                    <th>D</th>
+                                    <th>L</th>
+                                    <th>GD</th>
+                                    <th>Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {grouped[group].map((row, i) => {
+
+                                    const team = teamMap[row.team_id];
+
+                                    return (
+                                        <tr key={row.team_id ?? i}>
+                                            <td className="num">{row.position ?? i + 1}</td>
+                                            <td>
+                                                <div className="team-cell">
+                                                    <div className="badge badge-sm">
+                                                        {team?.logo && <img src={team.logo} alt={team.name} />}
+                                                    </div>
+                                                    {row.team_name ?? team?.name ?? `Team ${row.team_id}`}
+                                                </div>
+                                            </td>
+                                            <td className="num">{row.played ?? row.played_matches ?? "—"}</td>
+                                            <td className="num">{row.won ?? row.wins ?? "—"}</td>
+                                            <td className="num">{row.draw ?? row.draws ?? "—"}</td>
+                                            <td className="num">{row.lost ?? row.losses ?? "—"}</td>
+                                            <td className={`num ${(row.goal_difference ?? row.goal_diff ?? 0) > 0 ? "gd-positive" : (row.goal_difference ?? row.goal_diff ?? 0) < 0 ? "gd-negative" : ""}`}>
+                                                {row.goal_difference ?? row.goal_diff ?? "—"}
+                                            </td>
+                                            <td className="num td-points">{row.points ?? "—"}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            ))}
+
+        </div>
+
+    );
+}
+
 function WorldCupPage() {
 
-    const [tab, setTab]         = useState("results");
-    const [comp, setComp]       = useState(null);
-    const [matches, setMatches] = useState([]);
-    const [teamMap, setTeamMap] = useState({});
-    const [scorers, setScorers] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [tab, setTab]             = useState("results");
+    const [comp, setComp]           = useState(null);
+    const [matches, setMatches]     = useState([]);
+    const [teamMap, setTeamMap]     = useState({});
+    const [scorers, setScorers]     = useState([]);
+    const [standings, setStandings] = useState([]);
+    const [loading, setLoading]     = useState(false);
 
     useEffect(() => {
         fetchBase();
@@ -274,20 +357,17 @@ function WorldCupPage() {
 
             setLoading(true);
 
-            const [compsRes, matchesRes, teamsRes, scorersRes] = await Promise.all([
+            const [compsRes, matchesRes, teamsRes, scorersRes, standingsRes] = await Promise.all([
                 api.get(`/dataorg/competitions`),
-                api.get(`/dataorg/matches`),
+                api.get(`/dataorg/matches/${WORLD_CUP_ID}/2026`),
                 api.get(`/dataorg/teams`),
-                api.get(`/dataorg/scorers/${WORLD_CUP_ID}/${2026}`).catch(() => ({ data: [] })),
+                api.get(`/dataorg/scorers/${WORLD_CUP_ID}/2026`).catch(() => ({ data: [] })),
+                api.get(`/dataorg/standings/${WORLD_CUP_ID}/2026`).catch(() => ({ data: [] })),
             ]);
 
             const wcComp = (compsRes.data ?? []).find(c => c.league_id === WORLD_CUP_ID);
             setComp(wcComp ?? null);
-
-            const wcMatches = (matchesRes.data ?? []).filter(
-                m => m.competition_id === WORLD_CUP_ID
-            );
-            setMatches(wcMatches);
+            setMatches(matchesRes.data ?? []);
 
             const map = {};
             for (const t of (teamsRes.data ?? [])) {
@@ -296,6 +376,7 @@ function WorldCupPage() {
             setTeamMap(map);
 
             setScorers(scorersRes.data ?? []);
+            setStandings(standingsRes.data ?? []);
 
         } catch (err) {
 
@@ -334,9 +415,10 @@ function WorldCupPage() {
 
             <div className="btn-group">
                 <button className={tab === "results"   ? "active" : ""} onClick={() => setTab("results")}>Results</button>
-                <button className={tab === "fixtures"   ? "active" : ""} onClick={() => setTab("fixtures")}>Fixtures</button>
-                <button className={tab === "knockout"   ? "active" : ""} onClick={() => setTab("knockout")}>Knockout</button>
-                <button className={tab === "scorers"    ? "active" : ""} onClick={() => setTab("scorers")}>Top Scorers</button>
+                <button className={tab === "fixtures"  ? "active" : ""} onClick={() => setTab("fixtures")}>Fixtures</button>
+                <button className={tab === "groups"    ? "active" : ""} onClick={() => setTab("groups")}>Groups</button>
+                <button className={tab === "knockout"  ? "active" : ""} onClick={() => setTab("knockout")}>Knockout</button>
+                <button className={tab === "scorers"   ? "active" : ""} onClick={() => setTab("scorers")}>Top Scorers</button>
             </div>
 
             {loading ? (
@@ -360,6 +442,10 @@ function WorldCupPage() {
                     </div>
                     <UpcomingListView matches={upcoming} teamMap={teamMap} />
                 </>
+
+            ) : tab === "groups" ? (
+
+                <GroupStandingsView standings={standings} teamMap={teamMap} />
 
             ) : tab === "knockout" ? (
 

@@ -79,7 +79,7 @@ class Fetch_2:
 
             params = {
             "season": season,
-            "limit" : 20
+            "limit" : 30
         }
 
             response = requests.get(
@@ -98,8 +98,35 @@ class Fetch_2:
         except Exception as e:
             print(e)
 
-     def fetch_pl_matches(self,season:int):
-        url = f"https://api.football-data.org/v4/competitions/{2021}/matches"
+     def fetch_standings(self,season:int):
+        standings_url = f"https://api.football-data.org//v4/competitions/{2000}/standings"
+        try:
+            headers = {
+            "X-Auth-Token": API
+        }
+
+            params = {
+            "season": season,
+        }
+
+            response = requests.get(
+                url = standings_url,
+                headers=headers,
+                params=params
+            )
+
+            print(response.status_code)
+
+            with open(f"data/raw/1wc_standings.json","w") as f:
+                    json.dump(response.json(),f,indent=5)
+
+            return response
+
+        except Exception as e:
+            print(e)
+
+     def fetch_league_matches(self,id:int,season:int):
+        url = f"https://api.football-data.org/v4/competitions/{id}/matches"
         params = {
             'season' : season
         }
@@ -116,8 +143,8 @@ class Fetch_2:
 
         return res
 
-     def fetch_pl_teams(self,season:int):
-        url = f"https://api.football-data.org/v4/competitions/{2021}/teams"
+     def fetch_league_teams(self,id:int,season:int):
+        url = f"https://api.football-data.org/v4/competitions/{id}/teams"
         params = {
             'season' : season
         }
@@ -134,8 +161,8 @@ class Fetch_2:
 
         return res
      
-     def fetch_pl_scorers(self,season:int):
-        url = f"https://api.football-data.org/v4/competitions/{2021}/scorers"
+     def fetch_league_scorers(self,id:int,season:int):
+        url = f"https://api.football-data.org/v4/competitions/{id}/scorers"
         params = {
             'season' : season,
             'limit' : 20
@@ -152,3 +179,8 @@ class Fetch_2:
                 json.dump(res.json(),f,indent=5)
 
         return res
+     
+
+if __name__=='__main__':
+     res = Fetch_2().fetch_standings(2026)
+    

@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import json
 
 from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams, Venues, Squad, League, PlayerInfo, Fixtures, PlayerLeaderBoard
-from database.fixture_models import DataORGScorers,DataORGComp,DataORGMatch,DataORGPlayers,DataORGTeams
+from database.fixture_models import DataORGScorers,DataORGComp,DataORGMatch,DataORGPlayers,DataORGTeams,DataORGStandings
 from database.database import get_db
 
 app = FastAPI()
@@ -443,6 +443,22 @@ def get_dataorg_matches(comp_id : int, season : int,db: Session = Depends(get_db
         .filter(DataORGMatch.competition_id==comp_id)
         .filter(DataORGMatch.season==season)
         .order_by(DataORGMatch.date)
+        .all()
+    )
+
+    if not matches:
+        raise HTTPException(status_code=404, detail="No matches found")
+
+    return matches
+
+@app.get("/dataorg/standings/{comp_id}/{season}")
+def get_dataorg_matches(comp_id : int, season : int,db: Session = Depends(get_db)):
+
+    matches = (
+        db.query(DataORGStandings)
+        .filter(DataORGStandings.competition_id==comp_id)
+        .filter(DataORGStandings.season==season)
+        .order_by(DataORGStandings.date)
         .all()
     )
 

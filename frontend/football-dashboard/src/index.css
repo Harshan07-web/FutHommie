@@ -1048,7 +1048,8 @@ tbody tr:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  gap: 16px;
+  gap: 8px;
+  min-height: 1400px;
 }
 
 .bracket-match {
@@ -1122,13 +1123,12 @@ tbody tr:hover {
 }
 
 .bracket-extra {
-    margin-top: 0.5rem;
-    padding-top: 0.4rem;
-    border-top: 1px solid #d8dee9;
-    text-align: center;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: #7a8799;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+  text-align: center;
+  padding: 4px 8px 6px;
+  border-top: 1px solid var(--border);
 }
 
 .footer {
@@ -1254,4 +1254,24 @@ tbody tr:hover {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+}
+
+.wc-groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.wc-group .fixture-group-header {
+  margin-bottom: 8px;
+}
+
+.wc-group .table-wrap {
+  box-shadow: none;
+}
+
+.wc-group th,
+.wc-group td {
+  padding: 8px 10px;
 }

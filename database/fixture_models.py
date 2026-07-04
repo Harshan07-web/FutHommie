@@ -294,6 +294,11 @@ class DataORGScorers(base):
     assists = Column(Integer)
     penalties = Column(Integer)
 
+class DataORGStandings(base):
+    __tablename__ = 'DO_standings'
+
+    id = Column(Integer,primary_key=True,autoincrement=True)
+
 
     
 
