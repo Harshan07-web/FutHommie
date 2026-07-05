@@ -349,21 +349,30 @@ if __name__ == '__main__':
         time.sleep(7)
         run_dataorg_fetch_tscorers()
         time.sleep(7)
-    # print(f"Fetch pl matches for 2026")
-    # res = Fetch_2().fetch_pl_matches(2026)
-    # Build(res.json()).dataorg_matches()
-    # time.sleep(7)
-    # print(f"Fetch pl teams for 2025")
-    # res = Fetch_2().fetch_pl_teams(2025)
-    # Build(res.json()).dataorg_teams()
-    # time.sleep(7)
-    # print(f"Fetch pl teams for 2026")
-    # res = Fetch_2().fetch_pl_teams(2026)
-    # Build(res.json()).dataorg_teams()
-    # time.sleep(7)
 
-    # res = Fetch_2().fetch_pl_scorers(2025)
-    # Build(res.json()).dataorg_scorers()
+    # ids = [2021,2001,2002,2014,2015,2019]
+    # seasons = [2025,2026]
+    # for i in ids:
+    #     for j in seasons:
+    #         if i==2001 and j==2026:
+    #             continue
+    #         print(f"Fetch {i} matches for {j}")
+    #         res = Fetch_2().fetch_league_matches(i,j)
+    #         Build(res.json()).dataorg_matches()
+    #         print(f"stored matchs for {i} in season {j}")
+    #         time.sleep(7)
+    #         print(f"Fetch {i} teams for {j}")
+    #         res = Fetch_2().fetch_league_teams(i,j)
+    #         Build(res.json()).dataorg_teams()
+    #         print(f"stored teams for {i} in season {j}")
+    #         time.sleep(7)
+    #         print(f"fetch top scorers {i} for season {j}")
+    #         res = Fetch_2().fetch_league_scorers(i,j)
+    #         Build(res.json()).dataorg_scorers()
+    #         print(f"stored top scorers for {i} in season {j}")
+
+
+
 
 
 

@@ -138,7 +138,7 @@ class Fetch_2:
         res = requests.request("GET",url=url,params=params,headers=headers)
 
         print(res.status_code)
-        with open(f"data/raw/premier_league_{season}_matches.json","w") as f:
+        with open(f"data/raw/{id}_league_{season}_matches.json","w") as f:
                 json.dump(res.json(),f,indent=5)
 
         return res
@@ -156,7 +156,7 @@ class Fetch_2:
         res = requests.request("GET",url=url,params=params,headers=headers)
 
         print(res.status_code)
-        with open(f"data/raw/premier_league_{season}_matches.json","w") as f:
+        with open(f"data/raw/{id}_league_{season}_teams.json","w") as f:
                 json.dump(res.json(),f,indent=5)
 
         return res
@@ -175,7 +175,7 @@ class Fetch_2:
         res = requests.request("GET",url=url,params=params,headers=headers)
 
         print(res.status_code)
-        with open(f"data/raw/premier_league_{season}_matches.json","w") as f:
+        with open(f"data/raw/{id}_league_{season}_scorers.json","w") as f:
                 json.dump(res.json(),f,indent=5)
 
         return res
