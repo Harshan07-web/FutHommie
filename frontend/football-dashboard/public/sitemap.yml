@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <url>
+        <loc>https://futhommie.vercel.app/</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/standings</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/home-standings</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/away-standings</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/venues</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/teams</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/players</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/leagues</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/results</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/fixtures</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/top-scorers</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/top-assists</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/top-yellow-cards</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/top-red-cards</loc>
+    </url>
+
+    <url>
+        <loc>https://futhommie.vercel.app/world-cup</loc>
+    </url>
+
+</urlset>
