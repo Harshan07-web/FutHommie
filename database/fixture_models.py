@@ -297,9 +297,78 @@ class DataORGScorers(base):
 class DataORGStandings(base):
     __tablename__ = 'DO_standings'
 
-    id = Column(Integer,primary_key=True,autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    team_id = Column(Integer)
+    league_id = Column(Integer)
+    league = Column(VARCHAR(255))
+    season = Column(Integer)
+    rank = Column(Integer)
+    team = Column(VARCHAR(255))
+    played = Column(Integer)
+    wins = Column(Integer)
+    draws = Column(Integer)
+    losses = Column(Integer)
+    goals = Column(Integer)
+    goals_conceded = Column(Integer)
+    goal_diff = Column(Integer)
+    points =Column(Integer)
+    win_percent = Column(Float)
+    comp_round = Column(VARCHAR(100))
 
 
-    
+    __table_args__ = (
+        UniqueConstraint('season','team','league',name='unique_season_team'),
+    )
+
+
+class DataORGHomeStandings(base):
+    __tablename__ = 'DO_standing_home'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    team_id = Column(Integer)
+    league_id = Column(Integer)
+    league = Column(VARCHAR(255))
+    season = Column(Integer)
+    rank = Column(Integer)
+    team = Column(VARCHAR(255))
+    played = Column(Integer)
+    wins = Column(Integer)
+    draws = Column(Integer)
+    losses = Column(Integer)
+    goals = Column(Integer)
+    goals_conceded = Column(Integer)
+    goal_diff = Column(Integer)
+    points =Column(Integer)
+    win_percent = Column(Float)
+    comp_round = Column(VARCHAR(100))
+
+    __table_args__ = (
+        UniqueConstraint('season','team','league',name='unique_home_season_team'),
+    )
+
+class DataORGAwayStandings(base):
+    __tablename__ = 'DO_standing_away'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    team_id = Column(Integer)
+    league_id = Column(Integer)
+    league = Column(VARCHAR(255))
+    season = Column(Integer)
+    rank = Column(Integer)
+    team = Column(VARCHAR(255))
+    played = Column(Integer)
+    wins = Column(Integer)
+    draws = Column(Integer)
+    losses = Column(Integer)
+    goals = Column(Integer)
+    goals_conceded = Column(Integer)
+    goal_diff = Column(Integer)
+    points =Column(Integer)
+    win_percent = Column(Float)
+    comp_round = Column(VARCHAR(100))
+
+    __table_args__ = (
+        UniqueConstraint('season','team','league',name='unique_away_season_team'),
+    )  
 
 

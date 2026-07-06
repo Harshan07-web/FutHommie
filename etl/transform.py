@@ -574,11 +574,59 @@ class Build:
 
 #=================================================vibe code ends
 
+    def dataorg_standings(self):
+        season = self.json_data['filters']['season']
+        league_id = self.json_data['competition']['id']
+        league = self.json_data['competition']['name']
+        for standing in self.json_data['standings']:
+            final_data = {}
+            l_type = standing['type']
+
+            for team in standing['table']:
+                team_id = team['team']['id']
+
+                final_data[team_id] = {
+                'team' : team['team']['name'],
+                'season': season,
+                'league_id': league_id,
+                'league': league,
+                'rank' : team['position'],
+                'played' : team['playedGames'],
+                'wins' : team['won'],
+                'draws' : team['draw'],
+                'losses' : team['lost'],
+                'goals' : team['goalsFor'],
+                'goals_conceded' : team['goalsAgainst'],
+                'goal_diff': team['goalDifference'],
+                'points' : team['points'],
+                'comp_round' : l_type
+    }
+
+            final_data = self.calculate_dataorg_addition_data(final_data=final_data)
+            table = self.build_dataorg_standings(final_data)
+
+            if l_type == "TOTAL":
+                StoreData(table).dataorg_standings()
+            elif l_type == "HOME":
+                StoreData(table).dataorg_standings_home()
+            elif l_type == "AWAY":
+                StoreData(table).dataorg_standings_away()
+
+
     def calculate_addition_data(self,final_data:dict):
         for team in final_data:
             final_data[team]['points'] = final_data[team]['wins']*3 + final_data[team]['draws']*1
             final_data[team]['goal diff'] = final_data[team]['goals'] - final_data[team]['goal con']
             final_data[team]['win_per'] = round((final_data[team]['wins']/final_data[team]['played'])*100,2)
+
+        return final_data
+    
+    def calculate_dataorg_addition_data(self,final_data:dict):
+        for team in final_data:
+            if final_data[team]['played']==0:
+                final_data[team]['win_per'] = 0
+            else:
+                final_data[team]['win_per'] = round((final_data[team]['wins']/final_data[team]['played'])*100,2)
 
         return final_data
     
@@ -702,6 +750,15 @@ class Build:
         table = pd.DataFrame.from_dict(final_data,orient='index')
         table.reset_index(inplace=True)
         table.rename(columns={'index' : 'player_id'},inplace=True)
+        table = table.astype(object)
+        table = table.where(pd.notnull(table), None)
+
+        return table
+    
+    def build_dataorg_standings(self,final_data : dict):
+        table = pd.DataFrame.from_dict(final_data,orient='index')
+        table.reset_index(inplace=True)
+        table.rename(columns={'index' : 'team_id'},inplace=True)
         table = table.astype(object)
         table = table.where(pd.notnull(table), None)
 

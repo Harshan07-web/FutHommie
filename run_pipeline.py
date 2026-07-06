@@ -314,48 +314,53 @@ def run_dataorg_fetch_tscorers():
 
 
 if __name__ == '__main__':
-    try:
-        no_of_requests = 0
+    # try:
+    #     no_of_requests = 0
 
-        db= session()
-        to_check_players = set()
-        visited_player_det = set()
-        to_check = db.query(PlayerLeaderBoard.player_id).all()
-        for i in to_check:
-            to_check_players.add(i[0])
+    #     db= session()
+    #     to_check_players = set()
+    #     visited_player_det = set()
+    #     to_check = db.query(PlayerLeaderBoard.player_id).all()
+    #     for i in to_check:
+    #         to_check_players.add(i[0])
 
-        existing = db.query(PlayerInfo.player_id).all()
-        for i in existing:
-            visited_player_det.add(i[0])
+    #     existing = db.query(PlayerInfo.player_id).all()
+    #     for i in existing:
+    #         visited_player_det.add(i[0])
 
-        for i in to_check_players:
-            print(f"Player {i}")
-            if i in visited_player_det:
-                print(f"Player {i} exists , skipping")
-                continue
-            print(f"fetching for player {i}")
-            if no_of_requests>=16:
-                break
-            res = Fetch(0,0).fetch_player_details(i)
-            no_of_requests+=1
-            Build(res.json()).player_details_table()
-            print(f"Stored for player {i}")
-            time.sleep(7)
-    except Exception as e:
-        print(e)
-
-    finally:
-        run_dataorg_fetch_matches()
-        time.sleep(7)
-        run_dataorg_fetch_tscorers()
-        time.sleep(7)
-
-    # ids = [2021,2001,2002,2014,2015,2019]
-    # seasons = [2025,2026]
-    # for i in ids:
-    #     for j in seasons:
-    #         if i==2001 and j==2026:
+    #     for i in to_check_players:
+    #         print(f"Player {i}")
+    #         if i in visited_player_det:
+    #             print(f"Player {i} exists , skipping")
     #             continue
+    #         print(f"fetching for player {i}")
+    #         if no_of_requests>=16:
+    #             break
+    #         res = Fetch(0,0).fetch_player_details(i)
+    #         no_of_requests+=1
+    #         Build(res.json()).player_details_table()
+    #         print(f"Stored for player {i}")
+    #         time.sleep(7)
+    # except Exception as e:
+    #     print(e)
+
+    # finally:
+    #     run_dataorg_fetch_matches()
+    #     time.sleep(7)
+    #     run_dataorg_fetch_tscorers()
+    #     time.sleep(7)
+
+    ids = [2021,2001,2002,2014,2015,2019]
+    seasons = [2025,2026]
+    for i in ids:
+        for j in seasons:
+            if i==2001 and j==2026:
+                continue
+            print(f"fetch standings for {i} season {j}")
+            res = Fetch_2().fetch_standings(i,j)
+            Build(res.json()).dataorg_standings()
+            print(f"stored {i} for season {j}")
+            time.sleep(7)
     #         print(f"Fetch {i} matches for {j}")
     #         res = Fetch_2().fetch_league_matches(i,j)
     #         Build(res.json()).dataorg_matches()
@@ -370,6 +375,8 @@ if __name__ == '__main__':
     #         res = Fetch_2().fetch_league_scorers(i,j)
     #         Build(res.json()).dataorg_scorers()
     #         print(f"stored top scorers for {i} in season {j}")
+
+
 
 
 

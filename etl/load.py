@@ -1,6 +1,6 @@
 from database.database import session
 from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues, PlayerInfo, Fixtures, PlayerLeaderBoard
-from database.fixture_models import DataORGComp,DataORGMatch,DataORGPlayers,DataORGTeams,DataORGScorers
+from database.fixture_models import DataORGComp,DataORGMatch,DataORGPlayers,DataORGTeams,DataORGScorers,DataORGStandings,DataORGAwayStandings,DataORGHomeStandings
 
 class StoreData:
     def __init__(self,table):
@@ -738,6 +738,187 @@ class StoreData:
 
         finally:
             db.close()
+
+    def dataorg_standings(self):
+        try:
+            db = session()
+            for index,row in self.table.iterrows():
+
+                exists = (db.query(DataORGStandings)
+                        .filter(
+                            DataORGStandings.league_id == row["league_id"],
+                            DataORGStandings.season == row["season"],
+                            DataORGStandings.team_id == row["team_id"]
+                        )
+                        .first()
+                )
+
+                if exists:
+                    exists.team_id = row['team_id']
+                    exists.league_id = row['league_id']
+                    exists.league = row['league']
+                    exists.season = row['season']
+                    exists.rank = row['rank']
+                    exists.team = row['team']
+                    exists.played = row['played']
+                    exists.wins = row["wins"]
+                    exists.draws = row["draws"]
+                    exists.losses = row["losses"]
+                    exists.goals = row["goals"]
+                    exists.goals_conceded = row["goals_conceded"]
+                    exists.goal_diff = row["goal_diff"]
+                    exists.points = row["points"]
+                    exists.win_percent = row['win_per']
+                    exists.comp_round = row['comp_round']
+
+                else:
+                    team = DataORGStandings(
+                        team_id = row['team_id'],
+                        league_id = row['league_id'],
+                        league = row['league'],
+                        season = row['season'],
+                        rank = row['rank'],
+                        team = row['team'],
+                        played = row['played'],
+                        wins = row["wins"], 
+                        draws = row["draws"], 
+                        losses = row["losses"],
+                        goals = row["goals"],
+                        goals_conceded = row["goals_conceded"],
+                        goal_diff = row["goal_diff"],
+                        points = row["points"],
+                        win_percent = row['win_per'],
+                        comp_round = row['comp_round']
+                    )
+
+                    db.add(team)
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            raise e
+        finally:
+            db.close()
+
+    def dataorg_standings_home(self):
+        try:
+            db = session()
+            for index,row in self.table.iterrows():
+
+                exists = (db.query(DataORGHomeStandings)
+                        .filter(
+                            DataORGHomeStandings.league_id == row["league_id"],
+                            DataORGHomeStandings.season == row["season"],
+                            DataORGHomeStandings.team_id == row["team_id"]
+                        )
+                        .first()
+                )
+
+                if exists:
+                    exists.team_id = row['team_id']
+                    exists.league_id = row['league_id']
+                    exists.league = row['league']
+                    exists.season = row['season']
+                    exists.rank = row['rank']
+                    exists.team = row['team']
+                    exists.played = row['played']
+                    exists.wins = row["wins"]
+                    exists.draws = row["draws"]
+                    exists.losses = row["losses"]
+                    exists.goals = row["goals"]
+                    exists.goals_conceded = row["goals_conceded"]
+                    exists.goal_diff = row["goal_diff"]
+                    exists.points = row["points"]
+                    exists.win_percent = row['win_per']
+                    exists.comp_round = row['comp_round']
+
+                else:
+                    team = DataORGHomeStandings(
+                        team_id = row['team_id'],
+                        league_id = row['league_id'],
+                        league = row['league'],
+                        season = row['season'],
+                        rank = row['rank'],
+                        team = row['team'],
+                        played = row['played'],
+                        wins = row["wins"], 
+                        draws = row["draws"], 
+                        losses = row["losses"],
+                        goals = row["goals"],
+                        goals_conceded = row["goals_conceded"],
+                        goal_diff = row["goal_diff"],
+                        points = row["points"],
+                        win_percent = row['win_per'],
+                        comp_round = row['comp_round']
+                    )
+
+                    db.add(team)
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            raise e
+        finally:
+            db.close()
+
+    def dataorg_standings_away(self):
+        try:
+            db = session()
+            for index,row in self.table.iterrows():
+                exists = (db.query(DataORGAwayStandings)
+                        .filter(
+                            DataORGAwayStandings.league_id == row["league_id"],
+                            DataORGAwayStandings.season == row["season"],
+                            DataORGAwayStandings.team_id == row["team_id"]
+                        )
+                        .first()
+                )
+
+                if exists:
+                    exists.team_id = row['team_id']
+                    exists.league_id = row['league_id']
+                    exists.league = row['league']
+                    exists.season = row['season']
+                    exists.rank = row['rank']
+                    exists.team = row['team']
+                    exists.played = row['played']
+                    exists.wins = row["wins"]
+                    exists.draws = row["draws"]
+                    exists.losses = row["losses"]
+                    exists.goals = row["goals"]
+                    exists.goals_conceded = row["goals_conceded"]
+                    exists.goal_diff = row["goal_diff"]
+                    exists.points = row["points"]
+                    exists.win_percent = row['win_per']
+                    exists.comp_round = row['comp_round']
+
+                else:
+                    team = DataORGAwayStandings(
+                        team_id = row['team_id'],
+                        league_id = row['league_id'],
+                        league = row['league'],
+                        season = row['season'],
+                        rank = row['rank'],
+                        team = row['team'],
+                        played = row['played'],
+                        wins = row["wins"], 
+                        draws = row["draws"], 
+                        losses = row["losses"],
+                        goals = row["goals"],
+                        goals_conceded = row["goals_conceded"],
+                        goal_diff = row["goal_diff"],
+                        points = row["points"],
+                        win_percent = row['win_per'],
+                        comp_round = row['comp_round']
+                    )
+
+                    db.add(team)
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            raise e
+        finally:
+            db.close()
+
+
 
 
 

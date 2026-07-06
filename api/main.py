@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import json
 
 from database.fixture_models import OverallStanding, HomeStanding, AwayStanding, Teams, Venues, Squad, League, PlayerInfo, Fixtures, PlayerLeaderBoard
-from database.fixture_models import DataORGScorers,DataORGComp,DataORGMatch,DataORGPlayers,DataORGTeams,DataORGStandings
+from database.fixture_models import DataORGScorers,DataORGComp,DataORGMatch,DataORGPlayers,DataORGTeams,DataORGStandings,DataORGAwayStandings,DataORGHomeStandings
 from database.database import get_db
 
 app = FastAPI()
@@ -451,14 +451,13 @@ def get_dataorg_matches(comp_id : int, season : int,db: Session = Depends(get_db
 
     return matches
 
-@app.get("/dataorg/standings/{comp_id}/{season}")
+@app.get("/dataorg/wcstandings/{comp_id}/{season}")
 def get_dataorg_matches(comp_id : int, season : int,db: Session = Depends(get_db)):
 
     matches = (
         db.query(DataORGStandings)
-        .filter(DataORGStandings.competition_id==comp_id)
+        .filter(DataORGStandings.league_id==comp_id)
         .filter(DataORGStandings.season==season)
-        .order_by(DataORGStandings.date)
         .all()
     )
 
@@ -624,6 +623,114 @@ def get_team_matches(team_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No matches found")
 
     return matches
+
+@app.get("/dataorg/standings/{season}/{league_id}")
+def fetchdataorg_overall_standings(season: int,league_id :int, db: Session = Depends(get_db)):
+    results = (
+        db.query(DataORGStandings, DataORGTeams.logo)
+        .join(
+            DataORGTeams,
+            DataORGTeams.team_id == DataORGStandings.team_id
+        )
+        .filter(DataORGStandings.season == season)
+        .filter(DataORGStandings.league_id == league_id)
+        .order_by(DataORGStandings.rank)
+        .all()
+    )
+
+    if not results:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No data found for season {season}"
+        )
+
+    return [
+        {
+            "team_id": standing.team_id,
+            "rank": standing.rank,
+            "team": standing.team,
+            "played": standing.played,
+            "wins": standing.wins,
+            "draws": standing.draws,
+            "losses": standing.losses,
+            "goal_diff": standing.goal_diff,
+            "points": standing.points,
+            "logo": logo
+        }
+        for standing, logo in results
+    ]
+
+@app.get("/dataorg/homestandings/{season}/{league_id}")
+def fetchdataorg_home_table(season: int, league_id : int , db: Session = Depends(get_db)):
+    results = (
+        db.query(DataORGHomeStandings, DataORGTeams.logo)
+        .join(
+            DataORGTeams,
+            DataORGTeams.team_id == DataORGHomeStandings.team_id
+        )
+        .filter(DataORGHomeStandings.season == season)
+        .filter(DataORGHomeStandings.league_id == league_id)
+        .order_by(DataORGHomeStandings.rank)
+        .all()
+    )
+
+    if not results:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No data found for season {season}"
+        )
+
+    return [
+        {
+            "team_id": standing.team_id,
+            "rank": standing.rank,
+            "team": standing.team,
+            "played": standing.played,
+            "wins": standing.wins,
+            "draws": standing.draws,
+            "losses": standing.losses,
+            "goal_diff": standing.goal_diff,
+            "points": standing.points,
+            "logo": logo
+        }
+        for standing, logo in results
+    ]
+
+@app.get("/dataorg/awaystandings/{season}/{league_id}")
+def fetchdataorg_away_table(season: int,league_id : int, db: Session = Depends(get_db)):
+    results = (
+        db.query(DataORGAwayStandings, DataORGTeams.logo)
+        .join(
+            DataORGTeams,
+            DataORGTeams.team_id == DataORGAwayStandings.team_id
+        )
+        .filter(DataORGAwayStandings.season == season)
+        .filter(DataORGAwayStandings.league_id == league_id)
+        .order_by(DataORGAwayStandings.rank)
+        .all()
+    )
+
+    if not results:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No data found for season {season}"
+        )
+
+    return [
+        {
+            "team_id": standing.team_id,
+            "rank": standing.rank,
+            "team": standing.team,
+            "played": standing.played,
+            "wins": standing.wins,
+            "draws": standing.draws,
+            "losses": standing.losses,
+            "goal_diff": standing.goal_diff,
+            "points": standing.points,
+            "logo": logo
+        }
+        for standing, logo in results
+    ]
 
 
 app.add_middleware(

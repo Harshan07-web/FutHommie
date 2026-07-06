@@ -98,8 +98,8 @@ class Fetch_2:
         except Exception as e:
             print(e)
 
-     def fetch_standings(self,season:int):
-        standings_url = f"https://api.football-data.org//v4/competitions/{2000}/standings"
+     def fetch_standings(self,id:int,season:int):
+        standings_url = f"https://api.football-data.org//v4/competitions/{id}/standings"
         try:
             headers = {
             "X-Auth-Token": API
@@ -117,7 +117,7 @@ class Fetch_2:
 
             print(response.status_code)
 
-            with open(f"data/raw/1wc_standings.json","w") as f:
+            with open(f"data/raw/{id}_season_{season}_standings.json","w") as f:
                     json.dump(response.json(),f,indent=5)
 
             return response
@@ -182,5 +182,5 @@ class Fetch_2:
      
 
 if __name__=='__main__':
-     res = Fetch_2().fetch_standings(2026)
+     res = Fetch_2().fetch_standings(2025)
     
