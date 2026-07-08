@@ -97,7 +97,7 @@ function ResultsPage() {
     const navigate = useNavigate();
 
     const [league,   setLeague]   = useState(39);
-    const [season,   setSeason]   = useState(2024);
+    const [season,   setSeason]   = useState(2025);
     const [fixtures, setFixtures] = useState([]);
     const [teamMap,  setTeamMap]  = useState({});
     const [loading,  setLoading]  = useState(false);

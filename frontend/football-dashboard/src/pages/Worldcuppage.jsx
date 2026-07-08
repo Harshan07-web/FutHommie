@@ -255,15 +255,26 @@ function BracketView({ matches, teamMap }) {
     );
 }
 
-function GroupStandingsView({ standings, teamMap }) {
+function GroupStandingsView({ standings, teamMap, matches }) {
 
     if (!standings || standings.length === 0) {
         return <p className="state">No standings data found.</p>;
     }
 
-    // group by group name
+    // 1. Build a team-to-group map from the matches data
+    const teamGroupMap = {};
+    if (matches && matches.length > 0) {
+        matches.forEach(m => {
+            if (m.group) {
+                teamGroupMap[m.home_id] = m.group;
+                teamGroupMap[m.away_id] = m.group;
+            }
+        });
+    }
+
+    // 2. Group the standings using our map
     const grouped = standings.reduce((acc, row) => {
-        const key = row.group ?? "Unknown";
+        const key = teamGroupMap[row.team_id] ?? row.group ?? "Unknown";
         if (!acc[key]) acc[key] = [];
         acc[key].push(row);
         return acc;
@@ -298,13 +309,24 @@ function GroupStandingsView({ standings, teamMap }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {grouped[group].map((row, i) => {
+                                {grouped[group]
+                                    // SORTING LOGIC ADDED HERE
+                                    .sort((a, b) => {
+                                        const ptsA = a.points ?? 0;
+                                        const ptsB = b.points ?? 0;
+                                        if (ptsB !== ptsA) return ptsB - ptsA; // Sort by Points DESC
+                                        
+                                        const gdA = a.goal_difference ?? a.goal_diff ?? 0;
+                                        const gdB = b.goal_difference ?? b.goal_diff ?? 0;
+                                        return gdB - gdA; // Tie-breaker: GD DESC
+                                    })
+                                    .map((row, i) => {
 
                                     const team = teamMap[row.team_id];
 
                                     return (
                                         <tr key={row.team_id ?? i}>
-                                            <td className="num">{row.position ?? i + 1}</td>
+                                            <td className="num">{i + 1}</td>
                                             <td>
                                                 <div className="team-cell">
                                                     <div className="badge badge-sm">
@@ -445,7 +467,7 @@ function WorldCupPage() {
 
             ) : tab === "groups" ? (
 
-                <GroupStandingsView standings={standings} teamMap={teamMap} />
+                <GroupStandingsView standings={standings} teamMap={teamMap} matches={matches} />
 
             ) : tab === "knockout" ? (
 

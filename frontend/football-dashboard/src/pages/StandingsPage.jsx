@@ -19,7 +19,7 @@ function StandingsPage() {
     const [standings, setStandings] = useState([]);
     const [loading, setLoading]     = useState(false);
     const [league, setLeague]       = useState(39);
-    const [season, setSeason]       = useState(2024);
+    const [season, setSeason]       = useState(2025);
 
     const isDataOrg      = season >= 2025;
     const selectedLeague = LEAGUES.find(l => l.afId === league);

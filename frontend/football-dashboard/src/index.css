@@ -429,7 +429,7 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  background: #a0e3e7;
   border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-pill);
   overflow: hidden;
@@ -1274,4 +1274,30 @@ tbody tr:hover {
 .wc-group th,
 .wc-group td {
   padding: 8px 10px;
+}
+
+/* ============================================================
+   WORLD CUP GROUPS GRID
+   ============================================================ */
+
+.wc-groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.wc-group table {
+  min-width: 100%; /* Overrides the global 600px min-width */
+}
+
+.wc-group th, 
+.wc-group td {
+  padding: 12px 8px; /* Slightly tighter padding so it fits well without scrolling */
+}
+
+/* Ensure the team name cell can truncate if it gets too narrow */
+.wc-group .team-cell {
+  white-space: normal; 
+  word-break: break-word;
 }
