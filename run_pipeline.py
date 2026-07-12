@@ -212,78 +212,93 @@ def run_player_details_fetch():
     finally:
         db.close()
 
-def leaderboard_exists(league_id,season,league_type):
-    db = session()
+LEADERBOARD_STATE_FILE = r"D:\Football\data\raw\leaderboard_state.json"
 
-    exists = (
-        db.query(PlayerLeaderBoard)
-        .filter(PlayerLeaderBoard.season==season)
-        .filter(PlayerLeaderBoard.league_id==league_id)
-        .filter(PlayerLeaderBoard.leaderboard_type==league_type)
-        .first()
-    )
+def _load_leaderboard_state():
+    if os.path.exists(LEADERBOARD_STATE_FILE):
+        with open(LEADERBOARD_STATE_FILE) as f:
+            return json.load(f)
+    return {}
 
-    db.close()
+def _save_leaderboard_state(state):
+    os.makedirs(os.path.dirname(LEADERBOARD_STATE_FILE), exist_ok=True)
+    with open(LEADERBOARD_STATE_FILE, "w") as f:
+        json.dump(state, f, indent=2)
 
-    return exists
+def leaderboard_complete(state, league_id, season, league_type):
+    key = f"{league_type}:{league_id}:{season}"
+    return state.get(key, False)
+
+def mark_leaderboard_complete(state, league_id, season, league_type):
+    key = f"{league_type}:{league_id}:{season}"
+    state[key] = True
+    _save_leaderboard_state(state)
 
 def run_fetch_topscorer_leaderbaord():
+    state = _load_leaderboard_state()
     for league_id,league_name in COMPETITIONS.items():
         print(f"fetching for {league_name}")
         for i in SEASONS:
             if (league_id==528 and i==2023) or (league_id==15 and i==2024):
                 continue
             print(f"season {i}")
-            if leaderboard_exists(league_id,i,"topscorer"):
+            if leaderboard_complete(state,league_id,i,"topscorer"):
                 print(f"already exists {i} {league_id}")
                 continue
             response = Fetch(league_id,i).fetch_topscorers()
             Build(response.json()).player_leaderboard("topscorer")
+            mark_leaderboard_complete(state,league_id,i,"topscorer")
             print(f"stored season{i}")
             time.sleep(10)
 
 def run_fetch_topassists_leaderbaord():
+    state = _load_leaderboard_state()
     for league_id,league_name in COMPETITIONS.items():
         print(f"fetching for {league_name}")
         for i in SEASONS:
             if (league_id==528 and i==2023) or (league_id==15 and i==2024):
                 continue
             print(f"season {i}")
-            if leaderboard_exists(league_id,i,"topassists"):
+            if leaderboard_complete(state,league_id,i,"topassists"):
                 print(f"already exists {i} {league_id}")
                 continue
             response = Fetch(league_id,i).fetch_topassists()
             Build(response.json()).player_leaderboard("topassists")
+            mark_leaderboard_complete(state,league_id,i,"topassists")
             print(f"stored season{i}")
             time.sleep(10)
 
 def run_fetch_topyellow_leaderbaord():
+    state = _load_leaderboard_state()
     for league_id,league_name in COMPETITIONS.items():
         print(f"fetching for {league_name}")
         for i in SEASONS:
             if (league_id==528 and i==2023) or (league_id==15 and i==2024):
                 continue
             print(f"season {i}")
-            if leaderboard_exists(league_id,i,"topyellowcards"):
+            if leaderboard_complete(state,league_id,i,"topyellowcards"):
                 print(f"already exists {i} {league_id}")
                 continue
             response = Fetch(league_id,i).fetch_topyellow()
             Build(response.json()).player_leaderboard("topyellowcards")
+            mark_leaderboard_complete(state,league_id,i,"topyellowcards")
             print(f"stored season{i}")
             time.sleep(10)
 
 def run_fetch_topred_leaderbaord():
+    state = _load_leaderboard_state()
     for league_id,league_name in COMPETITIONS.items():
         print(f"fetching for {league_name}")
         for i in SEASONS:
             if (league_id==528 and i==2023) or (league_id==15 and i==2024):
                 continue
             print(f"season {i}")
-            if leaderboard_exists(league_id,i,"topredcards"):
+            if leaderboard_complete(state,league_id,i,"topredcards"):
                 print(f"already exists {i} {league_id}")
                 continue
             response = Fetch(league_id,i).fetch_topred()
             Build(response.json()).player_leaderboard("topredcards")
+            mark_leaderboard_complete(state,league_id,i,"topredcards")
             print(f"stored season{i}")
             time.sleep(10)
 
@@ -313,51 +328,42 @@ def run_dataorg_fetch_tscorers():
 
 
 
-if __name__ == '__main__':
+def run_player_details_fetch_capped(max_requests=16):
+    db = session()
     try:
-        no_of_requests = 0
-
-        db= session()
-        to_check_players = set()
-        visited_player_det = set()
-        to_check = db.query(PlayerLeaderBoard.player_id).all()
-        for i in to_check:
-            to_check_players.add(i[0])
-
-        existing = db.query(PlayerInfo.player_id).all()
-        for i in existing:
-            visited_player_det.add(i[0])
-
-        for i in to_check_players:
-            print(f"Player {i}")
-            if i in visited_player_det:
-                print(f"Player {i} exists , skipping")
-                continue
-            print(f"fetching for player {i}")
-            if no_of_requests>=16:
-                break
-            res = Fetch(0,0).fetch_player_details(i)
-            no_of_requests+=1
-            Build(res.json()).player_details_table()
-            print(f"Stored for player {i}")
-            time.sleep(7)
-    except Exception as e:
-        print(e)
-
+        to_check_players = {row[0] for row in db.query(PlayerLeaderBoard.player_id).all()}
+        visited_player_det = {row[0] for row in db.query(PlayerInfo.player_id).all()}
     finally:
-        run_dataorg_fetch_matches()
-        time.sleep(7)
-        run_dataorg_fetch_tscorers()
-        time.sleep(7)
+        db.close()
+
+    no_of_requests = 0
+    for player_id in to_check_players:
+        if player_id in visited_player_det:
+            print(f"Player {player_id} exists, skipping")
+            continue
+        if no_of_requests >= max_requests:
+            print(f"Hit request cap ({max_requests}), stopping")
+            break
+        print(f"fetching for player {player_id}")
+        try:
+            res = Fetch(0, 0).fetch_player_details(player_id)
+            Build(res.json()).player_details_table()
+            no_of_requests += 1
+            print(f"Stored for player {player_id}")
+            time.sleep(7)
+        except Exception as e:
+            # don't let one bad player kill the whole capped batch
+            print(f"Failed for player {player_id}: {e}")
+            continue
+
+
+if __name__ == '__main__':
+    run_player_details_fetch_capped(max_requests=16)
+
+    time.sleep(7)
+    run_dataorg_fetch_matches()
+    time.sleep(7)
+    run_dataorg_fetch_tscorers()
 
     # res = Fetch_2().fetch_standings(2000,2026)
     # Build(res.json()).dataorg_standings()
-
-
-
-
-
-
-
-
-
