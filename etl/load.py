@@ -1,6 +1,7 @@
 from database.database import session
 from database.fixture_models import OverallStanding, HomeStanding,AwayStanding , Teams, Squad, League, Venues, PlayerInfo, Fixtures, PlayerLeaderBoard
 from database.fixture_models import DataORGComp,DataORGMatch,DataORGPlayers,DataORGTeams,DataORGScorers,DataORGStandings,DataORGAwayStandings,DataORGHomeStandings
+import pandas as pd
 
 class StoreData:
     def __init__(self,table):
@@ -415,28 +416,32 @@ class StoreData:
     def leaderboard_table(self):
         try:
             db = session()
-            existing = {
-                (
-                    row.league_id,
-                    row.season,
-                    row.player_id,
-                    row.team_id
-                )
-                for row in db.query(
-                    PlayerLeaderBoard.league_id,
-                    PlayerLeaderBoard.season,
-                    PlayerLeaderBoard.player_id,
-                    PlayerLeaderBoard.team_id
-                ).all()
+            existing_rows = {
+                (row.league_id, row.season, row.player_id, row.team_id): row
+                for row in db.query(PlayerLeaderBoard).all()
             }
-            for index,row in self.table.iterrows():
+
+            update_cols = [
+                'goals_tot', 'assists_tot', 'conceded', 'saves',
+                'yellow_tot', 'yellowred_tot', 'red_tot',
+                'position', 'rating', 'appearances', 'leaderboard_type'
+            ]
+
+            for index, row in self.table.iterrows():
                 key = (
                     row["league_id"],
                     row["season"],
                     row["player_id"],
                     row["team_id"]
                 )
-                if key in existing:
+
+                if key in existing_rows:
+                    existing = existing_rows[key]
+                    for col in update_cols:
+                        new_val = row[col]
+                        if new_val is not None and not (isinstance(new_val, float) and pd.isna(new_val)):
+                            setattr(existing, col, new_val)
+                    db.add(existing)
                     continue
 
                 player = PlayerLeaderBoard(
