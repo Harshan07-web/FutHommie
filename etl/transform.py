@@ -345,10 +345,11 @@ class Build:
     def player_leaderboard(self, table_name):
         final_data = {}
         res = self.json_data["response"]
+
         for entry in res:
             player = entry["player"]
-            for stats in entry["statistics"]:
 
+            for stats in entry["statistics"]:
                 team = stats["team"]
                 league = stats["league"]
                 game = stats["games"]
@@ -360,7 +361,7 @@ class Build:
                     league["id"],
                     league["season"],
                     team["id"],
-                    table_name
+                    table_name,
                 )
 
                 final_data[key] = {
@@ -381,9 +382,16 @@ class Build:
                     "leaderboard_type": table_name,
                 }
 
-            table = self.build_leaderboard_table(final_data)
-            table.to_csv(rf"data\processed\leaderboard_{table_name}_{league['season']}_{league['id']}.csv",index=False)
-            StoreData(table).leaderboard_table()
+        print(f"Collected {len(final_data)} rows")
+
+        table = self.build_leaderboard_table(final_data)
+
+        print(table.head())
+        print(table.shape)
+
+        table.to_csv(rf"data\processed\leaderboard_{table_name}_{league['season']}_{league['id']}.csv",index=False,)
+
+        StoreData(table).leaderboard_table()
 
     def league_table(self):
         final_data = {}

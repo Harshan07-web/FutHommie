@@ -463,7 +463,10 @@ class StoreData:
                 )
 
                 db.add(player)
+                print("player added")
+            print("to be commited")
             db.commit()
+            print("commited")
 
         except Exception as e:
             db.rollback()

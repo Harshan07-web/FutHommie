@@ -246,7 +246,9 @@ def run_fetch_topscorer_leaderbaord():
                 print(f"already exists {i} {league_id}")
                 continue
             response = Fetch(league_id,i).fetch_topscorers()
+            print("resposnse fetched")
             Build(response.json()).player_leaderboard("topscorer")
+            print("table built")
             mark_leaderboard_complete(state,league_id,i,"topscorer")
             print(f"stored season{i}")
             time.sleep(10)
@@ -358,12 +360,24 @@ def run_player_details_fetch_capped(max_requests=16):
 
 
 if __name__ == '__main__':
-    run_player_details_fetch_capped(max_requests=16)
+    # run_player_details_fetch_capped(max_requests=16)
 
-    time.sleep(7)
-    run_dataorg_fetch_matches()
-    time.sleep(7)
-    run_dataorg_fetch_tscorers()
+    # time.sleep(7)
+    # run_dataorg_fetch_matches()
+    # time.sleep(7)
+    # run_dataorg_fetch_tscorers()
 
     # res = Fetch_2().fetch_standings(2000,2026)
     # Build(res.json()).dataorg_standings()
+    # print(f"Fetching top scorer")
+    # run_fetch_topscorer_leaderbaord()
+    # time.sleep(5)
+    print(f"Fetching top assists")
+    run_fetch_topassists_leaderbaord()
+    # time.sleep(5)
+    # print(f"Fetching top yellow")
+    # run_fetch_topyellow_leaderbaord()
+    # time.sleep(5)
+    # print(f"Fetching top red")
+    # run_fetch_topred_leaderbaord()
+
