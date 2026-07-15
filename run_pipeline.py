@@ -258,7 +258,7 @@ def run_fetch_topassists_leaderbaord():
     for league_id,league_name in COMPETITIONS.items():
         print(f"fetching for {league_name}")
         for i in SEASONS:
-            if (league_id==528 and i==2023) or (league_id==15 and i==2024):
+            if (league_id==528 and i==2023) or (league_id==15 and i==2024) or (league_id==531 and i==2022):
                 continue
             print(f"season {i}")
             if leaderboard_complete(state,league_id,i,"topassists"):
@@ -362,21 +362,21 @@ def run_player_details_fetch_capped(max_requests=16):
 if __name__ == '__main__':
     # run_player_details_fetch_capped(max_requests=16)
 
-    # time.sleep(7)
-    # run_dataorg_fetch_matches()
-    # time.sleep(7)
-    # run_dataorg_fetch_tscorers()
+    time.sleep(7)
+    run_dataorg_fetch_matches()
+    time.sleep(7)
+    run_dataorg_fetch_tscorers()
 
     # res = Fetch_2().fetch_standings(2000,2026)
     # Build(res.json()).dataorg_standings()
     # print(f"Fetching top scorer")
     # run_fetch_topscorer_leaderbaord()
     # time.sleep(5)
-    print(f"Fetching top assists")
-    run_fetch_topassists_leaderbaord()
+    # print(f"Fetching top assists")
+    # run_fetch_topassists_leaderbaord()
     # time.sleep(5)
-    # print(f"Fetching top yellow")
-    # run_fetch_topyellow_leaderbaord()
+    print(f"Fetching top yellow")
+    run_fetch_topyellow_leaderbaord()
     # time.sleep(5)
     # print(f"Fetching top red")
     # run_fetch_topred_leaderbaord()
