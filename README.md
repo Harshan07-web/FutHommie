@@ -413,7 +413,9 @@ Football/
 * Caching layer using Redis
 * Airflow orchestration
 * Docker containerization
-* CI/CD pipeline using GitHub Actions
+
+* Major UI changes planned to be implemented
+* Easier UX to be implemented
 
 ---
 ## Author
