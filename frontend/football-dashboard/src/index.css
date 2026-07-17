@@ -106,7 +106,8 @@ a { color: inherit; text-decoration: none; }
 .topbar {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  gap: 24px;
   padding: 0 32px;
   height: 60px;
   background:#060f29;
@@ -115,6 +116,13 @@ a { color: inherit; text-decoration: none; }
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
 }
 
 .topbar-back {
@@ -153,6 +161,52 @@ a { color: inherit; text-decoration: none; }
   color:white;
   letter-spacing: 1.5px;
   text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.topbar-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.topbar-nav-link {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #9fb2d6;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.topbar-nav-link:hover {
+  color: white;
+  background: rgba(255,255,255,.06);
+}
+
+.topbar-nav-link.active {
+  color: white;
+  background: var(--pitch);
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 16px;
+    gap: 12px;
+  }
+  .topbar-brand .brand-text {
+    display: none;
+  }
 }
 
 .topbar-brand .mark {
@@ -1129,6 +1183,93 @@ tbody tr:hover {
   text-align: center;
   padding: 4px 8px 6px;
   border-top: 1px solid var(--border);
+}
+
+/* ============================================================
+   HOME DASHBOARD (matches + table on one screen)
+   ============================================================ */
+
+.wc-banner {
+  margin-bottom: 20px;
+  border-left: 3px solid #d4a017;
+  box-shadow: 0 10px 28px rgba(184,134,11,.12);
+  background: linear-gradient(135deg, #fff7e6, #fff1d6);
+}
+
+.wc-banner:hover {
+  border-left-color: #d4a017;
+  background: #fffaf0;
+}
+
+.league-tabs {
+  margin-bottom: 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.league-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 8px;
+}
+
+.dashboard-widget {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-crisp);
+  padding: 18px;
+}
+
+.dashboard-widget .fixture-list,
+.dashboard-widget .table-wrap {
+  box-shadow: none;
+  border: none;
+}
+
+.dashboard-widget th,
+.dashboard-widget td {
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.widget-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.widget-header h2 {
+  font-size: 16px;
+}
+
+.widget-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--pitch);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.widget-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 860px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .footer {
