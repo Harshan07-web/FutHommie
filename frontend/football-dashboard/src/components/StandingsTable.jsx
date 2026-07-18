@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function StandingsTable({ standings }) {
+function StandingsTable({ standings, teamMap }) {
 
     const navigate = useNavigate();
 
@@ -23,7 +23,10 @@ function StandingsTable({ standings }) {
             </thead>
 
             <tbody>
-                {standings.map((team) => (
+                {standings.map((team) => {
+                    const tla = teamMap?.[team.team_id]?.tla || team.tla;
+
+                    return (
                     <tr key={team.team_id}>
                         <td className="num">{team.rank}</td>
                         <td
@@ -36,11 +39,11 @@ function StandingsTable({ standings }) {
                                 <div className="badge badge-sm">
                                     <img
                                         src={team.logo}
-                                        alt={team.team}
+                                        alt={tla || team.team}
                                     />
                                 </div>
 
-                                {team.team}
+                                {tla || team.team}
                             </div>
                         </td>
 
@@ -62,8 +65,8 @@ function StandingsTable({ standings }) {
                         <td className="num">{team.points}</td>
 
                     </tr>
-
-                ))}
+                    );
+                })}
 
             </tbody>
         </table>
