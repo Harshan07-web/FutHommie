@@ -18,6 +18,32 @@ function pad(n) {
     return String(n).padStart(2, "0");
 }
 
+// "5h 29m 32s" — days segment only shows up if > 0
+function formatRemaining({ days, hours, minutes, seconds }) {
+    const parts = [];
+    if (days > 0) parts.push(`${days}d`);
+    parts.push(`${pad(hours)}h`);
+    parts.push(`${pad(minutes)}m`);
+    parts.push(`${pad(seconds)}s`);
+    return parts.join(" ");
+}
+
+const IST_FORMATTER = new Intl.DateTimeFormat("en-IN", {
+    timeZone: "Asia/Kolkata",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+});
+
+// e.g. "Sun, 19 Jul, 2:30 AM IST"
+function formatKickoffIST(targetISO) {
+    if (!targetISO) return null;
+    return `${IST_FORMATTER.format(new Date(targetISO))} IST`;
+}
+
 // home/away: { name, logo, tla } — pass null while the match hasn't been
 // resolved from dataorg yet, teams render as "TBD".
 function Countdown({ title, venue, home, away, targetISO }) {
@@ -38,6 +64,12 @@ function Countdown({ title, venue, home, away, targetISO }) {
                 {venue && <span className="countdown-subtitle">{venue}</span>}
             </div>
 
+            {targetISO && (
+                <div className="countdown-subtitle countdown-kickoff">
+                    {formatKickoffIST(targetISO)}
+                </div>
+            )}
+
             <div className="countdown-match">
                 <div className="countdown-team">
                     <div className="badge badge-sm">
@@ -56,10 +88,7 @@ function Countdown({ title, venue, home, away, targetISO }) {
 
             {remaining ? (
                 <div className="countdown-digits">
-                    {remaining.days > 0 && <span>{remaining.days}d</span>}
-                    <span>{pad(remaining.hours)}h</span>
-                    <span>{pad(remaining.minutes)}m</span>
-                    <span>{pad(remaining.seconds)}s</span>
+                    <span>{formatRemaining(remaining)}</span>
                 </div>
             ) : (
                 <div className="countdown-digits countdown-live">LIVE / FT</div>

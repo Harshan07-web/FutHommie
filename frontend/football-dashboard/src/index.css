@@ -1379,6 +1379,12 @@ tbody tr:hover {
   color: var(--ink-muted);
 }
 
+.countdown-kickoff {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
 .countdown-match {
   display: flex;
   align-items: center;
@@ -1549,6 +1555,7 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
   .dashboard-stack {
+    grid-column: span 1;
     flex-direction: column;
   }
 }
