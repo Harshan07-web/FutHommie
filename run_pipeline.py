@@ -330,7 +330,7 @@ def run_dataorg_fetch_tscorers():
 
 
 
-def run_player_details_fetch_capped(max_requests=16):
+def run_player_details_fetch_capped(max_requests=30):
     db = session()
     try:
         to_check_players = {row[0] for row in db.query(PlayerLeaderBoard.player_id).all()}
@@ -362,22 +362,9 @@ def run_player_details_fetch_capped(max_requests=16):
 if __name__ == '__main__':
     # run_player_details_fetch_capped(max_requests=16)
 
-    time.sleep(7)
-    run_dataorg_fetch_matches()
-    time.sleep(7)
-    run_dataorg_fetch_tscorers()
-
-    # res = Fetch_2().fetch_standings(2000,2026)
-    # Build(res.json()).dataorg_standings()
-    # print(f"Fetching top scorer")
-    # run_fetch_topscorer_leaderbaord()
-    # time.sleep(5)
-    # print(f"Fetching top assists")
-    # run_fetch_topassists_leaderbaord()
-    # time.sleep(5)
-    print(f"Fetching top yellow")
-    run_fetch_topyellow_leaderbaord()
-    # time.sleep(5)
-    # print(f"Fetching top red")
-    # run_fetch_topred_leaderbaord()
+    # time.sleep(7)
+    # run_dataorg_fetch_matches()
+    # time.sleep(7)
+    # run_dataorg_fetch_tscorers()
+    run_player_details_fetch_capped()
 
