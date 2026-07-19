@@ -1438,10 +1438,30 @@ tbody tr:hover {
   margin-bottom: 8px;
 }
 
+.dashboard-grid-3 > * {
+  min-width: 0;
+}
+
 .dashboard-grid-3 .dashboard-widget {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.dashboard-grid-3 .dashboard-widget > * {
+  min-width: 0;
+}
+
+.feature-row > * {
+  min-width: 0;
+}
+
+.dashboard-stack {
+  min-width: 0;
+}
+
+.dashboard-stack > * {
+  min-width: 0;
 }
 
 .dashboard-stack {
@@ -1557,6 +1577,15 @@ tbody tr:hover {
   .dashboard-stack {
     grid-column: span 1;
     flex-direction: column;
+  }
+  .dashboard-widget table {
+    min-width: 0;
+    width: 100%;
+  }
+  .dashboard-widget th,
+  .dashboard-widget td {
+    padding: 9px 6px;
+    font-size: 12px;
   }
 }
 
@@ -1682,6 +1711,19 @@ tbody tr:hover {
   .table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+  }
+
+  /* Home dashboard widgets stack full-width — let their tables shrink
+     to fit instead of forcing the 600px global min-width + scroll. */
+  .dashboard-widget table {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .dashboard-widget th,
+  .dashboard-widget td {
+    padding: 8px 6px;
+    font-size: 11px;
   }
 }
 
