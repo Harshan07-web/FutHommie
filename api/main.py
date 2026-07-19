@@ -181,9 +181,16 @@ def fetch_team_details(team_id: int, db : Session = Depends(get_db)):
 @app.get("/teams/{league_id}")
 def get_teams_by_league(league_id: int, db: Session = Depends(get_db)):
 
-    teams = db.query(Teams).filter(Teams.league_id == league_id).all()
+    teams = db.query(Teams).filter(Teams.league_id == league_id).order_by(Teams.season.desc()).all()
 
-    return teams
+    seen = set()
+    unique_teams = []
+    for t in teams:
+        if t.team_id not in seen:
+            seen.add(t.team_id)
+            unique_teams.append(t)
+
+    return unique_teams
 
 @app.get("/fetch_all_venues")
 def fetch_all_venues(db : Session = Depends(get_db)):

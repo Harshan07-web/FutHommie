@@ -38,7 +38,6 @@ const sections = [
     {
         label: "Clubs & Competitions",
         cards: [
-            { title: "Teams",          description: "Browse every club by league and season",                   route: "/teams" },
             { title: "Team Stats",     description: "Detailed performance metrics per club",                    route: "/team-stats" },
             { title: "Season Stats",   description: "Aggregated team performance data across the season",       route: "/season-stats" },
             { title: "Leagues",        description: "All competitions and tournaments tracked in the database", route: "/leagues" },
@@ -47,19 +46,16 @@ const sections = [
     {
         label: "Players",
         cards: [
-            { title: "Squads",         description: "Full squad rosters with player profiles and positions",    route: "/players" },
             { title: "Top Scorers",    description: "Golden boot rankings by player and club per league",       route: "/top-scorers" },
             { title: "Top Assists",    description: "Most assists — playmakers ranked across each league",      route: "/top-assists" },
             { title: "Yellow Cards",   description: "Disciplinary rankings — most bookings by league",         route: "/top-yellow-cards" },
             { title: "Red Cards",      description: "Most dismissals per player, club and league",              route: "/top-red-cards" },
             { title: "Injuries",       description: "Current and historical injury reports across all squads",  route: "/injuries" },
-            { title: "Transfers",      description: "Player transfer activity by club and window",              route: "/transfers" },
         ]
     },
     {
         label: "Matches",
         cards: [
-            { title: "Results",        description: "Recent match results, final scores and goalscorers",       route: "/results" },
             { title: "Live Scores",    description: "Live match data and in-game stats updated in real time",   route: "/live" },
             { title: "Lineups",        description: "Starting XIs, formations and substitutes per fixture",     route: "/lineups" },
             { title: "Head to Head",   description: "Historical results between any two clubs",                 route: "/h2h" },
@@ -231,14 +227,16 @@ function Home() {
                             venue="Miami Stadium"
                             home={thirdHome}
                             away={thirdAway}
-                            targetISO={thirdPlaceMatch?.date ?? WC_THIRD_PLACE_ISO_FALLBACK}
+                            match={thirdPlaceMatch}
+                            fallbackISO={WC_THIRD_PLACE_ISO_FALLBACK}
                         />
                         <Countdown
                             title="Final"
                             venue="MetLife Stadium, East Rutherford"
                             home={finalHome}
                             away={finalAway}
-                            targetISO={finalMatch?.date ?? WC_FINAL_ISO_FALLBACK}
+                            match={finalMatch}
+                            fallbackISO={WC_FINAL_ISO_FALLBACK}
                         />
                     </div>
 
@@ -342,7 +340,7 @@ function Home() {
                                 {LEAGUES.map(l => (
                                     <div
                                         key={l.id}
-                                        className={"top-league-item" + (l.id === leagueId ? " active" : "")}
+                                        className="top-league-item"
                                         onClick={() => navigate(`/league/${l.id}`)}
                                     >
                                         <div className="badge badge-sm">

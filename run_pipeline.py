@@ -330,7 +330,7 @@ def run_dataorg_fetch_tscorers():
 
 
 
-def run_player_details_fetch_capped(max_requests=30):
+def run_player_details_fetch_capped(max_requests=90):
     db = session()
     try:
         to_check_players = {row[0] for row in db.query(PlayerLeaderBoard.player_id).all()}
@@ -360,11 +360,10 @@ def run_player_details_fetch_capped(max_requests=30):
 
 
 if __name__ == '__main__':
-    # run_player_details_fetch_capped(max_requests=16)
-
-    # time.sleep(7)
-    # run_dataorg_fetch_matches()
-    # time.sleep(7)
-    # run_dataorg_fetch_tscorers()
+    
+    time.sleep(7)
+    run_dataorg_fetch_matches()
+    time.sleep(7)
+    run_dataorg_fetch_tscorers()
     run_player_details_fetch_capped()
 

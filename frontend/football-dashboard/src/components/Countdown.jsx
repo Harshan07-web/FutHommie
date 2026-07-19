@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
 
+function normalizeUTC(dateStr) {
+    if (!dateStr) return dateStr;
+    if (/Z$|[+-]\d{2}:\d{2}$/.test(dateStr)) return dateStr;
+    return `${dateStr}Z`;
+}
+
 function getRemaining(targetISO) {
     if (!targetISO) return null;
     const diff = new Date(targetISO).getTime() - Date.now();
@@ -38,22 +44,23 @@ const IST_FORMATTER = new Intl.DateTimeFormat("en-IN", {
     hour12: true,
 });
 
-// e.g. "Sun, 19 Jul, 2:30 AM IST"
 function formatKickoffIST(targetISO) {
     if (!targetISO) return null;
     return `${IST_FORMATTER.format(new Date(targetISO))} IST`;
 }
 
-// home/away: { name, logo, tla } — pass null while the match hasn't been
-// resolved from dataorg yet, teams render as "TBD".
-function Countdown({ title, venue, home, away, targetISO }) {
+function Countdown({ title, venue, home, away, match, fallbackISO }) {
+
+    const finished = (match?.status ?? "").toUpperCase() === "FINISHED";
+    const targetISO = normalizeUTC(match?.date) ?? fallbackISO;
 
     const [remaining, setRemaining] = useState(() => getRemaining(targetISO));
 
     useEffect(() => {
+        if (finished) return;
         const id = setInterval(() => setRemaining(getRemaining(targetISO)), 1000);
         return () => clearInterval(id);
-    }, [targetISO]);
+    }, [targetISO, finished]);
 
     return (
 
@@ -64,7 +71,7 @@ function Countdown({ title, venue, home, away, targetISO }) {
                 {venue && <span className="countdown-subtitle">{venue}</span>}
             </div>
 
-            {targetISO && (
+            {!finished && targetISO && (
                 <div className="countdown-subtitle countdown-kickoff">
                     {formatKickoffIST(targetISO)}
                 </div>
@@ -77,7 +84,19 @@ function Countdown({ title, venue, home, away, targetISO }) {
                     </div>
                     <span>{home?.tla || home?.name || "TBD"}</span>
                 </div>
-                <span className="countdown-vs">vs</span>
+
+                <div className="countdown-center">
+                    {finished ? (
+                        <div className="countdown-score">
+                            <span>{match.ft_home_goals}</span>
+                            <span className="countdown-score-sep">—</span>
+                            <span>{match.ft_away_goals}</span>
+                        </div>
+                    ) : (
+                        <span className="countdown-vs">vs</span>
+                    )}
+                </div>
+
                 <div className="countdown-team">
                     <span>{away?.tla || away?.name || "TBD"}</span>
                     <div className="badge badge-sm">
@@ -86,12 +105,26 @@ function Countdown({ title, venue, home, away, targetISO }) {
                 </div>
             </div>
 
-            {remaining ? (
+            {finished ? (
+                <>
+                    <div className="countdown-digits countdown-ft">FT</div>
+                    {match.duration === "EXTRA_TIME" && (
+                        <div className="countdown-subtitle countdown-extra">
+                            FT {match.rt_home_goals}-{match.rt_away_goals} • ET {match.et_home_goals}-{match.et_away_goals}
+                        </div>
+                    )}
+                    {match.duration === "PENALTY_SHOOTOUT" && (
+                        <div className="countdown-subtitle countdown-extra">
+                            FT {match.rt_home_goals}-{match.rt_away_goals} • ET {match.et_home_goals}-{match.et_away_goals} • Pens {match.pen_home_goals}-{match.pen_away_goals}
+                        </div>
+                    )}
+                </>
+            ) : remaining ? (
                 <div className="countdown-digits">
                     <span>{formatRemaining(remaining)}</span>
                 </div>
             ) : (
-                <div className="countdown-digits countdown-live">LIVE / FT</div>
+                <div className="countdown-digits countdown-live">LIVE</div>
             )}
 
         </div>

@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 const NAV_LINKS = [
     { label: "Teams",   route: "/teams" },
     { label: "Squads",  route: "/players" },
-    { label: "Venues",  route: "/venues" },
+    { label: "Transfers",  route: "/transfers" },
     { label: "Results", route: "/results" },
 ];
 
