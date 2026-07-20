@@ -575,14 +575,11 @@ def get_dataorg_scorers(db: Session = Depends(get_db)):
 
 
 @app.get("/dataorg/scorers/{competition_id}/{season}")
-def get_dataorg_competition_scorers(
-    competition_id: int,
-    db: Session = Depends(get_db)
-):
-
+def get_dataorg_competition_scorers(competition_id: int,season: int,db: Session = Depends(get_db)):
     scorers = (
         db.query(DataORGScorers)
         .filter(DataORGScorers.competition_id == competition_id)
+        .filter(DataORGScorers.season == season)
         .order_by(DataORGScorers.goals.desc())
         .all()
     )

@@ -1345,6 +1345,76 @@ tbody tr:hover {
   box-shadow: 0 14px 32px rgba(184,134,11,.28);
 }
 
+.champions-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.champion-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.champion-medal {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.champion-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.champion-winner .champion-name {
+  font-size: 18px;
+}
+
+.champion-runner-up {
+  border-top: 1px solid var(--border);
+}
+
+.champion-runner-up .champion-name {
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.champion-awards {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.champion-award {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.champion-award-label {
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.champion-award-value {
+  color: var(--ink-muted);
+  text-align: right;
+}
+
+.champion-award-empty {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
 .countdown-card {
   display: flex;
   flex-direction: column;
@@ -1467,7 +1537,7 @@ tbody tr:hover {
 
 .dashboard-grid-3 {
   display: grid;
-  grid-template-columns: 1fr 1.5fr 0.60fr;
+  grid-template-columns: 1fr 1.4fr 0.65fr;
   gap: 20px;
   align-items: stretch;
   margin-bottom: 8px;

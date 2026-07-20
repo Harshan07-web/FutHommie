@@ -360,10 +360,21 @@ def run_player_details_fetch_capped(max_requests=90):
 
 
 if __name__ == '__main__':
-    
-    time.sleep(7)
-    run_dataorg_fetch_matches()
-    time.sleep(7)
+    ids = [2021,2019,2014,2002,2015,2001]
+    season = [2025,2026]
     run_dataorg_fetch_tscorers()
-    run_player_details_fetch_capped()
+    for i in ids:
+        for j in season:
+            try:
+                if j==2026 and i==2001:
+                    continue
+                res = Fetch_2().fetch_league_scorers(i,j)
+                Build(res.json()).dataorg_scorers()
+                print(f"stored scorers for {i} {j}")
+                time.sleep(5)
+            except Exception as e:
+                print(e)
+                continue
+
+    #run_player_details_fetch_capped()
 

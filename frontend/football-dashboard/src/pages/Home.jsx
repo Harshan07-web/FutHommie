@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/footballApi";
 import StandingsTable from "../components/StandingsTable";
 import Marquee from "../components/Marquee";
-import Countdown from "../components/Countdown";
 import PredictionCard from "../components/PredictionCard";
 
 const LEAGUES = [
@@ -20,11 +19,6 @@ const LEAGUES = [
 const SEASON = 2026;
 
 const WORLD_CUP_ID = 2000;
-const THIRD_PLACE_STAGES = ["THIRD_PLACE", "THIRD_PLACE_PLAYOFF", "3RD_PLACE"];
-
-// Fallback dates if the matches haven't landed in dataorg yet (confirmed 2026 schedule).
-const WC_THIRD_PLACE_ISO_FALLBACK = "2026-07-18T21:00:00Z"; // Miami Stadium, 5pm ET
-const WC_FINAL_ISO_FALLBACK       = "2026-07-19T19:00:00Z"; // MetLife Stadium, 3pm ET
 
 const sections = [
     {
@@ -99,6 +93,7 @@ function Home() {
     const [loading, setLoading] = useState(false);
     const [wcMatches, setWcMatches] = useState([]);
     const [wcTeamMap, setWcTeamMap] = useState({});
+    const [goldenBoot, setGoldenBoot] = useState(null);
 
     const league = LEAGUES.find(l => l.id === leagueId);
 
@@ -112,9 +107,10 @@ function Home() {
 
     async function fetchWorldCup() {
         try {
-            const [matchesRes, teamsRes] = await Promise.all([
+            const [matchesRes, teamsRes, scorersRes] = await Promise.all([
                 api.get(`/dataorg/matches/${WORLD_CUP_ID}/${SEASON}`),
                 api.get(`/dataorg/teams`),
+                api.get(`/dataorg/scorers/${WORLD_CUP_ID}/${SEASON}`).catch(() => ({ data: [] })),
             ]);
 
             setWcMatches(matchesRes.data ?? []);
@@ -124,6 +120,9 @@ function Home() {
                 map[t.team_id] = { name: t.name, logo: t.logo, tla: t.tla };
             }
             setWcTeamMap(map);
+
+            // already sorted goals desc by the endpoint — top scorer is the Golden Boot
+            setGoldenBoot((scorersRes.data ?? [])[0] ?? null);
 
         } catch (err) {
             console.error(err);
@@ -172,12 +171,22 @@ function Home() {
     ];
 
     const finalMatch = wcMatches.find(m => (m.stage ?? "").toUpperCase() === "FINAL");
-    const thirdPlaceMatch = wcMatches.find(m => THIRD_PLACE_STAGES.includes((m.stage ?? "").toUpperCase()));
 
     const finalHome = finalMatch ? wcTeamMap[finalMatch.home_id] : null;
     const finalAway = finalMatch ? wcTeamMap[finalMatch.away_id] : null;
-    const thirdHome = thirdPlaceMatch ? wcTeamMap[thirdPlaceMatch.home_id] : null;
-    const thirdAway = thirdPlaceMatch ? wcTeamMap[thirdPlaceMatch.away_id] : null;
+
+    // Winner decided by regulation score, falling through to ET then penalties —
+    // same order the final itself would actually be decided in.
+    let champion = null, runnerUp = null;
+    if (finalMatch && (finalMatch.status ?? "").toUpperCase() === "FINISHED" && finalHome && finalAway) {
+        const homeScore = finalMatch.pen_home_goals ?? finalMatch.et_home_goals ?? finalMatch.ft_home_goals;
+        const awayScore = finalMatch.pen_away_goals ?? finalMatch.et_away_goals ?? finalMatch.ft_away_goals;
+        if (homeScore > awayScore) {
+            champion = finalHome; runnerUp = finalAway;
+        } else if (awayScore > homeScore) {
+            champion = finalAway; runnerUp = finalHome;
+        }
+    }
 
     return (
 
@@ -218,26 +227,59 @@ function Home() {
                         <p>Fixtures, results and top scorers — all in one place</p>
                     </div>
 
-                    <div className="dashboard-widget countdown-card">
+                    <div className="dashboard-widget champions-card">
                         <div className="widget-header">
-                            <h2>2026 World Cup — Final Stretch</h2>
+                            <h2>2026 World Cup Champions</h2>
                         </div>
-                        <Countdown
-                            title="Third-Place Playoff"
-                            venue="Miami Stadium"
-                            home={thirdHome}
-                            away={thirdAway}
-                            match={thirdPlaceMatch}
-                            fallbackISO={WC_THIRD_PLACE_ISO_FALLBACK}
-                        />
-                        <Countdown
-                            title="Final"
-                            venue="MetLife Stadium, East Rutherford"
-                            home={finalHome}
-                            away={finalAway}
-                            match={finalMatch}
-                            fallbackISO={WC_FINAL_ISO_FALLBACK}
-                        />
+
+                        {champion ? (
+                            <>
+                                <div className="champion-row champion-winner">
+                                    <span className="champion-medal">1️⃣</span>
+                                    <div className="badge badge-sm">
+                                        {champion.logo && <img src={champion.logo} alt={champion.tla || champion.name} />}
+                                    </div>
+                                    <span className="champion-name">{champion.name}</span>
+                                </div>
+                                <div className="champion-row champion-runner-up">
+                                    <span className="champion-medal">2️⃣</span>
+                                    <div className="badge badge-sm">
+                                        {runnerUp?.logo && <img src={runnerUp.logo} alt={runnerUp?.tla || runnerUp?.name} />}
+                                    </div>
+                                    <span className="champion-name">{runnerUp?.name}</span>
+                                </div>
+                            </>
+                        ) : (
+                            <p className="state">Final result not available yet.</p>
+                        )}
+
+                        <div className="champion-awards">
+                            <div className="champion-award">
+                                <span className="champion-award-label">Golden Boot</span>
+                                {goldenBoot ? (
+                                    <span className="champion-award-value">
+                                        {goldenBoot.player_name} · {goldenBoot.team_name} · {goldenBoot.goals} goals
+                                    </span>
+                                ) : (
+                                    <span className="champion-award-value champion-award-empty">—</span>
+                                )}
+                            </div>
+                            <div className="champion-award">
+                                <span className="champion-award-label">Golden Ball</span>
+                                {/* No endpoint for this — hardcoded from confirmed 2026 award results */}
+                                <span className="champion-award-value">Rodri · Spain</span>
+                            </div>
+                            <div className="champion-award">
+                                <span className="champion-award-label">Golden Glove</span>
+                                {/* No endpoint for this — hardcoded from confirmed 2026 award results */}
+                                <span className="champion-award-value">Unai Simón · Spain</span>
+                            </div>
+                            <div className="champion-award">
+                                <span className="champion-award-label">Best Young Player</span>
+                                {/* No endpoint for this — hardcoded from confirmed 2026 award results */}
+                                <span className="champion-award-value">Pau Cubarsí · Spain</span>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

@@ -543,7 +543,7 @@ class Build:
         final_data = {}
 
         competition = self.json_data["competition"]
-        season = self.json_data["season"]
+        season = self.json_data['filters']['season']
 
         for scorer in self.json_data["scorers"]:
 
@@ -553,7 +553,7 @@ class Build:
             final_data[player["id"]] = {
 
                 "competition_id": competition["id"],
-                "season": season["id"],
+                "season": season,
 
                 "player_name": player["name"],
                 "firstname": player["firstName"],
