@@ -1877,3 +1877,25 @@ tbody tr:hover {
   white-space: normal; 
   word-break: break-word;
 }
+
+.backend-notice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: #fff8e1;
+    color: #6b5500;
+    border-bottom: 1px solid #e6d38a;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.backend-notice-close {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+}

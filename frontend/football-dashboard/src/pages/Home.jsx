@@ -94,6 +94,7 @@ function Home() {
     const [wcMatches, setWcMatches] = useState([]);
     const [wcTeamMap, setWcTeamMap] = useState({});
     const [goldenBoot, setGoldenBoot] = useState(null);
+    const [showBackendNotice, setShowBackendNotice] = useState(true);
 
     const league = LEAGUES.find(l => l.id === leagueId);
 
@@ -191,6 +192,22 @@ function Home() {
     return (
 
         <>
+
+            {showBackendNotice && (
+                <div className="backend-notice">
+                    <span>
+                        The backend is hosted on a free serverless plan and may take a moment to wake up.
+                        If data doesn't load, please reload the page 2-3 times.
+                    </span>
+                    <button
+                        className="backend-notice-close"
+                        onClick={() => setShowBackendNotice(false)}
+                        aria-label="Dismiss"
+                    >
+                        ×
+                    </button>
+                </div>
+            )}
 
             <div className="home-hero">
 
