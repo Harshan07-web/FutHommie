@@ -321,7 +321,7 @@ def run_dataorg_fetch_matches():
     print("Stored competition and matches.")
     return data
 
-def run_dataorg_fetch_tscorers():
+def run_dataorg_fetch_tscorers(id:int,):
     print("Fetching World Cup top scorers...")
     data = Fetch_2().fetch_top_scorer(2026)
     Build(data.json()).dataorg_scorers()
@@ -358,23 +358,36 @@ def run_player_details_fetch_capped(max_requests=90):
             print(f"Failed for player {player_id}: {e}")
             continue
 
+def warmup():
+    for attempt in range(5):
+        try:
+            response = Fetch_2().fetch_league_matches(
+                id=2021,
+                season=2026
+            )
+
+            print("Server is awake.")
+            return
+
+        except Exception as e:
+            print(f"Server waking up... attempt {attempt + 1}: {e}")
+            time.sleep(15)
+
+    raise Exception("Server failed to wake up")
+
 
 if __name__ == '__main__':
-    ids = [2021,2019,2014,2002,2015,2001]
-    season = [2025,2026]
-    run_dataorg_fetch_tscorers()
-    for i in ids:
-        for j in season:
-            try:
-                if j==2026 and i==2001:
-                    continue
-                res = Fetch_2().fetch_league_scorers(i,j)
-                Build(res.json()).dataorg_scorers()
-                print(f"stored scorers for {i} {j}")
-                time.sleep(5)
-            except Exception as e:
-                print(e)
-                continue
 
-    #run_player_details_fetch_capped()
+    ids = [2021,2019,2014,2002,2015]
+    for id in ids:
+        time.sleep(12)
+        data = Fetch_2().fetch_league_matches(id=id,season=2026)
+        Build(data.json()).dataorg_matches()
+        time.sleep(12)
+        data = Fetch_2().fetch_league_scorers(id=id,season=2026)
+        Build(data.json()).dataorg_scorers()
+        time.sleep(12)
+        data = Fetch_2().fetch_standings(id=id,season=2026)
+        Build(data.json()).dataorg_standings()
+    
 
