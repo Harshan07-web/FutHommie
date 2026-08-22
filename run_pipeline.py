@@ -377,7 +377,7 @@ def warmup():
 
 
 if __name__ == '__main__':
-
+    warmup()
     ids = [2021,2019,2014,2002,2015]
     for id in ids:
         time.sleep(12)
