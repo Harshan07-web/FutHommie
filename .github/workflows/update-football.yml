@@ -25,6 +25,26 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Test MySQL Connection
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python -c "
+          from sqlalchemy import create_engine, text
+          import os
+
+          print('Testing database connection...')
+
+          engine = create_engine(
+              os.environ['DATABASE_URL'],
+              connect_args={'connect_timeout': 30}
+          )
+
+          with engine.connect() as conn:
+              result = conn.execute(text('SELECT 1'))
+              print('DATABASE CONNECTION SUCCESSFUL:', result.scalar())
+          "
+
       - name: Run ETL Pipeline
         env:
           FOOTBALL_API: ${{ secrets.FOOTBALL_API }}
