@@ -31,19 +31,35 @@ jobs:
         run: |
           python -c "
           from sqlalchemy import create_engine, text
+          from sqlalchemy.exc import OperationalError
           import os
-
-          print('Testing database connection...')
-
-          engine = create_engine(
-              os.environ['DATABASE_URL'],
-              connect_args={'connect_timeout': 30}
-          )
-
-          with engine.connect() as conn:
-              result = conn.execute(text('SELECT 1'))
-              print('DATABASE CONNECTION SUCCESSFUL:', result.scalar())
-          "
+          import time
+      
+          for attempt in range(1, 4):
+              try:
+                  print(f'Testing database connection - attempt {attempt}/3...')
+      
+                  engine = create_engine(
+                      os.environ['DATABASE_URL'],
+                      connect_args={
+                          'connect_timeout': 30
+                      }
+                  )
+      
+                  with engine.connect() as conn:
+                      result = conn.execute(text('SELECT 1'))
+                      print(f'DATABASE CONNECTION SUCCESSFUL: {result.scalar()}')
+                      break
+      
+              except OperationalError as e:
+                  print(f'Database connection failed: {e}')
+      
+                  if attempt == 3:
+                      print('Database connection failed after 3 attempts.')
+                      raise
+      
+                  print('Retrying in 30 seconds...')
+                  time.sleep(30)
 
       - name: Run ETL Pipeline
         env:
