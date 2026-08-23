@@ -8,9 +8,9 @@ import logging
 from datetime import date
 
 from database.fixture_models import Teams, OverallStanding, Venues, Squad, PlayerInfo, Fixtures, PlayerLeaderBoard
-from database.database import session
+from database.database import session, init_db
 
-
+init_db()
 TOP5_LEAGUES = {
     39:  "Premier League",
     140: "La Liga",

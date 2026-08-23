@@ -10,7 +10,14 @@ load_dotenv()
 
 DB_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DB_URL)
+engine = create_engine(
+    DB_URL,
+    pool_pre_ping=True,
+    pool_recycle=1800,
+    connect_args={
+        "connect_timeout" : 30
+    }
+    )
 
 session = sessionmaker(
     autocommit=False,
@@ -25,4 +32,5 @@ def get_db():
     finally:
         db.close()
 
-base.metadata.create_all(bind=engine)
+def init_db():
+    base.metadata.create_all(bind=engine)

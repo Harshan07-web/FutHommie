@@ -48,4 +48,20 @@ jobs:
           DATAORG_TOP_SCORER: ${{ secrets.DATAORG_TOP_SCORER }}
 
         run: |
-          python run_pipeline.py
+          for attempt in 1 2 3 4 5
+          do
+            echo "ETL attempt $attempt/5"
+
+            if python run_pipeline.py; then
+              echo "ETL pipeline completed successfully."
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 5 ]; then
+              echo "Pipeline failed. Retrying in 30 seconds..."
+              sleep 30
+            fi
+          done
+
+          echo "ETL pipeline failed after 5 attempts."
+          exit 1
