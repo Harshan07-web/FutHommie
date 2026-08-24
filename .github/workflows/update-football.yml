@@ -2,9 +2,8 @@ name: Football Data Pipeline
 
 on:
   schedule:
-    # Runs every 4 hours
+    # Runs every 2 hours
     - cron: "0 */2 * * *"
-
   workflow_dispatch:
 
 jobs:
@@ -29,39 +28,55 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          python -c "
+          python <<'PYTHON'
           from sqlalchemy import create_engine, text
+          from sqlalchemy.exc import OperationalError
           import os
+          import time
 
-          print('Testing database connection...')
+          for attempt in range(1, 4):
+              try:
+                  print(f"Testing database connection - attempt {attempt}/3...")
 
-          engine = create_engine(
-              os.environ['DATABASE_URL'],
-              connect_args={'connect_timeout': 30}
-          )
+                  engine = create_engine(
+                      os.environ["DATABASE_URL"],
+                      connect_args={
+                          "connect_timeout": 30
+                      }
+                  )
 
-          with engine.connect() as conn:
-              result = conn.execute(text('SELECT 1'))
-              print('DATABASE CONNECTION SUCCESSFUL:', result.scalar())
-          "
+                  with engine.connect() as conn:
+                      result = conn.execute(text("SELECT 1"))
+                      print(
+                          f"DATABASE CONNECTION SUCCESSFUL: {result.scalar()}"
+                      )
+                      break
+
+              except OperationalError as e:
+                  print(f"Database connection failed: {e}")
+
+                  if attempt == 3:
+                      print("Database connection failed after 3 attempts.")
+                      raise
+
+                  print("Retrying in 30 seconds...")
+                  time.sleep(30)
+          PYTHON
 
       - name: Run ETL Pipeline
         env:
           FOOTBALL_API: ${{ secrets.FOOTBALL_API }}
           DATAORGTOKEN: ${{ secrets.DATAORGTOKEN }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
           BASE_URL: ${{ secrets.BASE_URL }}
           TEAM_URL: ${{ secrets.TEAM_URL }}
           PLAYER_URL: ${{ secrets.PLAYER_URL }}
           LEAGUE_URL: ${{ secrets.LEAGUE_URL }}
           VENUES_URL: ${{ secrets.VENUES_URL }}
-
           PLAYER_TOPSCORERS: ${{ secrets.PLAYER_TOPSCORERS }}
           PLAYER_TOPASSISTS: ${{ secrets.PLAYER_TOPASSISTS }}
           PLAYER_YELLOW: ${{ secrets.PLAYER_YELLOW }}
           PLAYER_RED: ${{ secrets.PLAYER_RED }}
-
           DATAORG_MATCHES_URL: ${{ secrets.DATAORG_MATCHES_URL }}
           DATAORG_TEAMS_URL: ${{ secrets.DATAORG_TEAMS_URL }}
           DATAORG_MATCH_URL: ${{ secrets.DATAORG_MATCH_URL }}
