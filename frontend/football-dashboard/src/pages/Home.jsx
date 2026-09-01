@@ -234,73 +234,6 @@ function Home() {
 
             <div className="page page-wide">
 
-                <div className="feature-row">
-
-                    <div
-                        className="nav-card wc-hub-card"
-                        onClick={() => navigate("/world-cup")}
-                    >
-                        <h3>World Cup Hub</h3>
-                        <p>Fixtures, results and top scorers — all in one place</p>
-                    </div>
-
-                    <div className="dashboard-widget champions-card">
-                        <div className="widget-header">
-                            <h2>2026 World Cup Champions</h2>
-                        </div>
-
-                        {champion ? (
-                            <>
-                                <div className="champion-row champion-winner">
-                                    <span className="champion-medal">1️⃣</span>
-                                    <div className="badge badge-sm">
-                                        {champion.logo && <img src={champion.logo} alt={champion.tla || champion.name} />}
-                                    </div>
-                                    <span className="champion-name">{champion.name}</span>
-                                </div>
-                                <div className="champion-row champion-runner-up">
-                                    <span className="champion-medal">2️⃣</span>
-                                    <div className="badge badge-sm">
-                                        {runnerUp?.logo && <img src={runnerUp.logo} alt={runnerUp?.tla || runnerUp?.name} />}
-                                    </div>
-                                    <span className="champion-name">{runnerUp?.name}</span>
-                                </div>
-                            </>
-                        ) : (
-                            <p className="state">Final result not available yet.</p>
-                        )}
-
-                        <div className="champion-awards">
-                            <div className="champion-award">
-                                <span className="champion-award-label">Golden Boot</span>
-                                {goldenBoot ? (
-                                    <span className="champion-award-value">
-                                        {goldenBoot.player_name} · {goldenBoot.team_name} · {goldenBoot.goals} goals
-                                    </span>
-                                ) : (
-                                    <span className="champion-award-value champion-award-empty">—</span>
-                                )}
-                            </div>
-                            <div className="champion-award">
-                                <span className="champion-award-label">Golden Ball</span>
-                                {/* No endpoint for this — hardcoded from confirmed 2026 award results */}
-                                <span className="champion-award-value">Rodri · Spain</span>
-                            </div>
-                            <div className="champion-award">
-                                <span className="champion-award-label">Golden Glove</span>
-                                {/* No endpoint for this — hardcoded from confirmed 2026 award results */}
-                                <span className="champion-award-value">Unai Simón · Spain</span>
-                            </div>
-                            <div className="champion-award">
-                                <span className="champion-award-label">Best Young Player</span>
-                                {/* No endpoint for this — hardcoded from confirmed 2026 award results */}
-                                <span className="champion-award-value">Pau Cubarsí · Spain</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
                 <div className="btn-group league-tabs">
                     {LEAGUES.map(l => (
                         <button
@@ -413,6 +346,73 @@ function Home() {
 
                         <PredictionCard fixtures={fixtures} teamMap={teamMap} />
 
+                    </div>
+
+                </div>
+
+                <div className="feature-row">
+
+                    <div
+                        className="nav-card wc-hub-card"
+                        onClick={() => navigate("/world-cup")}
+                    >
+                        <h3>World Cup Hub</h3>
+                        <p>Fixtures, results and top scorers — all in one place</p>
+                    </div>
+
+                    <div className="dashboard-widget champions-card">
+                        <div className="widget-header">
+                            <h2>2026 World Cup Champions</h2>
+                        </div>
+
+                        {champion ? (
+                            <>
+                                <div className="champion-row champion-winner">
+                                    <span className="champion-medal">1️⃣</span>
+                                    <div className="badge badge-sm">
+                                        {champion.logo && <img src={champion.logo} alt={champion.tla || champion.name} />}
+                                    </div>
+                                    <span className="champion-name">{champion.name}</span>
+                                </div>
+                                <div className="champion-row champion-runner-up">
+                                    <span className="champion-medal">2️⃣</span>
+                                    <div className="badge badge-sm">
+                                        {runnerUp?.logo && <img src={runnerUp.logo} alt={runnerUp?.tla || runnerUp?.name} />}
+                                    </div>
+                                    <span className="champion-name">{runnerUp?.name}</span>
+                                </div>
+                            </>
+                        ) : (
+                            <p className="state">Final result not available yet.</p>
+                        )}
+
+                        <div className="champion-awards">
+                            <div className="champion-award">
+                                <span className="champion-award-label">Golden Boot</span>
+                                {goldenBoot ? (
+                                    <span className="champion-award-value">
+                                        {goldenBoot.player_name} · {goldenBoot.team_name} · {goldenBoot.goals} goals
+                                    </span>
+                                ) : (
+                                    <span className="champion-award-value champion-award-empty">—</span>
+                                )}
+                            </div>
+                            <div className="champion-award">
+                                <span className="champion-award-label">Golden Ball</span>
+                                {/* No endpoint for this — hardcoded from confirmed 2026 award results */}
+                                <span className="champion-award-value">Rodri · Spain</span>
+                            </div>
+                            <div className="champion-award">
+                                <span className="champion-award-label">Golden Glove</span>
+                                {/* No endpoint for this — hardcoded from confirmed 2026 award results */}
+                                <span className="champion-award-value">Unai Simón · Spain</span>
+                            </div>
+                            <div className="champion-award">
+                                <span className="champion-award-label">Best Young Player</span>
+                                {/* No endpoint for this — hardcoded from confirmed 2026 award results */}
+                                <span className="champion-award-value">Pau Cubarsí · Spain</span>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
